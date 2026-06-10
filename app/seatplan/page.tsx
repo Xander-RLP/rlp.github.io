@@ -7,7 +7,7 @@ import type { Seat } from "@/lib/types";
 type DragPayload = { name: string; fromSeat?: string };
 
 export default function SeatplanPage() {
-  const { state, staticMode, isAdmin, claimSeat } = useTournament();
+  const { state, staticMode, isAdmin, remoteAdmin, claimSeat } = useTournament();
   const [busy, setBusy] = useState(false);
   const [overTarget, setOverTarget] = useState<string | null>(null);
 
@@ -16,7 +16,7 @@ export default function SeatplanPage() {
   const seats = state.seats ?? [];
   const bySide = (side: Seat["side"]) => seats.filter((s) => s.side === side);
   const unseated = state.unseated ?? [];
-  const canDrag = !staticMode;
+  const canDrag = !staticMode || remoteAdmin;
 
   function setPayload(e: React.DragEvent, payload: DragPayload) {
     e.dataTransfer.setData("application/json", JSON.stringify(payload));
@@ -97,9 +97,9 @@ export default function SeatplanPage() {
     <div>
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Seatplan</h2>
       <p className="mb-5 max-w-2xl text-[13px] text-slate-400">
-        {staticMode
-          ? "De huidige stoelindeling — stoel kiezen kan op de LAN zelf via het lokale netwerk."
-          : "Sleep je naam uit het midden naar een vrije stoel. Klik op je stoel om hem weer vrij te geven."}
+        {canDrag
+          ? "Sleep je naam uit het midden naar een vrije stoel. Klik op je stoel om hem weer vrij te geven."
+          : "De huidige stoelindeling — stoel kiezen kan op de LAN zelf via het lokale netwerk."}
         {isAdmin && " Als admin kun je iedereen verslepen."}
       </p>
 
