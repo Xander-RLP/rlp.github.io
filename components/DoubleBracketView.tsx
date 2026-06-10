@@ -15,9 +15,8 @@ type Props = {
 };
 
 const SEEDS: Record<string, [number, number]> = { "w1-0": [1, 4], "w1-1": [2, 3] };
-// winnaars stromen naar rechts; verliezers vallen naar beneden het losers bracket in
+// winnaars stromen naar rechts; verliezers vallen (zonder lijn) het losers bracket in
 const WINNER_FEEDS: [SlotKey, SlotKey][] = [["w1-0", "wf"], ["w1-1", "wf"], ["l1", "lf"], ["wf", "gf"], ["lf", "gf"]];
-const LOSER_DROPS: [SlotKey, SlotKey][] = [["w1-0", "l1"], ["w1-1", "l1"], ["wf", "lf"]];
 
 export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Props) {
   const d = propagateDouble(game.double!);
@@ -50,18 +49,6 @@ export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Pro
       next.push({ left: srcX, top: srcY, width: midX - srcX, height: 1.5 });
       next.push({ left: midX, top: Math.min(srcY, dstY), width: 1.5, height: Math.abs(dstY - srcY) || 1.5 });
       next.push({ left: midX, top: dstY, width: dstX - midX, height: 1.5 });
-    }
-    for (const [from, to] of LOSER_DROPS) {
-      const src = rect(from), dst = rect(to);
-      if (!src || !dst) continue;
-      const srcX = src.left + src.width / 2 - origin.left;
-      const dstX = dst.left + dst.width / 2 - origin.left;
-      const srcY = src.bottom - origin.top;
-      const dstY = dst.top - origin.top;
-      const midY = (srcY + dstY) / 2;
-      next.push({ left: Math.min(srcX, dstX) === srcX ? srcX : dstX, top: midY, width: Math.abs(dstX - srcX) || 1.5, height: 1.5, loser: true });
-      next.push({ left: srcX, top: srcY, width: 1.5, height: midY - srcY, loser: true });
-      next.push({ left: dstX, top: midY, width: 1.5, height: dstY - midY, loser: true });
     }
     setLines(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,7 +167,7 @@ export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Pro
         <MatchCard matchKey="lf" label="Losers Finale" />
       </div>
       <p className="mt-3 max-w-xl text-[11px] text-slate-500">
-        Verlies je in het winners bracket (rode lijn), dan krijg je in het losers bracket een tweede kans.
+        Verlies je in het winners bracket, dan krijg je in het losers bracket een tweede kans.
         De winnaar daarvan speelt de Grand Final tegen de winnaar van het winners bracket.
       </p>
     </div>

@@ -58,7 +58,11 @@ export default function SeatplanPage() {
   }
 
   async function onSeatClick(seat: Seat) {
-    if (!canEdit || busy) return;
+    if (!canEdit) {
+      alert("Stoelen wijzigen kan hier alleen als admin (log in via /admin) of op de LAN zelf via de lokale server.");
+      return;
+    }
+    if (busy) return;
     if (!seat.name && selected) {
       await place(seat.id, selected);
       return;
@@ -142,7 +146,13 @@ export default function SeatplanPage() {
                 key={n}
                 draggable={canEdit}
                 onDragStart={(e) => setPayload(e, { name: n })}
-                onClick={() => { if (canEdit) setSelected(selected === n ? null : n); }}
+                onClick={() => {
+                  if (!canEdit) {
+                    alert("Stoelen wijzigen kan hier alleen als admin (log in via /admin) of op de LAN zelf via de lokale server.");
+                    return;
+                  }
+                  setSelected(selected === n ? null : n);
+                }}
                 className={`select-none rounded border px-3 py-1 text-sm font-semibold ${
                   selected === n
                     ? "border-lime-400 bg-lime-400/15 text-lime-300 ring-2 ring-lime-400/40"
