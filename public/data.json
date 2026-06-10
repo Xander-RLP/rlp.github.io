@@ -139,11 +139,11 @@
             {
               "teams": [
                 {
-                  "name": "PentaPete",
+                  "name": "Ennio",
                   "score": null
                 },
                 {
-                  "name": "AramAndy",
+                  "name": "Xander",
                   "score": null
                 }
               ]
@@ -151,11 +151,11 @@
             {
               "teams": [
                 {
-                  "name": "MidDiff",
+                  "name": "Leon",
                   "score": null
                 },
                 {
-                  "name": "FlashFout",
+                  "name": "Bo",
                   "score": null
                 }
               ]
@@ -163,11 +163,11 @@
             {
               "teams": [
                 {
-                  "name": "JungleGap",
+                  "name": "Indy",
                   "score": null
                 },
                 {
-                  "name": "TiltedTeun",
+                  "name": "Jean",
                   "score": null
                 }
               ]
@@ -175,7 +175,7 @@
             {
               "teams": [
                 {
-                  "name": "WardWim",
+                  "name": "Sjoerd",
                   "score": null
                 },
                 {
@@ -370,11 +370,11 @@
             {
               "teams": [
                 {
-                  "name": "HumanHenk",
+                  "name": "Laszlo",
                   "score": null
                 },
                 {
-                  "name": "OrcOtto",
+                  "name": "Ronnie",
                   "score": null
                 }
               ]
@@ -382,11 +382,11 @@
             {
               "teams": [
                 {
-                  "name": "NightElfNiels",
+                  "name": "Ennio",
                   "score": null
                 },
                 {
-                  "name": "UndeadUgo",
+                  "name": "Xander",
                   "score": null
                 }
               ]
@@ -394,11 +394,11 @@
             {
               "teams": [
                 {
-                  "name": "TowerTim",
+                  "name": "Leon",
                   "score": null
                 },
                 {
-                  "name": "RushRoel",
+                  "name": "Bo",
                   "score": null
                 }
               ]
@@ -406,11 +406,11 @@
             {
               "teams": [
                 {
-                  "name": "GrubbyFan",
+                  "name": "Indy",
                   "score": null
                 },
                 {
-                  "name": "HuntressHans",
+                  "name": "Jean",
                   "score": null
                 }
               ]
@@ -472,11 +472,11 @@
             {
               "teams": [
                 {
-                  "name": "RailRick",
+                  "name": "Ronnie",
                   "score": null
                 },
                 {
-                  "name": "StormSven",
+                  "name": "Ennio",
                   "score": null
                 }
               ]
@@ -484,11 +484,11 @@
             {
               "teams": [
                 {
-                  "name": "JumpJoep",
+                  "name": "Xander",
                   "score": null
                 },
                 {
-                  "name": "LaserLars",
+                  "name": "Leon",
                   "score": null
                 }
               ]
@@ -496,11 +496,11 @@
             {
               "teams": [
                 {
-                  "name": "DodgeDirk",
+                  "name": "Bo",
                   "score": null
                 },
                 {
-                  "name": "AimArne",
+                  "name": "Indy",
                   "score": null
                 }
               ]
@@ -508,11 +508,11 @@
             {
               "teams": [
                 {
-                  "name": "SpeedySam",
+                  "name": "Jean",
                   "score": null
                 },
                 {
-                  "name": "",
+                  "name": "Sjoerd",
                   "score": null
                 }
               ]
@@ -575,6 +575,18 @@
         "target": 20,
         "participants": [
           {
+            "name": "Laszlo",
+            "progress": 0
+          },
+          {
+            "name": "Ronnie",
+            "progress": 0
+          },
+          {
+            "name": "Ennio",
+            "progress": 0
+          },
+          {
             "name": "Xander",
             "progress": 0
           },
@@ -588,6 +600,14 @@
           },
           {
             "name": "Indy",
+            "progress": 0
+          },
+          {
+            "name": "Jean",
+            "progress": 0
+          },
+          {
+            "name": "Sjoerd",
             "progress": 0
           }
         ]
