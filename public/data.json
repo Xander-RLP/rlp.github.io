@@ -1,0 +1,458 @@
+{
+  "games": [
+    {
+      "id": "cs2-wingman",
+      "name": "CS2 Wingman",
+      "format": "Counter-Strike 2 \u00b7 2v2 Wingman \u00b7 Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "Ronnie Rifles",
+                  "score": null
+                },
+                {
+                  "name": "Rush B",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Smoke Bros",
+                  "score": null
+                },
+                {
+                  "name": "Rolator Jeans",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/cs2-wingman.jpg"
+    },
+    {
+      "id": "league-of-legends",
+      "name": "League of Legends",
+      "format": "1v1 \u00b7 ARAM \u00b7 7 spelers",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "PentaPete",
+                  "score": null
+                },
+                {
+                  "name": "AramAndy",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "MidDiff",
+                  "score": null
+                },
+                {
+                  "name": "FlashFout",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "JungleGap",
+                  "score": null
+                },
+                {
+                  "name": "TiltedTeun",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "WardWim",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/league-of-legends.png"
+    },
+    {
+      "id": "rocket-league",
+      "name": "Rocket League",
+      "format": "2v2 \u00b7 Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "Boost Boys",
+                  "score": null
+                },
+                {
+                  "name": "Aerial Aces",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Demo Kings",
+                  "score": null
+                },
+                {
+                  "name": "Whiff Squad",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/rocket-league.jpg"
+    },
+    {
+      "id": "wc3-reforged",
+      "name": "WC3 Reforged",
+      "format": "1v1 \u00b7 Solo \u00b7 Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "HumanHenk",
+                  "score": null
+                },
+                {
+                  "name": "OrcOtto",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "NightElfNiels",
+                  "score": null
+                },
+                {
+                  "name": "UndeadUgo",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "TowerTim",
+                  "score": null
+                },
+                {
+                  "name": "RushRoel",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "GrubbyFan",
+                  "score": null
+                },
+                {
+                  "name": "HuntressHans",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/wc3-reforged.png"
+    },
+    {
+      "id": "shootmania-storm",
+      "name": "Shootmania Storm",
+      "format": "1v1 \u00b7 Solo \u00b7 Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "RailRick",
+                  "score": null
+                },
+                {
+                  "name": "StormSven",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "JumpJoep",
+                  "score": null
+                },
+                {
+                  "name": "LaserLars",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "DodgeDirk",
+                  "score": null
+                },
+                {
+                  "name": "AimArne",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "SpeedySam",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/shootmania-storm.png"
+    }
+  ],
+  "seats": [
+    {
+      "id": "T1",
+      "side": "top",
+      "name": "Laszlo"
+    },
+    {
+      "id": "T2",
+      "side": "top",
+      "name": "Ronnie"
+    },
+    {
+      "id": "L1",
+      "side": "left",
+      "name": "Ennio"
+    },
+    {
+      "id": "L2",
+      "side": "left",
+      "name": "Xander"
+    },
+    {
+      "id": "L3",
+      "side": "left",
+      "name": ""
+    },
+    {
+      "id": "R1",
+      "side": "right",
+      "name": ""
+    },
+    {
+      "id": "R2",
+      "side": "right",
+      "name": ""
+    },
+    {
+      "id": "R3",
+      "side": "right",
+      "name": ""
+    },
+    {
+      "id": "O1",
+      "side": "bottom",
+      "name": ""
+    }
+  ],
+  "unseated": [
+    "Leon",
+    "Bo",
+    "Indy",
+    "Jean",
+    "Sjoerd"
+  ]
+}
