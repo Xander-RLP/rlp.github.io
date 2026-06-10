@@ -9,6 +9,7 @@ const NEWS = [
   { accent: "border-lime-500", html: <><b className="text-slate-100">Line-up:</b> CS2 Wingman, League of Legends (ARAM), Rocket League, WC3 Reforged en Shootmania Storm.</> },
   { accent: "border-amber-400", html: <><b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.</> },
   { accent: "border-red-500", html: <><b className="text-slate-100">Schedule:</b> definitieve tijden volgen zodra de aanmeldingen rond zijn.</> },
+  { accent: "border-sky-500", html: <><b className="text-slate-100">TeamSpeak:</b> praat mee op <a href="ts3server://ts.impulzgaming.com" className="text-lime-400 hover:underline">ts.impulzgaming.com</a>.</> },
 ];
 
 const BAR_COLORS = ["bg-teal-500", "bg-lime-500", "bg-amber-400", "bg-red-500"];

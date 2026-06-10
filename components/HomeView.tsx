@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BRACKET_SIZES, emptyBracket, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
-import type { Bracket, Game } from "@/lib/types";
+import type { Bracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
+import RaceView from "./RaceView";
 
 export default function HomeView() {
   const { state, isAdmin, updateGames, saveStatus, fetchImage } = useTournament();
@@ -15,6 +16,7 @@ export default function HomeView() {
   const [newName, setNewName] = useState("");
   const [newFormat, setNewFormat] = useState("");
   const [newSize, setNewSize] = useState("8");
+  const [newType, setNewType] = useState<"bracket" | "race">("bracket");
 
   // game-keuze volgt de URL-hash, zodat tabs en de terug-knop samenwerken
   useEffect(() => {
@@ -33,14 +35,20 @@ export default function HomeView() {
     updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, bracket } : g)));
   }
 
+  function setRace(race: Race) {
+    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, race } : g)));
+  }
+
   async function addGame() {
     const name = newName.trim();
     if (!name) return;
     const g: Game = {
       id: slugify(name, state!.games.map((x) => x.id)),
       name,
-      format: newFormat.trim() || "Single Elimination",
-      bracket: emptyBracket(parseInt(newSize, 10)),
+      type: newType,
+      format: newFormat.trim() || (newType === "race" ? "Race · Leaderboard" : "Single Elimination"),
+      bracket: emptyBracket(newType === "race" ? 4 : parseInt(newSize, 10)),
+      ...(newType === "race" ? { race: { goalLabel: "Eerste bij het doel", target: 20, participants: [] } } : {}),
     };
     setImageBusy(true);
     g.image = (await fetchImage(g.id, name).catch(() => null)) ?? undefined;
@@ -134,7 +142,7 @@ export default function HomeView() {
       </div>
 
       {/* titel + prize pool */}
-      <div className="mb-3.5 flex items-center justify-between gap-4">
+      <div className="mb-3.5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3.5">
           {game.image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -145,8 +153,8 @@ export default function HomeView() {
             </div>
           )}
           <div>
-            <h1 className="text-2xl font-extrabold uppercase tracking-wide">
-              {game.name}: {teamCount(game.bracket)}-Team Bracket
+            <h1 className="text-xl font-extrabold uppercase tracking-wide md:text-2xl">
+              {game.type === "race" ? game.name : `${game.name}: ${teamCount(game.bracket)}-Team Bracket`}
             </h1>
             <div className="text-[11px] uppercase tracking-[1.5px] text-slate-400">
               {game.format || "Single Elimination"}
@@ -160,16 +168,20 @@ export default function HomeView() {
       </div>
 
       {/* sectie-tabs */}
-      <div className="mb-6 flex gap-1.5 text-[11px] font-bold uppercase tracking-wide">
+      <div className="mb-6 flex flex-wrap gap-1.5 text-[11px] font-bold uppercase tracking-wide">
         <Link href="/tournaments" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Tournament Info]</Link>
         <span className="rounded border border-lime-400 bg-lime-400/10 px-3 py-1.5 text-lime-400">[Brackets]</span>
         <Link href="/schedule" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Schedule]</Link>
         <Link href="/teams" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Teams]</Link>
       </div>
 
-      <BracketView game={game} isAdmin={isAdmin} onBracketChange={setBracket} />
+      {game.type === "race" ? (
+        <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
+      ) : (
+        <BracketView game={game} isAdmin={isAdmin} onBracketChange={setBracket} />
+      )}
 
-      {isAdmin && (
+      {isAdmin && game.type !== "race" && (
         <div className="mt-4 max-w-2xl rounded border border-dashed border-slate-700 px-3 py-2 text-[11px] text-slate-400">
           <b className="text-lime-400">Admin mode:</b> vul de namen in bij de eerste ronde en zet de scores per match.
           De winnaar (hoogste score) schuift automatisch door; een lege plek in ronde 1 is een bye.
@@ -222,12 +234,22 @@ export default function HomeView() {
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             />
             <select
-              value={newSize}
-              onChange={(e) => setNewSize(e.target.value)}
+              value={newType}
+              onChange={(e) => setNewType(e.target.value as "bracket" | "race")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
-              {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} deelnemers</option>)}
+              <option value="bracket">Bracket (knock-out)</option>
+              <option value="race">Race / leaderboard (bijv. eerste op level 20)</option>
             </select>
+            {newType === "bracket" && (
+              <select
+                value={newSize}
+                onChange={(e) => setNewSize(e.target.value)}
+                className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
+              >
+                {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} deelnemers</option>)}
+              </select>
+            )}
             <div className="flex justify-end gap-2">
               <button onClick={() => setAddOpen(false)} className="cursor-pointer rounded border border-lime-400 px-3.5 py-1.5 text-[11px] font-bold uppercase text-lime-400 hover:bg-lime-400/10">
                 Annuleren

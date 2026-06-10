@@ -107,6 +107,13 @@ export function slugify(name: string, existing: string[]): string {
 }
 
 export function gameStatus(game: Game): { text: string; champ: boolean } {
+  if (game.type === "race" && game.race) {
+    const winner = [...game.race.participants].sort((a, b) => b.progress - a.progress)
+      .find((p) => p.progress >= game.race!.target);
+    if (winner) return { text: `\u{1F3C6} ${winner.name}`, champ: true };
+    if (game.race.participants.some((p) => p.progress > 0)) return { text: "Bezig", champ: false };
+    return { text: game.race.participants.length ? "Start binnenkort" : "Aanmeldingen open", champ: false };
+  }
   const rs = game.bracket.rounds;
   const gf = rs[rs.length - 1][0];
   const w = winnerIdx(gf);

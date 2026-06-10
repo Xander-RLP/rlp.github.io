@@ -399,6 +399,80 @@
         ]
       },
       "image": "/images/shootmania-storm.png"
+    },
+    {
+      "id": "lotro",
+      "name": "LOTRO",
+      "type": "race",
+      "format": "MMO \u00b7 Race naar level 20",
+      "description": "Samen met je squad questen in Midden-aarde \u2014 wie als eerste level 20 haalt wint. Onderweg helpen mag (en moet).",
+      "race": {
+        "goalLabel": "Eerste op level 20",
+        "target": 20,
+        "participants": [
+          {
+            "name": "Xander",
+            "progress": 0
+          },
+          {
+            "name": "Leon",
+            "progress": 0
+          },
+          {
+            "name": "Bo",
+            "progress": 0
+          },
+          {
+            "name": "Indy",
+            "progress": 0
+          }
+        ]
+      },
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/lotro.jpg"
     }
   ],
   "seats": [
@@ -420,7 +494,7 @@
     {
       "id": "L2",
       "side": "left",
-      "name": "Xander"
+      "name": ""
     },
     {
       "id": "L3",
@@ -449,10 +523,11 @@
     }
   ],
   "unseated": [
-    "Leon",
+    "Xander",
     "Bo",
     "Indy",
     "Jean",
-    "Sjoerd"
+    "Sjoerd",
+    "Leon"
   ]
 }

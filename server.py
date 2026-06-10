@@ -146,6 +146,19 @@ def valid_state(data):
                 return False
             if not isinstance(game.get("image") or "", str):
                 return False
+            if game.get("type") not in (None, "bracket", "race"):
+                return False
+            if not isinstance(game.get("description") or "", str):
+                return False
+            race = game.get("race")
+            if race is not None:
+                if not isinstance(race.get("goalLabel"), str):
+                    return False
+                if not isinstance(race.get("target"), (int, float)):
+                    return False
+                for p in race.get("participants", []):
+                    if not (isinstance(p.get("name"), str) and isinstance(p.get("progress"), (int, float))):
+                        return False
             if game["id"] in ids:
                 return False
             ids.add(game["id"])
@@ -178,9 +191,25 @@ def _wiki_thumbnail(search):
     return None
 
 
+def _steam_image(query):
+    """Fallback: zoek de game in de Steam-store en pak de header-afbeelding."""
+    params = urllib.parse.urlencode({"term": query, "cc": "NL", "l": "en"})
+    req = urllib.request.Request(
+        f"https://store.steampowered.com/api/storesearch/?{params}",
+        headers={"User-Agent": USER_AGENT},
+    )
+    with urllib.request.urlopen(req, timeout=10) as res:
+        data = json.loads(res.read())
+    items = data.get("items") or []
+    if not items:
+        return None
+    appid = items[0]["id"]
+    return f"https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
+
+
 def find_game_image(query, game_id):
-    """Zoek de spelpagina op Wikipedia en sla de paginathumbnail lokaal op."""
-    thumb = _wiki_thumbnail(query) or _wiki_thumbnail(f"{query} video game")
+    """Zoek het spel op Wikipedia (en anders Steam) en sla de afbeelding lokaal op."""
+    thumb = _wiki_thumbnail(query) or _wiki_thumbnail(f"{query} video game") or _steam_image(query)
     if not thumb:
         return None
     ext = re.search(r"\.(png|jpe?g|gif|webp)", thumb, re.I)
@@ -247,18 +276,25 @@ class Handler(SimpleHTTPRequestHandler):
             seat = next((s for s in seats if s["id"] == seat_id), None)
             if not seat:
                 return self._json({"error": "stoel bestaat niet"}, 404)
+            is_admin = self._authorized()
             if not name:
-                if not self._authorized():
-                    return self._json({"error": "unauthorized"}, 401)
+                # stoel intrekken mag iedereen; naam terug naar de pool
+                if seat.get("name"):
+                    state.setdefault("unseated", []).append(seat["name"])
                 seat["name"] = ""
             else:
                 if seat.get("name"):
                     return self._json({"error": "deze stoel is al bezet"}, 409)
-                for s in seats:  # verhuizen: oude stoel vrijgeven
+                unseated = state.get("unseated") or []
+                in_pool = any(n.lower() == name.lower() for n in unseated)
+                if not is_admin and not in_pool:
+                    # zonder admin alleen de eerste plaatsing vanuit de pool; daarna is het vast
+                    return self._json({"error": "alleen de admin kan stoelen wijzigen"}, 403)
+                for s in seats:  # verhuizen (admin): oude stoel vrijgeven
                     if s.get("name", "").lower() == name.lower():
                         s["name"] = ""
                 seat["name"] = name
-                state["unseated"] = [n for n in (state.get("unseated") or []) if n.lower() != name.lower()]
+                state["unseated"] = [n for n in unseated if n.lower() != name.lower()]
             save_state(state)
             return self._json({"ok": True})
 
