@@ -10,7 +10,7 @@ import DoubleBracketView from "./DoubleBracketView";
 import RaceView from "./RaceView";
 
 export default function HomeView() {
-  const { state, isAdmin, staticMode, remoteAdmin, updateGames, saveStatus, fetchImage } = useTournament();
+  const { state, isAdmin, updateGames, saveStatus, fetchImage } = useTournament();
   const [imageBusy, setImageBusy] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -199,15 +199,13 @@ export default function HomeView() {
                 {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} deelnemers</option>)}
               </select>
             </span>
-            {!staticMode && (
-              <button
-                onClick={() => void refreshImage()}
-                disabled={imageBusy}
-                className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400 disabled:opacity-50"
-              >
-                {imageBusy ? "Zoeken…" : "🔍 Plaatje zoeken"}
-              </button>
-            )}
+            <button
+              onClick={() => void refreshImage()}
+              disabled={imageBusy}
+              className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400 disabled:opacity-50"
+            >
+              {imageBusy ? "Zoeken…" : "🔍 Plaatje zoeken"}
+            </button>
           </div>
         </div>
       )}
@@ -272,7 +270,7 @@ export default function HomeView() {
         <div className={`fixed bottom-4 left-1/2 z-40 -translate-x-1/2 rounded border px-4 py-1.5 text-[11px] font-bold tracking-wide ${
           saveStatus === "saved" ? "border-lime-400 bg-slate-800 text-lime-400" : "border-red-500 bg-slate-800 text-red-500"
         }`}>
-          {saveStatus === "saved" ? (remoteAdmin ? "✓ Opgeslagen — live over ±1 min" : "✓ Opgeslagen") : "Opslaan mislukt"}
+          {saveStatus === "saved" ? "✓ Opgeslagen — live over ±1 min" : "Opslaan mislukt"}
         </div>
       )}
     </div>

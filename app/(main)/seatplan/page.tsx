@@ -7,7 +7,7 @@ import type { Seat } from "@/lib/types";
 type DragPayload = { name: string; fromSeat?: string };
 
 export default function SeatplanPage() {
-  const { state, staticMode, isAdmin, remoteAdmin, claimSeat } = useTournament();
+  const { state, isAdmin, claimSeat } = useTournament();
   const [busy, setBusy] = useState(false);
   const [overTarget, setOverTarget] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null); // tik-om-te-plaatsen
@@ -17,7 +17,7 @@ export default function SeatplanPage() {
   const seats = state.seats ?? [];
   const bySide = (side: Seat["side"]) => seats.filter((s) => s.side === side);
   const unseated = state.unseated ?? [];
-  const canEdit = !staticMode || remoteAdmin;
+  const canEdit = isAdmin;
 
   async function place(seatId: string, name: string) {
     if (busy) return;
@@ -59,7 +59,7 @@ export default function SeatplanPage() {
 
   async function onSeatClick(seat: Seat) {
     if (!canEdit) {
-      alert("Stoelen wijzigen kan hier alleen als admin (log in via /admin) of op de LAN zelf via de lokale server.");
+      alert("Stoelen wijzigen kan alleen de organisatie — log in via /admin.");
       return;
     }
     if (busy) return;
@@ -110,9 +110,8 @@ export default function SeatplanPage() {
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Seatplan</h2>
       <p className="mb-5 max-w-2xl text-[13px] text-slate-400">
         {canEdit
-          ? "Tik je naam aan en daarna een vrije stoel — of sleep hem ernaartoe. Klik op je stoel om hem weer vrij te geven."
-          : "De huidige stoelindeling — stoel kiezen kan op de LAN zelf, of de organisatie regelt het via admin."}
-        {isAdmin && " Als admin kun je iedereen verplaatsen."}
+          ? "Tik een naam aan en daarna een vrije stoel — of sleep hem ernaartoe. Klik op een bezette stoel om hem vrij te geven."
+          : "De huidige stoelindeling. Wil je een (andere) stoel? Geef het door aan de organisatie."}
       </p>
 
       <div className="inline-grid select-none grid-cols-[auto_1fr_auto] gap-4 rounded-xl border border-slate-700 bg-slate-900/50 p-6">
@@ -148,7 +147,7 @@ export default function SeatplanPage() {
                 onDragStart={(e) => setPayload(e, { name: n })}
                 onClick={() => {
                   if (!canEdit) {
-                    alert("Stoelen wijzigen kan hier alleen als admin (log in via /admin) of op de LAN zelf via de lokale server.");
+                    alert("Stoelen wijzigen kan alleen de organisatie — log in via /admin.");
                     return;
                   }
                   setSelected(selected === n ? null : n);
@@ -177,8 +176,7 @@ export default function SeatplanPage() {
       </div>
 
       <p className="mt-4 max-w-xl text-xs text-slate-500">
-        Eenmaal gekozen? Alleen de organisatie kan je daarna nog verplaatsen —
-        je stoel intrekken (terug naar de pool) kan altijd.
+        De organisatie deelt de stoelen in — wijzigingen staan binnen een minuut voor iedereen op de site.
       </p>
     </div>
   );

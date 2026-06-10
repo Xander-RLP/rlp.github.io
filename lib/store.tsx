@@ -7,12 +7,9 @@ type SaveStatus = "idle" | "saved" | "error";
 
 type TournamentContext = {
   state: TournamentState | null;
-  staticMode: boolean;
   isAdmin: boolean;
-  remoteAdmin: boolean; // ingelogd met GitHub-token op de publieke site
   saveStatus: SaveStatus;
-  login: (username: string, password: string) => Promise<boolean>;
-  loginGitHub: (token: string) => Promise<boolean>;
+  login: (token: string) => Promise<boolean>;
   logout: () => void;
   updateGames: (games: Game[]) => void;
   updateEventStart: (value: string) => void;
@@ -38,26 +35,25 @@ function toBase64(s: string): string {
 }
 
 function fromBase64(b64: string): string {
-  return new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)));
+  return new TextDecoder().decode(b64ToBytes(b64));
+}
+
+function b64ToBytes(b64: string): Uint8Array {
+  return Uint8Array.from(atob(b64.replace(/\n/g, "")), (c) => c.charCodeAt(0));
 }
 
 export function TournamentProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<TournamentState | null>(null);
-  const [staticMode, setStaticMode] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const [ghToken, setGhToken] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const tokenRef = useRef<string | null>(null);
   const ghTokenRef = useRef<string | null>(null);
   const ghShaRef = useRef<string | null>(null);
   const stateRef = useRef<TournamentState | null>(null);
-  tokenRef.current = token;
   ghTokenRef.current = ghToken;
   stateRef.current = state;
 
-  const remoteAdmin = staticMode && !!ghToken;
-  const isAdmin = (!!token && !staticMode) || remoteAdmin;
+  const isAdmin = !!ghToken;
 
   const loadFromGitHub = useCallback(async (tok: string) => {
     const res = await fetch(GH_CONTENTS, {
@@ -67,26 +63,16 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     if (!res.ok) throw new Error("github fetch failed");
     const body = await res.json();
     ghShaRef.current = body.sha;
-    return JSON.parse(fromBase64(body.content.replace(/\n/g, ""))) as TournamentState;
+    return JSON.parse(fromBase64(body.content)) as TournamentState;
   }, []);
 
   const load = useCallback(async () => {
-    // lokale server eerst; op statische hosting (GitHub Pages) terugvallen op data.json/GitHub
-    try {
-      const res = await fetch("/api/games");
-      if (!res.ok || !(res.headers.get("Content-Type") ?? "").includes("json")) throw new Error();
-      setState(await res.json());
-      setStaticMode(false);
-      return;
-    } catch {
-      setStaticMode(true);
-    }
     const tok = ghTokenRef.current;
     if (tok) {
       try {
         setState(await loadFromGitHub(tok));
         return;
-      } catch { /* val terug op data.json */ }
+      } catch { /* val terug op het statische bestand */ }
     }
     try {
       const res = await fetch("/data.json", { cache: "no-store" });
@@ -97,34 +83,23 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, [loadFromGitHub]);
 
   useEffect(() => {
-    setToken(localStorage.getItem("rlp_token"));
     const gh = localStorage.getItem("rlp_gh_token");
     setGhToken(gh);
     ghTokenRef.current = gh;
     void load();
   }, [load]);
 
-  // bezoekers krijgen elke 10s verse data; admins zijn zelf de bron
+  // bezoekers krijgen elke 10s verse data; de admin is zelf de bron
   useEffect(() => {
     if (isAdmin) return;
     const t = setInterval(() => void load(), 10000);
     return () => clearInterval(t);
   }, [isAdmin, load]);
 
-  const login = useCallback(async (username: string, password: string) => {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    if (!res.ok) return false;
-    const { token: t } = await res.json();
-    localStorage.setItem("rlp_token", t);
-    setToken(t);
-    return true;
-  }, []);
-
-  const loginGitHub = useCallback(async (tok: string) => {
+  // inloggen met een GitHub fine-grained token (Contents r/w op de repo)
+  const login = useCallback(async (token: string) => {
+    const tok = token.trim();
+    if (!tok) return false;
     try {
       const fresh = await loadFromGitHub(tok);
       localStorage.setItem("rlp_gh_token", tok);
@@ -138,14 +113,12 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, [loadFromGitHub]);
 
   const logout = useCallback(() => {
-    localStorage.removeItem("rlp_token");
     localStorage.removeItem("rlp_gh_token");
-    setToken(null);
     setGhToken(null);
     ghTokenRef.current = null;
   }, []);
 
-  // commit de hele state als public/data.json naar de repo (GitHub Pages herbouwt daarna)
+  // commit de hele state als public/data.json naar de repo (Pages herbouwt daarna)
   const commitToGitHub = useCallback(async (next: TournamentState, retry = true): Promise<boolean> => {
     const tok = ghTokenRef.current;
     if (!tok) return false;
@@ -173,25 +146,11 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     setState(next);
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
-      let ok: boolean;
-      if (ghTokenRef.current && staticMode) {
-        ok = await commitToGitHub(next);
-      } else {
-        const res = await fetch("/api/games", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${tokenRef.current}` },
-          body: JSON.stringify(next),
-        });
-        ok = res.ok;
-        if (res.status === 401) {
-          localStorage.removeItem("rlp_token");
-          setToken(null);
-        }
-      }
+      const ok = await commitToGitHub(next);
       setSaveStatus(ok ? "saved" : "error");
       setTimeout(() => setSaveStatus("idle"), 2500);
     }, 600);
-  }, [commitToGitHub, staticMode]);
+  }, [commitToGitHub]);
 
   const updateGames = useCallback((games: Game[]) => {
     const cur = stateRef.current;
@@ -208,24 +167,8 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   const claimSeat = useCallback(async (seatId: string, name: string) => {
     const cur = stateRef.current;
     if (!cur) return "nog niet geladen";
+    if (!ghTokenRef.current) return "Alleen de organisatie kan stoelen wijzigen — log in via /admin.";
 
-    if (!staticMode) {
-      const res = await fetch("/api/seat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${tokenRef.current}` },
-        body: JSON.stringify({ seatId, name }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        return (body.error as string) ?? "er ging iets mis";
-      }
-      await load();
-      return null;
-    }
-
-    if (!ghTokenRef.current) return "Stoel kiezen kan op de LAN zelf, of door de organisatie (admin).";
-
-    // remote admin: zelfde regels als de server, maar client-side + commit
     const seats: Seat[] = JSON.parse(JSON.stringify(cur.seats ?? []));
     const seat = seats.find((s) => s.id === seatId);
     if (!seat) return "stoel bestaat niet";
@@ -241,21 +184,32 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     }
     persist({ ...cur, seats, unseated });
     return null;
-  }, [staticMode, load, persist]);
+  }, [persist]);
 
-  const fetchImage = useCallback(async (gameId: string, query: string) => {
-    if (staticMode) return null; // beeldzoeker draait alleen op de lokale server
-    const res = await fetch("/api/game-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${tokenRef.current}` },
-      body: JSON.stringify({ gameId, query }),
-    });
-    if (!res.ok) return null;
-    return (await res.json()).image as string;
-  }, [staticMode]);
+  // spel-plaatje zoeken via de Wikipedia API (CORS open); levert een afbeeldings-URL
+  const fetchImage = useCallback(async (_gameId: string, query: string) => {
+    const search = async (q: string): Promise<string | null> => {
+      const params = new URLSearchParams({
+        action: "query", format: "json", origin: "*",
+        generator: "search", gsrsearch: q, gsrlimit: "5",
+        prop: "pageimages", piprop: "thumbnail", pithumbsize: "512",
+      });
+      const res = await fetch(`https://en.wikipedia.org/w/api.php?${params}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const pages = Object.values((data.query?.pages ?? {}) as Record<string, { index?: number; thumbnail?: { source?: string } }>);
+      pages.sort((a, b) => (a.index ?? 99) - (b.index ?? 99));
+      return pages.find((p) => p.thumbnail?.source)?.thumbnail?.source ?? null;
+    };
+    try {
+      return (await search(query)) ?? (await search(`${query} video game`));
+    } catch {
+      return null;
+    }
+  }, []);
 
   return (
-    <Ctx.Provider value={{ state, staticMode, isAdmin, remoteAdmin, saveStatus, login, loginGitHub, logout, updateGames, updateEventStart, fetchImage, reload: load, claimSeat }}>
+    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateEventStart, fetchImage, reload: load, claimSeat }}>
       {children}
     </Ctx.Provider>
   );

@@ -1,39 +1,29 @@
 # RLP26 — Tournament Brackets
 
-Toernooisite voor de Ronnie LAN Party: per spel een tab met een single-elimination
-bracket (4–32 deelnemers), agenda, teams en uitslagen. Gebouwd met **Next.js**
-(App Router, static export) en **Tailwind CSS**.
+Toernooisite voor de Ronnie LAN Party op **https://xrlp.github.io/** — brackets
+(single & double elimination), races, kalender, seatplan en tickets. Gebouwd met
+**Next.js** (App Router, static export) en **Tailwind CSS**, gehost op GitHub Pages.
 
-## Stack
+## Hoe het werkt
 
-- `app/` — Next.js-pagina's: brackets (home), tournaments, schedule (agenda), teams, sponsors, contact
-- `components/` + `lib/` — React-componenten en bracket-logica
-- `public/data.json` — alle toernooidata (de site leest dit bestand op GitHub Pages)
-- `server.py` — lokale admin-API (Python stdlib, geen dependencies)
+Er is géén server. De database is één bestand: **`public/data.json`** in deze repo.
 
-## Lokaal beheren
+- Bezoekers lezen dat bestand direct (de site ververst elke 10 seconden).
+- De **admin** logt in op `/admin` met een GitHub fine-grained token
+  (alleen deze repo, permissie Contents: read & write). Daarna wordt elke
+  wijziging als commit op `public/data.json` opgeslagen; na ±1 minuut bouwt
+  Pages de site opnieuw en ziet iedereen de nieuwe stand.
 
-```bash
-python3 server.py    # admin-API op :8080 (leest credentials uit .env)
-npm run dev          # site op :3000, proxiet /api/* naar server.py
-```
+Als admin kun je: spellen toevoegen (bracket / double elimination / race),
+deelnemers en scores invullen, de agenda plannen, het seatplan indelen en het
+startmoment van de countdown zetten.
 
-Log in via **Admin login** (gebruikersnaam/wachtwoord staan in `.env`:
-`RLP_ADMIN_USER` / `RLP_ADMIN_PASSWORD`). Als admin kun je:
-
-- spellen toevoegen/verwijderen via de tabs (bracket van 4, 8, 16 of 32 deelnemers)
-- deelnemers invullen in ronde 1 — een lege plek is automatisch een bye
-- scores invullen; de winnaar schuift automatisch door
-- per toernooi een datum/tijd instellen op de Schedule-pagina (agenda)
-
-Wijzigingen worden automatisch opgeslagen in `public/data.json`.
-
-## Publiceren
-
-De site draait op GitHub Pages in read-only modus (zonder API valt hij terug op
-`data.json`). Bracket bijgewerkt? Commit & push — de workflow bouwt en deployt
-automatisch:
+## Ontwikkelen
 
 ```bash
-git add public/data.json && git commit -m "Update bracket" && git push
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # statische export naar out/
 ```
+
+Elke push naar `main` deployt automatisch via `.github/workflows/pages.yml`.
