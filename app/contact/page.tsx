@@ -19,13 +19,6 @@ export default function ContactPage() {
           <div className="mb-1.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-400">Locatie</div>
           RLP26 main stage — tijden volgen via het schedule.
         </div>
-        <div className="rounded-md border border-slate-700 bg-slate-800 p-4 text-[13px] leading-relaxed">
-          <div className="mb-1.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-400">TeamSpeak</div>
-          Hang alvast in de lobby:{" "}
-          <a href="ts3server://ts.impulzgaming.com" className="font-semibold text-lime-400 hover:underline">
-            ts.impulzgaming.com
-          </a>
-        </div>
       </div>
     </div>
   );

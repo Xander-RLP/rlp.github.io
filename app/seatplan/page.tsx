@@ -76,7 +76,7 @@ export default function SeatplanPage() {
         onDrop={(e) => void dropOnSeat(e, seat)}
         onClick={() => { if (taken && canDrag) void releaseSeat(seat); }}
         title={taken ? (canDrag ? "Klik om vrij te geven" : seat.name) : "Sleep een naam hierheen"}
-        className={`flex items-center justify-center rounded-xl border-2 text-sm font-bold transition-colors ${
+        className={`flex select-none items-center justify-center rounded-xl border-2 text-sm font-bold transition-colors ${
           vertical ? "h-28 w-16" : "h-16 w-40"
         } ${
           taken
@@ -103,7 +103,7 @@ export default function SeatplanPage() {
         {isAdmin && " Als admin kun je iedereen verslepen."}
       </p>
 
-      <div className="inline-grid grid-cols-[auto_1fr_auto] gap-4 rounded-xl border border-slate-700 bg-slate-900/50 p-6">
+      <div className="inline-grid select-none grid-cols-[auto_1fr_auto] gap-4 rounded-xl border border-slate-700 bg-slate-900/50 p-6">
         {/* bovenkant */}
         <div className="col-start-2 flex justify-center gap-4">
           {bySide("top").map((s) => <SeatBox key={s.id} seat={s} />)}
@@ -134,7 +134,7 @@ export default function SeatplanPage() {
                 key={n}
                 draggable={canDrag}
                 onDragStart={(e) => setPayload(e, { name: n })}
-                className={`rounded border border-slate-600 bg-slate-800 px-3 py-1 text-sm font-semibold text-slate-200 ${
+                className={`select-none rounded border border-slate-600 bg-slate-800 px-3 py-1 text-sm font-semibold text-slate-200 ${
                   canDrag ? "cursor-grab active:cursor-grabbing hover:border-lime-400" : ""
                 }`}
               >

@@ -15,6 +15,7 @@ type TournamentContext = {
   loginGitHub: (token: string) => Promise<boolean>;
   logout: () => void;
   updateGames: (games: Game[]) => void;
+  updateEventStart: (value: string) => void;
   fetchImage: (gameId: string, query: string) => Promise<string | null>;
   reload: () => Promise<void>;
   claimSeat: (seatId: string, name: string) => Promise<string | null>; // null = ok, anders foutmelding
@@ -198,6 +199,12 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     persist({ ...cur, games });
   }, [persist]);
 
+  const updateEventStart = useCallback((value: string) => {
+    const cur = stateRef.current;
+    if (!cur) return;
+    persist({ ...cur, eventStart: value || undefined });
+  }, [persist]);
+
   const claimSeat = useCallback(async (seatId: string, name: string) => {
     const cur = stateRef.current;
     if (!cur) return "nog niet geladen";
@@ -248,7 +255,7 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, [staticMode]);
 
   return (
-    <Ctx.Provider value={{ state, staticMode, isAdmin, remoteAdmin, saveStatus, login, loginGitHub, logout, updateGames, fetchImage, reload: load, claimSeat }}>
+    <Ctx.Provider value={{ state, staticMode, isAdmin, remoteAdmin, saveStatus, login, loginGitHub, logout, updateGames, updateEventStart, fetchImage, reload: load, claimSeat }}>
       {children}
     </Ctx.Provider>
   );

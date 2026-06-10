@@ -3,6 +3,7 @@ import "./globals.css";
 import { TournamentProvider } from "@/lib/store";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import TeamSpeakWidget from "@/components/TeamSpeakWidget";
 
 export const metadata: Metadata = {
   title: "RLP26 — Tournament Brackets",
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="overflow-x-auto px-4 py-5 md:px-7 md:py-6">{children}</main>
             <Sidebar />
           </div>
+          <TeamSpeakWidget />
         </TournamentProvider>
       </body>
     </html>

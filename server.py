@@ -131,6 +131,8 @@ def valid_state(data):
     try:
         if not valid_seats(data):
             return False
+        if not isinstance(data.get("eventStart") or "", str):
+            return False
         games = data["games"]
         if not isinstance(games, list) or not games:
             return False

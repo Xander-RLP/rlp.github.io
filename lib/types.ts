@@ -34,4 +34,5 @@ export type TournamentState = {
   games: Game[];
   seats?: Seat[];
   unseated?: string[]; // aangemeld maar nog geen stoel
+  eventStart?: string; // startmoment van de LAN zelf (countdown op home)
 };

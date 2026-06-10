@@ -9,7 +9,6 @@ const NEWS = [
   { accent: "border-lime-500", html: <><b className="text-slate-100">Line-up:</b> CS2 Wingman, League of Legends (ARAM), Rocket League, WC3 Reforged en Shootmania Storm.</> },
   { accent: "border-amber-400", html: <><b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.</> },
   { accent: "border-red-500", html: <><b className="text-slate-100">Schedule:</b> definitieve tijden volgen zodra de aanmeldingen rond zijn.</> },
-  { accent: "border-sky-500", html: <><b className="text-slate-100">TeamSpeak:</b> praat mee op <a href="ts3server://ts.impulzgaming.com" className="text-lime-400 hover:underline">ts.impulzgaming.com</a>.</> },
 ];
 
 const BAR_COLORS = ["bg-teal-500", "bg-lime-500", "bg-amber-400", "bg-red-500"];
@@ -65,6 +64,21 @@ export default function Sidebar() {
         <div className="rounded border border-dashed border-slate-700 bg-slate-800 p-3 text-center text-[11px] italic text-slate-400">
           Nog geen inschrijvingen — de ranking verschijnt zodra het toernooi loopt.
         </div>
+      </section>
+
+      <section>
+        <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">🎵 LAN Playlist</h2>
+        <p className="mb-2 text-[11px] text-slate-400">Bouw mee aan de RLP2026-playlist:</p>
+        <iframe
+          src="https://open.spotify.com/embed/playlist/4drxBWX7uZiXWBfuikt30S?theme=0"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          className="rounded-lg"
+          title="RLP2026 Spotify playlist"
+        />
       </section>
 
       <footer className="mt-auto border-t border-slate-700 pt-4">

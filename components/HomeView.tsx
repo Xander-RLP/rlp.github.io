@@ -167,14 +167,6 @@ export default function HomeView() {
         </div>
       </div>
 
-      {/* sectie-tabs */}
-      <div className="mb-6 flex flex-wrap gap-1.5 text-[11px] font-bold uppercase tracking-wide">
-        <Link href="/tournaments" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Tournament Info]</Link>
-        <span className="rounded border border-lime-400 bg-lime-400/10 px-3 py-1.5 text-lime-400">[Brackets]</span>
-        <Link href="/schedule" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Schedule]</Link>
-        <Link href="/teams" className="px-3 py-1.5 text-slate-400 hover:text-slate-100">[Teams]</Link>
-      </div>
-
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
       ) : (
