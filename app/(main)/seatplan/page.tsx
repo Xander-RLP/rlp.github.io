@@ -10,22 +10,32 @@ export default function SeatplanPage() {
   const { state, staticMode, isAdmin, remoteAdmin, claimSeat } = useTournament();
   const [busy, setBusy] = useState(false);
   const [overTarget, setOverTarget] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null); // tik-om-te-plaatsen
 
   if (!state) return <p className="text-sm text-slate-400">Laden…</p>;
 
   const seats = state.seats ?? [];
   const bySide = (side: Seat["side"]) => seats.filter((s) => s.side === side);
   const unseated = state.unseated ?? [];
-  const canDrag = !staticMode || remoteAdmin;
+  const canEdit = !staticMode || remoteAdmin;
+
+  async function place(seatId: string, name: string) {
+    if (busy) return;
+    setBusy(true);
+    const err = await claimSeat(seatId, name);
+    setBusy(false);
+    setSelected(null);
+    if (err) alert(err);
+  }
 
   function setPayload(e: React.DragEvent, payload: DragPayload) {
-    e.dataTransfer.setData("application/json", JSON.stringify(payload));
+    e.dataTransfer.setData("text/plain", JSON.stringify(payload));
     e.dataTransfer.effectAllowed = "move";
   }
 
   function getPayload(e: React.DragEvent): DragPayload | null {
     try {
-      return JSON.parse(e.dataTransfer.getData("application/json"));
+      return JSON.parse(e.dataTransfer.getData("text/plain"));
     } catch {
       return null;
     }
@@ -35,38 +45,36 @@ export default function SeatplanPage() {
     e.preventDefault();
     setOverTarget(null);
     const payload = getPayload(e);
-    if (!payload || busy || seat.name) return;
-    setBusy(true);
-    const err = await claimSeat(seat.id, payload.name);
-    setBusy(false);
-    if (err) alert(err);
+    if (!payload || seat.name) return;
+    await place(seat.id, payload.name);
   }
 
   async function dropOnPool(e: React.DragEvent) {
     e.preventDefault();
     setOverTarget(null);
     const payload = getPayload(e);
-    if (!payload?.fromSeat || busy) return;
-    setBusy(true);
-    const err = await claimSeat(payload.fromSeat, "");
-    setBusy(false);
-    if (err) alert(err);
+    if (!payload?.fromSeat) return;
+    await place(payload.fromSeat, "");
   }
 
-  async function releaseSeat(seat: Seat) {
-    if (!seat.name || busy) return;
-    if (!confirm(`Stoel ${seat.id} van ${seat.name} vrijgeven?`)) return;
-    setBusy(true);
-    const err = await claimSeat(seat.id, "");
-    setBusy(false);
-    if (err) alert(err);
+  async function onSeatClick(seat: Seat) {
+    if (!canEdit || busy) return;
+    if (!seat.name && selected) {
+      await place(seat.id, selected);
+      return;
+    }
+    if (seat.name) {
+      if (!confirm(`Stoel ${seat.id} van ${seat.name} vrijgeven?`)) return;
+      await place(seat.id, "");
+    }
   }
 
   function SeatBox({ seat, vertical = false }: { seat: Seat; vertical?: boolean }) {
     const taken = !!seat.name;
     // gezeten namen zijn alleen voor de admin versleepbaar; intrekken mag iedereen (klik)
-    const draggable = canDrag && taken && isAdmin;
+    const draggable = canEdit && taken && isAdmin;
     const isOver = overTarget === seat.id;
+    const isTarget = !taken && !!selected;
     return (
       <div
         draggable={draggable}
@@ -74,15 +82,15 @@ export default function SeatplanPage() {
         onDragOver={(e) => { if (!seat.name) { e.preventDefault(); setOverTarget(seat.id); } }}
         onDragLeave={() => setOverTarget(null)}
         onDrop={(e) => void dropOnSeat(e, seat)}
-        onClick={() => { if (taken && canDrag) void releaseSeat(seat); }}
-        title={taken ? (canDrag ? "Klik om vrij te geven" : seat.name) : "Sleep een naam hierheen"}
+        onClick={() => void onSeatClick(seat)}
+        title={taken ? (canEdit ? "Klik om vrij te geven" : seat.name) : selected ? `Plaats ${selected} hier` : "Sleep of tik een naam hierheen"}
         className={`flex select-none items-center justify-center rounded-xl border-2 text-sm font-bold transition-colors ${
           vertical ? "h-28 w-16" : "h-16 w-40"
         } ${
           taken
-            ? `border-lime-400 bg-slate-800 text-lime-300 ${canDrag ? "cursor-pointer" : ""}`
-            : isOver
-              ? "border-lime-400 bg-lime-400/10 text-lime-400"
+            ? `border-lime-400 bg-slate-800 text-lime-300 ${canEdit ? "cursor-pointer" : ""}`
+            : isOver || isTarget
+              ? "animate-pulse cursor-pointer border-lime-400 bg-lime-400/10 text-lime-400"
               : "border-dashed border-slate-600 bg-slate-900 text-slate-400"
         }`}
       >
@@ -97,10 +105,10 @@ export default function SeatplanPage() {
     <div>
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Seatplan</h2>
       <p className="mb-5 max-w-2xl text-[13px] text-slate-400">
-        {canDrag
-          ? "Sleep je naam uit het midden naar een vrije stoel. Klik op je stoel om hem weer vrij te geven."
-          : "De huidige stoelindeling — stoel kiezen kan op de LAN zelf via het lokale netwerk."}
-        {isAdmin && " Als admin kun je iedereen verslepen."}
+        {canEdit
+          ? "Tik je naam aan en daarna een vrije stoel — of sleep hem ernaartoe. Klik op je stoel om hem weer vrij te geven."
+          : "De huidige stoelindeling — stoel kiezen kan op de LAN zelf, of de organisatie regelt het via admin."}
+        {isAdmin && " Als admin kun je iedereen verplaatsen."}
       </p>
 
       <div className="inline-grid select-none grid-cols-[auto_1fr_auto] gap-4 rounded-xl border border-slate-700 bg-slate-900/50 p-6">
@@ -124,22 +132,25 @@ export default function SeatplanPage() {
           }`}
         >
           <div className="mb-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-500">
-            Nog geen stoel
+            Nog geen stoel{canEdit && unseated.length > 0 ? " — tik je naam aan" : ""}
           </div>
           {unseated.length === 0 ? (
             <span className="text-xs italic text-slate-500">iedereen zit!</span>
           ) : (
             unseated.map((n) => (
-              <span
+              <button
                 key={n}
-                draggable={canDrag}
+                draggable={canEdit}
                 onDragStart={(e) => setPayload(e, { name: n })}
-                className={`select-none rounded border border-slate-600 bg-slate-800 px-3 py-1 text-sm font-semibold text-slate-200 ${
-                  canDrag ? "cursor-grab active:cursor-grabbing hover:border-lime-400" : ""
-                }`}
+                onClick={() => { if (canEdit) setSelected(selected === n ? null : n); }}
+                className={`select-none rounded border px-3 py-1 text-sm font-semibold ${
+                  selected === n
+                    ? "border-lime-400 bg-lime-400/15 text-lime-300 ring-2 ring-lime-400/40"
+                    : "border-slate-600 bg-slate-800 text-slate-200"
+                } ${canEdit ? "cursor-grab active:cursor-grabbing hover:border-lime-400" : "cursor-default"}`}
               >
                 {n}
-              </span>
+              </button>
             ))
           )}
         </div>
