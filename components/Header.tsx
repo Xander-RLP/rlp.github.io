@@ -12,6 +12,7 @@ const NAV = [
   { href: "/seatplan", label: "Seatplan" },
   { href: "/tickets", label: "Tickets" },
   { href: "/sponsors", label: "Sponsors" },
+  { href: "/fotos", label: "Foto's" },
   { href: "/contact", label: "Contact" },
 ];
 
