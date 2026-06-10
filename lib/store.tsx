@@ -186,8 +186,49 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     return null;
   }, [persist]);
 
-  // spel-plaatje zoeken via de Wikipedia API (CORS open); levert een afbeeldings-URL
+  // spel-icoon zoeken: eerst Steam's vierkante clienticon, dan Wikipedia als vangnet
   const fetchImage = useCallback(async (_gameId: string, query: string) => {
+    // Steam bewaart per app een vierkant clienticon (.ico, tot 256px) en klein icoon (.jpg, 32px)
+    // op de community-CDN: /steamcommunity/public/images/apps/{appid}/{hash}.{ico,jpg}
+    const iconUrl = (appid: string, hash: string, ext: "ico" | "jpg") =>
+      `https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/${appid}/${hash}.${ext}`;
+    const imageExists = async (url: string) => {
+      try { return (await fetch(url, { method: "HEAD" })).ok; } catch { return false; }
+    };
+
+    const searchSteam = async (q: string): Promise<string | null> => {
+      // store-URL of kaal appid geplakt? Dan hebben we de appid al
+      let appid =
+        q.match(/store\.steampowered\.com\/app\/(\d+)/)?.[1] ??
+        q.trim().match(/^(\d{3,})$/)?.[1] ?? null;
+      let smallIcon: string | null = null;
+      if (!appid) {
+        // zoeken op naam: Steam stuurt geen CORS-headers, dus via een proxy
+        const target = `https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(q)}`;
+        const res = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
+        if (!res.ok) return null;
+        const apps = (await res.json()) as { appid: string; name: string; icon?: string }[];
+        appid = apps[0]?.appid ?? null;
+        smallIcon = apps[0]?.icon ?? null; // vierkant 32px-icoontje, vast vangnet
+      }
+      if (!appid) return null;
+      // de icon-hashes staan in Steam's appinfo; api.steamcmd.net serveert die CORS-open
+      try {
+        const res = await fetch(`https://api.steamcmd.net/v1/info/${appid}`);
+        const common = (await res.json())?.data?.[appid]?.common as
+          { clienticon?: string; icon?: string } | undefined;
+        if (common?.clienticon) {
+          const url = iconUrl(appid, common.clienticon, "ico");
+          if (await imageExists(url)) return url;
+        }
+        if (common?.icon) {
+          const url = iconUrl(appid, common.icon, "jpg");
+          if (await imageExists(url)) return url;
+        }
+      } catch { /* appinfo niet beschikbaar — val terug op het zoek-icoontje */ }
+      return smallIcon;
+    };
+
     const search = async (q: string): Promise<string | null> => {
       const params = new URLSearchParams({
         action: "query", format: "json", origin: "*",
@@ -201,6 +242,8 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
       pages.sort((a, b) => (a.index ?? 99) - (b.index ?? 99));
       return pages.find((p) => p.thumbnail?.source)?.thumbnail?.source ?? null;
     };
+    const steam = await searchSteam(query).catch(() => null);
+    if (steam) return steam;
     try {
       return (await search(query)) ?? (await search(`${query} video game`));
     } catch {

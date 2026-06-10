@@ -48,7 +48,7 @@
           ]
         ]
       },
-      "image": "/images/cs2-wingman.jpg",
+      "image": "/images/cs2-wingman.png",
       "start": "2026-06-12T20:00",
       "durationMin": 180,
       "type": "double",
@@ -279,7 +279,7 @@
           ]
         ]
       },
-      "image": "/images/rocket-league.jpg",
+      "image": "/images/rocket-league.png",
       "start": "2026-06-13T14:00",
       "durationMin": 120,
       "type": "double",
@@ -656,7 +656,7 @@
           ]
         ]
       },
-      "image": "/images/lotro.jpg",
+      "image": "/images/lotro.png",
       "start": "2026-06-14T14:00",
       "durationMin": 240
     }
