@@ -4,6 +4,15 @@ export type Match = { teams: [Team, Team] };
 
 export type Bracket = { rounds: Match[][] };
 
+// double elimination voor 4 teams: winners + losers bracket, GF = WB-winnaar vs LB-winnaar
+export type DoubleBracket = {
+  w1: [Match, Match]; // winners ronde 1
+  wf: Match;          // winners finale
+  l1: Match;          // losers ronde 1 (verliezers van w1)
+  lf: Match;          // losers finale (winnaar l1 vs verliezer wf)
+  gf: Match;          // grand final
+};
+
 export type RaceParticipant = { name: string; progress: number };
 
 export type Race = {
@@ -15,13 +24,15 @@ export type Race = {
 export type Game = {
   id: string;
   name: string;
-  type?: "bracket" | "race"; // default: bracket
+  type?: "bracket" | "race" | "double"; // default: bracket
   format?: string;
   description?: string; // bijv. uitleg van het quest/level-event
   start?: string; // agenda: datum/tijd (datetime-local), via admin in te stellen
+  durationMin?: number; // geschatte duur in minuten (kalenderblok), default 120
   image?: string; // pad naar automatisch gezocht spel-plaatje (public/images/...)
   bracket: Bracket;
   race?: Race;
+  double?: DoubleBracket;
 };
 
 export type Seat = {

@@ -54,7 +54,7 @@ export default function HomePage() {
   const target = state?.eventStart || state?.games.map((g) => g.start).filter(Boolean).sort()[0];
 
   return (
-    <div className="-mx-4 -mt-5 md:-mx-7 md:-mt-6">
+    <div>
       {/* HERO */}
       <section className="relative flex min-h-[440px] flex-col items-center justify-center overflow-hidden px-4 py-14 text-center md:min-h-[500px]">
         {/* fallback-achtergrond als er (nog) geen video is */}
@@ -78,7 +78,10 @@ export default function HomePage() {
             Ronnie <span className="text-lime-400">LAN</span> Party 2026
           </h1>
           <p className="max-w-xl text-sm text-slate-300 md:text-base">
-            Eén weekend. Vijf toernooien, een seatplan, een TeamSpeak en veel te weinig slaap.
+            Eén weekend. Zes toernooien, een seatplan, een TeamSpeak en veel te weinig slaap.
+          </p>
+          <p className="text-xs font-bold uppercase tracking-widest text-teal-300">
+            📅 12 · 13 · 14 juni 2026 — inchecken kan al vanaf donderdag 11 juni
           </p>
 
           {target ? (
@@ -153,6 +156,31 @@ export default function HomePage() {
               </Link>
             );
           })}
+        </div>
+      </section>
+
+      {/* LAN PLAYLIST */}
+      <section className="px-4 pb-10 md:px-7">
+        <div className="flex flex-col gap-5 rounded-xl border border-slate-700 bg-slate-900/60 p-6 md:flex-row md:items-center">
+          <div className="md:w-1/2">
+            <h2 className="mb-2 text-lg font-extrabold uppercase tracking-wide">🎵 LAN Playlist</h2>
+            <p className="text-[13px] leading-relaxed text-slate-400">
+              Laten we samen een playlist maken! Voeg je tracks toe aan <b className="text-slate-200">RLP2026</b> —
+              dit is wat er op de LAN uit de speakers komt.
+            </p>
+          </div>
+          <div className="md:w-1/2">
+            <iframe
+              src="https://open.spotify.com/embed/playlist/4drxBWX7uZiXWBfuikt30S?theme=0"
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              className="rounded-lg"
+              title="RLP2026 Spotify playlist"
+            />
+          </div>
         </div>
       </section>
     </div>

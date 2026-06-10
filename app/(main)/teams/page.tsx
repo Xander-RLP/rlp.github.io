@@ -17,6 +17,13 @@ export default function TeamsPage() {
         const entries: { seed: number | string; name: string }[] = [];
         if (g.type === "race" && g.race) {
           g.race.participants.forEach((p, i) => entries.push({ seed: i + 1, name: p.name }));
+        } else if (g.type === "double" && g.double) {
+          const seeds = [[1, 4], [2, 3]];
+          g.double.w1.forEach((m, mi) =>
+            m.teams.forEach((t, si) => {
+              if (t.name) entries.push({ seed: seeds[mi][si], name: t.name });
+            })
+          );
         } else {
           const pairs = seedPairs(g.bracket.rounds[0].length * 2);
           g.bracket.rounds[0].forEach((m, mi) =>

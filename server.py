@@ -146,10 +146,25 @@ def valid_state(data):
                 return False
             if not isinstance(game.get("start") or "", str):
                 return False
+            if not isinstance(game.get("durationMin") or 0, (int, float)):
+                return False
             if not isinstance(game.get("image") or "", str):
                 return False
-            if game.get("type") not in (None, "bracket", "race"):
+            if game.get("type") not in (None, "bracket", "race", "double"):
                 return False
+            dbl = game.get("double")
+            if dbl is not None:
+                matches = [dbl["w1"][0], dbl["w1"][1], dbl["wf"], dbl["l1"], dbl["lf"], dbl["gf"]]
+                if len(dbl["w1"]) != 2:
+                    return False
+                for m in matches:
+                    if len(m["teams"]) != 2:
+                        return False
+                    for t in m["teams"]:
+                        if not isinstance(t.get("name", ""), str):
+                            return False
+                        if not (t.get("score") is None or isinstance(t["score"], int)):
+                            return False
             if not isinstance(game.get("description") or "", str):
                 return False
             race = game.get("race")

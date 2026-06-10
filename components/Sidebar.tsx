@@ -66,21 +66,6 @@ export default function Sidebar() {
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">🎵 LAN Playlist</h2>
-        <p className="mb-2 text-[11px] text-slate-400">Bouw mee aan de RLP2026-playlist:</p>
-        <iframe
-          src="https://open.spotify.com/embed/playlist/4drxBWX7uZiXWBfuikt30S?theme=0"
-          width="100%"
-          height="152"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          className="rounded-lg"
-          title="RLP2026 Spotify playlist"
-        />
-      </section>
-
       <footer className="mt-auto border-t border-slate-700 pt-4">
         <p className="mb-3 text-center text-[11px] text-slate-400">
           RLP26 zoekt nog sponsors —{" "}

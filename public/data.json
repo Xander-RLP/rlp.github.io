@@ -3,7 +3,7 @@
     {
       "id": "cs2-wingman",
       "name": "CS2 Wingman",
-      "format": "Counter-Strike 2 \u00b7 2v2 Wingman \u00b7 Single Elimination",
+      "format": "Counter-Strike 2 \u00b7 2v2 Wingman \u00b7 Double Elimination",
       "bracket": {
         "rounds": [
           [
@@ -48,7 +48,86 @@
           ]
         ]
       },
-      "image": "/images/cs2-wingman.jpg"
+      "image": "/images/cs2-wingman.jpg",
+      "start": "2026-06-12T20:00",
+      "durationMin": 180,
+      "type": "double",
+      "double": {
+        "w1": [
+          {
+            "teams": [
+              {
+                "name": "Ronnie Rifles",
+                "score": null
+              },
+              {
+                "name": "Rush B",
+                "score": null
+              }
+            ]
+          },
+          {
+            "teams": [
+              {
+                "name": "Smoke Bros",
+                "score": null
+              },
+              {
+                "name": "Rolator Jeans",
+                "score": null
+              }
+            ]
+          }
+        ],
+        "wf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "l1": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "lf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "gf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        }
+      }
     },
     {
       "id": "league-of-legends",
@@ -148,12 +227,14 @@
           ]
         ]
       },
-      "image": "/images/league-of-legends.png"
+      "image": "/images/league-of-legends.png",
+      "start": "2026-06-13T11:00",
+      "durationMin": 120
     },
     {
       "id": "rocket-league",
       "name": "Rocket League",
-      "format": "2v2 \u00b7 Single Elimination",
+      "format": "2v2 \u00b7 Double Elimination",
       "bracket": {
         "rounds": [
           [
@@ -198,7 +279,86 @@
           ]
         ]
       },
-      "image": "/images/rocket-league.jpg"
+      "image": "/images/rocket-league.jpg",
+      "start": "2026-06-13T14:00",
+      "durationMin": 120,
+      "type": "double",
+      "double": {
+        "w1": [
+          {
+            "teams": [
+              {
+                "name": "Boost Boys",
+                "score": null
+              },
+              {
+                "name": "Aerial Aces",
+                "score": null
+              }
+            ]
+          },
+          {
+            "teams": [
+              {
+                "name": "Demo Kings",
+                "score": null
+              },
+              {
+                "name": "Whiff Squad",
+                "score": null
+              }
+            ]
+          }
+        ],
+        "wf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "l1": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "lf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        },
+        "gf": {
+          "teams": [
+            {
+              "name": "",
+              "score": null
+            },
+            {
+              "name": "",
+              "score": null
+            }
+          ]
+        }
+      }
     },
     {
       "id": "wc3-reforged",
@@ -298,7 +458,9 @@
           ]
         ]
       },
-      "image": "/images/wc3-reforged.png"
+      "image": "/images/wc3-reforged.png",
+      "start": "2026-06-13T20:00",
+      "durationMin": 180
     },
     {
       "id": "shootmania-storm",
@@ -398,7 +560,9 @@
           ]
         ]
       },
-      "image": "/images/shootmania-storm.png"
+      "image": "/images/shootmania-storm.png",
+      "start": "2026-06-14T11:00",
+      "durationMin": 120
     },
     {
       "id": "lotro",
@@ -472,7 +636,9 @@
           ]
         ]
       },
-      "image": "/images/lotro.jpg"
+      "image": "/images/lotro.jpg",
+      "start": "2026-06-14T14:00",
+      "durationMin": 240
     }
   ],
   "seats": [
@@ -529,5 +695,6 @@
     "Jean",
     "Sjoerd",
     "Leon"
-  ]
+  ],
+  "eventStart": "2026-06-12T10:00"
 }

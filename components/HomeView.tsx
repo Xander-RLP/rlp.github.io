@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, emptyBracket, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
-import type { Bracket, Game, Race } from "@/lib/types";
+import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
+import DoubleBracketView from "./DoubleBracketView";
 import RaceView from "./RaceView";
 
 export default function HomeView() {
@@ -16,7 +17,7 @@ export default function HomeView() {
   const [newName, setNewName] = useState("");
   const [newFormat, setNewFormat] = useState("");
   const [newSize, setNewSize] = useState("8");
-  const [newType, setNewType] = useState<"bracket" | "race">("bracket");
+  const [newType, setNewType] = useState<"bracket" | "race" | "double">("bracket");
 
   // game-keuze volgt de URL-hash, zodat tabs en de terug-knop samenwerken
   useEffect(() => {
@@ -39,6 +40,10 @@ export default function HomeView() {
     updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, race } : g)));
   }
 
+  function setDouble(double: DoubleBracket) {
+    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, double } : g)));
+  }
+
   async function addGame() {
     const name = newName.trim();
     if (!name) return;
@@ -46,9 +51,10 @@ export default function HomeView() {
       id: slugify(name, state!.games.map((x) => x.id)),
       name,
       type: newType,
-      format: newFormat.trim() || (newType === "race" ? "Race · Leaderboard" : "Single Elimination"),
-      bracket: emptyBracket(newType === "race" ? 4 : parseInt(newSize, 10)),
+      format: newFormat.trim() || (newType === "race" ? "Race · Leaderboard" : newType === "double" ? "Double Elimination" : "Single Elimination"),
+      bracket: emptyBracket(newType === "bracket" ? parseInt(newSize, 10) : 4),
       ...(newType === "race" ? { race: { goalLabel: "Eerste bij het doel", target: 20, participants: [] } } : {}),
+      ...(newType === "double" ? { double: emptyDouble() } : {}),
     };
     setImageBusy(true);
     g.image = (await fetchImage(g.id, name).catch(() => null)) ?? undefined;
@@ -154,7 +160,9 @@ export default function HomeView() {
           )}
           <div>
             <h1 className="text-xl font-extrabold uppercase tracking-wide md:text-2xl">
-              {game.type === "race" ? game.name : `${game.name}: ${teamCount(game.bracket)}-Team Bracket`}
+              {game.type === "race" ? game.name
+                : game.type === "double" ? `${game.name}: Double Elimination`
+                : `${game.name}: ${teamCount(game.bracket)}-Team Bracket`}
             </h1>
             <div className="text-[11px] uppercase tracking-[1.5px] text-slate-400">
               {game.format || "Single Elimination"}
@@ -169,11 +177,13 @@ export default function HomeView() {
 
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
+      ) : game.type === "double" ? (
+        <DoubleBracketView game={game} isAdmin={isAdmin} onDoubleChange={setDouble} />
       ) : (
         <BracketView game={game} isAdmin={isAdmin} onBracketChange={setBracket} />
       )}
 
-      {isAdmin && game.type !== "race" && (
+      {isAdmin && (game.type === "bracket" || !game.type) && (
         <div className="mt-4 max-w-2xl rounded border border-dashed border-slate-700 px-3 py-2 text-[11px] text-slate-400">
           <b className="text-lime-400">Admin mode:</b> vul de namen in bij de eerste ronde en zet de scores per match.
           De winnaar (hoogste score) schuift automatisch door; een lege plek in ronde 1 is een bye.
@@ -229,10 +239,11 @@ export default function HomeView() {
             />
             <select
               value={newType}
-              onChange={(e) => setNewType(e.target.value as "bracket" | "race")}
+              onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
               <option value="bracket">Bracket (knock-out)</option>
+              <option value="double">Double elimination (4 teams, winner + loser bracket)</option>
               <option value="race">Race / leaderboard (bijv. eerste op level 20)</option>
             </select>
             {newType === "bracket" && (

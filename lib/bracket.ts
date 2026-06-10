@@ -1,4 +1,4 @@
-import type { Bracket, Game, Match } from "./types";
+import type { Bracket, DoubleBracket, Game, Match } from "./types";
 
 export const BRACKET_SIZES = [4, 8, 16, 32];
 
@@ -74,6 +74,37 @@ export function propagate(bracket: Bracket): Bracket {
   return b;
 }
 
+function emptyMatch(): Match {
+  return { teams: [{ name: "", score: null }, { name: "", score: null }] };
+}
+
+export function emptyDouble(): DoubleBracket {
+  return { w1: [emptyMatch(), emptyMatch()], wf: emptyMatch(), l1: emptyMatch(), lf: emptyMatch(), gf: emptyMatch() };
+}
+
+// winnaars stromen door; verliezers vallen het losers bracket in
+export function propagateDouble(double: DoubleBracket): DoubleBracket {
+  const d: DoubleBracket = JSON.parse(JSON.stringify(double));
+  const feed = (match: Match, slot: { name: string; score: number | null }, takeWinner: boolean) => {
+    const w = winnerIdx(match);
+    const idx = w < 0 ? -1 : takeWinner ? w : 1 - w;
+    const newName = idx < 0 ? "" : match.teams[idx].name;
+    if (slot.name !== newName) {
+      slot.name = newName;
+      slot.score = null;
+    }
+  };
+  feed(d.w1[0], d.wf.teams[0], true);
+  feed(d.w1[1], d.wf.teams[1], true);
+  feed(d.w1[0], d.l1.teams[0], false);
+  feed(d.w1[1], d.l1.teams[1], false);
+  feed(d.l1, d.lf.teams[0], true);
+  feed(d.wf, d.lf.teams[1], false);
+  feed(d.wf, d.gf.teams[0], true);
+  feed(d.lf, d.gf.teams[1], true);
+  return d;
+}
+
 export function roundTitle(r: number, totalRounds: number, teams: number): string {
   const fromEnd = totalRounds - r;
   const label = fromEnd === 2 ? "Semifinals"
@@ -107,6 +138,15 @@ export function slugify(name: string, existing: string[]): string {
 }
 
 export function gameStatus(game: Game): { text: string; champ: boolean } {
+  if (game.type === "double" && game.double) {
+    const d = propagateDouble(game.double);
+    const w = winnerIdx(d.gf);
+    if (w >= 0) return { text: `\u{1F3C6} ${d.gf.teams[w].name}`, champ: true };
+    const all = [...d.w1, d.wf, d.l1, d.lf, d.gf];
+    if (all.some((m) => m.teams.some((t) => t.score != null))) return { text: "Bezig", champ: false };
+    const filled = d.w1.flatMap((m) => m.teams).filter((t) => t.name).length;
+    return { text: filled ? "Start binnenkort" : "Aanmeldingen open", champ: false };
+  }
   if (game.type === "race" && game.race) {
     const winner = [...game.race.participants].sort((a, b) => b.progress - a.progress)
       .find((p) => p.progress >= game.race!.target);
@@ -128,7 +168,23 @@ export type PendingMatch = { game: Game; a: string; b: string; round: string; de
 
 export function allMatches(games: Game[]): PendingMatch[] {
   const out: PendingMatch[] = [];
+  const push = (game: Game, m: Match, round: string) => {
+    const [a, b] = m.teams;
+    if (!a.name || !b.name) return;
+    const w = winnerIdx(m);
+    out.push({ game, a: a.name, b: b.name, round, decided: w >= 0, scoreA: a.score, scoreB: b.score, winner: w });
+  };
   for (const game of games) {
+    if (game.type === "double" && game.double) {
+      const d = propagateDouble(game.double);
+      push(game, d.w1[0], "WB R1");
+      push(game, d.w1[1], "WB R1");
+      push(game, d.wf, "WB FIN");
+      push(game, d.l1, "LB R1");
+      push(game, d.lf, "LB FIN");
+      push(game, d.gf, "GF");
+      continue;
+    }
     const rs = propagate(game.bracket).rounds;
     const tc = teamCount(game.bracket);
     rs.forEach((matches, r) => {
