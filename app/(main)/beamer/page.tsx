@@ -22,6 +22,7 @@ const WIDGETS: Record<string, string> = {
   matches: "🆚 Upcoming matches",
   leaderboard: "🏆 Leaderboard",
   countdown: "⏳ Countdown naar het volgende",
+  lanstart: "🚀 Countdown tot de LAN start",
   klok: "🕐 Grote klok",
   eten: "🍽️ Eetmomenten van vandaag",
   kampioenen: "👑 Kampioenen",
@@ -145,6 +146,7 @@ export default function BeamerPage() {
   const [emojiVoorBlok, setEmojiVoorBlok] = useState<number | null>(null);
   const [fotoMenu, setFotoMenu] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [bewerkModus, setBewerkModus] = useState(false);
   const [hulplijn, setHulplijn] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
   const [isFull, setIsFull] = useState(false);
   const [actief, setActief] = useState(true);
@@ -209,10 +211,10 @@ export default function BeamerPage() {
 
   // automatische rotatie
   useEffect(() => {
-    if (bezig || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null) return;
+    if (bezig || bewerkModus || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null) return;
     const t = setInterval(() => setIdx((i) => (i + 1) % totaal), SLIDE_MS);
     return () => clearInterval(t);
-  }, [totaal, bezig, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
+  }, [totaal, bezig, bewerkModus, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
 
   // presenteren zoals Keynote/PowerPoint: pijltjes, spatie, PageUp/Down
   useEffect(() => {
@@ -250,7 +252,7 @@ export default function BeamerPage() {
 
   if (!state) return null;
 
-  const chrome = actief || bezig || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null;
+  const chrome = actief || bezig || bewerkModus || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null;
   const fade = `transition-opacity duration-1000 ${chrome ? "opacity-100" : "pointer-events-none opacity-0"}`;
 
   // ---- bewerken ----
@@ -279,6 +281,7 @@ export default function BeamerPage() {
   }
 
   function addBlock(block: Omit<BeamerBlock, "id" | "x" | "y"> & Partial<Pick<BeamerBlock, "x" | "y">>) {
+    setBewerkModus(true);
     const d = startEdit().map((s, si) =>
       si === idx % totaal
         ? { ...s, blocks: [...(s.blocks ?? []), { id: uid(), x: 12, y: 6, ...block }] }
@@ -295,9 +298,24 @@ export default function BeamerPage() {
   }
 
   function nieuweSlide() {
-    const d = [...startEdit(), { blocks: [{ id: uid(), type: "text" as const, content: "Nieuwe slide", x: 12, y: 5, size: 64 }] }];
+    setBewerkModus(true);
+    const d = [...startEdit()];
+    const plek = (idx % totaal) + 1;
+    d.splice(plek, 0, { blocks: [{ id: uid(), type: "text" as const, content: "Nieuwe slide", x: 12, y: 5, size: 64 }] });
     bewaar(d);
-    setIdx(d.length - 1);
+    setIdx(plek);
+  }
+
+  // huidige slide een plek naar voren of achteren schuiven
+  function verplaatsSlide(richting: -1 | 1) {
+    const van = idx % totaal;
+    const naar = van + richting;
+    if (naar < 0 || naar >= totaal) return;
+    const d = [...startEdit()];
+    const [slide] = d.splice(van, 1);
+    d.splice(naar, 0, slide);
+    bewaar(d);
+    setIdx(naar);
   }
 
   function verwijderSlide() {
@@ -419,6 +437,13 @@ export default function BeamerPage() {
       );
     }
     if (naam === "klok") return <GroteKlok />;
+    if (naam === "lanstart") {
+      const start = state!.eventStart ? new Date(state!.eventStart) : null;
+      if (!start) return <p className="text-3xl text-slate-400">Startmoment nog niet ingesteld (kan via de homepage)</p>;
+      return start.getTime() > Date.now()
+        ? <CountdownWidget doel={start} label="Ronnie LAN Party 2026" emoji="🚀" />
+        : <p className="text-6xl font-extrabold">🎉 De LAN is begonnen!</p>;
+    }
     if (naam === "countdown") {
       const nu = Date.now();
       const items = [
@@ -528,7 +553,8 @@ export default function BeamerPage() {
       className="fixed inset-0 z-[100] overflow-hidden bg-slate-950 text-slate-100"
       onClick={(e) => {
         // klik op een lege plek = volgende slide (zoals een presentatie) —
-        // ook buiten fullscreen, handig tijdens het bewerken
+        // maar nooit in bewerkmodus, anders is bouwen onmogelijk
+        if (bewerkModus) return;
         if ((e.target as HTMLElement).closest("button, input, textarea, a, [contenteditable], [data-blok]")) return;
         setIdx((i) => (i + 1) % totaal);
       }}
@@ -547,7 +573,7 @@ export default function BeamerPage() {
       {/* het slide-raster */}
       <div ref={areaRef} className="absolute inset-x-0 bottom-20 top-28">
         {/* raster + middellijnen: faden zacht in tijdens het slepen en weer uit */}
-        <div className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${dragActive ? "opacity-100" : "opacity-0"}`}>
+        <div className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${dragActive ? "opacity-100" : bewerkModus ? "opacity-30" : "opacity-0"}`}>
           <div
             className="absolute inset-0"
             style={{
@@ -576,13 +602,24 @@ export default function BeamerPage() {
             {isAdmin && (
               <span className={`absolute -top-9 left-1/2 z-10 flex -translate-x-1/2 gap-1 opacity-0 transition-opacity group-hover:opacity-100 ${chrome ? "" : "!opacity-0"}`}>
                 <button
+                  onClick={() => patchBlock(bi, { locked: !b.locked }, true)}
+                  title={b.locked ? "Ontgrendel dit blok" : "Vergrendel dit blok (beschermt tegen per-ongeluk-klikken)"}
+                  className={`flex h-7 w-7 cursor-pointer items-center justify-center rounded border text-xs ${
+                    b.locked ? "border-amber-400 bg-amber-400/15 text-amber-300" : "border-slate-600 bg-slate-900 text-slate-300 hover:border-amber-400"
+                  }`}
+                >
+                  {b.locked ? "🔒" : "🔓"}
+                </button>
+                {!b.locked && (
+                <button
                   onPointerDown={(e) => dragBlock(e, bi)}
                   title="Sleep om te verplaatsen"
                   className="flex h-7 w-8 cursor-grab items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 active:cursor-grabbing"
                 >
                   ⠿
                 </button>
-                {b.type !== "widget" && (
+                )}
+                {!b.locked && b.type !== "widget" && (
                   <>
                     <button
                       onClick={() => patchBlock(bi, { size: Math.min(b.type === "image" ? 480 : 160, (b.size ?? (b.type === "image" ? 200 : 40)) + (b.type === "image" ? 32 : 8)) }, true)}
@@ -600,7 +637,7 @@ export default function BeamerPage() {
                     </button>
                   </>
                 )}
-                {b.type === "text" && (
+                {!b.locked && b.type === "text" && (
                   <>
                     <button
                       onClick={() => patchBlock(bi, { align: b.align === "left" ? "right" : b.align === "right" ? "center" : "left" }, true)}
@@ -633,6 +670,7 @@ export default function BeamerPage() {
                     </button>
                   </>
                 )}
+                {!b.locked && (
                 <button
                   onClick={() => removeBlock(bi)}
                   title="Blok verwijderen"
@@ -640,6 +678,7 @@ export default function BeamerPage() {
                 >
                   ×
                 </button>
+                )}
               </span>
             )}
 
@@ -650,7 +689,7 @@ export default function BeamerPage() {
                 textAlign: (b.align ?? "center") as React.CSSProperties["textAlign"],
               };
               const fontClass = b.font === "serif" ? "font-serif" : b.font === "mono" ? "font-mono" : "font-sans";
-              return isAdmin ? (
+              return isAdmin && !b.locked ? (
                 <div
                   contentEditable
                   suppressContentEditableWarning
@@ -679,8 +718,8 @@ export default function BeamerPage() {
             )}
             {b.type === "widget" && (
               <div
-                onPointerDown={(e) => dragBlock(e, bi)}
-                className={`w-max ${isAdmin ? "cursor-grab active:cursor-grabbing" : ""}`}
+                onPointerDown={b.locked ? undefined : (e) => dragBlock(e, bi)}
+                className={`w-max ${isAdmin && !b.locked ? "cursor-grab active:cursor-grabbing" : ""}`}
               >
                 {widgetBody(b.content)}
               </div>
@@ -709,24 +748,33 @@ export default function BeamerPage() {
         )}
       </div>
 
-      {/* beheerbalk: bolletjes + slide- en blok-acties */}
-      <div className={`absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5 ${fade}`}>
-        {Array.from({ length: totaal }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setIdx(i)}
-            className={`h-2.5 w-2.5 cursor-pointer rounded-full transition-colors ${i === idx % totaal ? "bg-lime-400" : "bg-slate-700 hover:bg-slate-500"}`}
-            aria-label={`Slide ${i + 1}`}
-          />
-        ))}
+      {/* beheerbalk: knoppen boven, slide-navigatie eronder */}
+      <div className={`absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 ${fade}`}>
         {isAdmin && (
-          <>
-            <span className="mx-1 h-4 w-px bg-slate-700" />
+          <button
+            onClick={() => setBewerkModus((v) => !v)}
+            title={bewerkModus ? "Bewerkmodus uit: klikken bladert weer en de rotatie loopt door" : "Bewerkmodus aan: klikken bladert niet en de rotatie pauzeert"}
+            className={`cursor-pointer rounded-full border px-3 py-0.5 text-xs font-bold uppercase tracking-wide ${
+              bewerkModus ? "border-lime-400 bg-lime-400/15 text-lime-300" : "border-slate-700 text-slate-500 hover:border-lime-400 hover:text-lime-400"
+            }`}
+          >
+            {bewerkModus ? "✏️ bewerkmodus aan" : "✏️ bewerken"}
+          </button>
+        )}
+        {isAdmin && (
+          <div className="flex items-center gap-2.5">
+
             <button onClick={nieuweSlide} title="Nieuwe slide" className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400">
               + slide
             </button>
             <button onClick={verwijderSlide} title="Deze slide verwijderen" className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-red-500 hover:text-red-500">
               × slide
+            </button>
+            <button onClick={() => verplaatsSlide(-1)} title="Slide naar voren verplaatsen" className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400">
+              ◀
+            </button>
+            <button onClick={() => verplaatsSlide(1)} title="Slide naar achteren verplaatsen" className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400">
+              ▶
             </button>
             <span className="mx-1 h-4 w-px bg-slate-700" />
             <button onClick={() => addBlock({ type: "text", content: "Tekst…", size: 40 })} className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400">
@@ -789,12 +837,45 @@ export default function BeamerPage() {
                 </span>
               )}
             </span>
-          </>
+                    </div>
         )}
+        <div className="flex items-center gap-2.5">
+        {totaal <= 20 ? (
+          Array.from({ length: totaal }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setIdx(i)}
+              className={`h-2.5 w-2.5 cursor-pointer rounded-full transition-colors ${i === idx % totaal ? "bg-lime-400" : "bg-slate-700 hover:bg-slate-500"}`}
+              aria-label={`Slide ${i + 1}`}
+            />
+          ))
+        ) : (
+          /* grote decks: compacte pager in plaats van 100+ bolletjes */
+          <span className="flex items-center gap-2">
+            <button
+              onClick={() => setIdx((i) => (i - 1 + totaal) % totaal)}
+              aria-label="Vorige slide"
+              className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-400 hover:border-lime-400 hover:text-lime-400"
+            >
+              ‹
+            </button>
+            <span className="min-w-16 text-center font-mono text-xs tabular-nums text-slate-400">
+              {(idx % totaal) + 1} / {totaal}
+            </span>
+            <button
+              onClick={() => setIdx((i) => (i + 1) % totaal)}
+              aria-label="Volgende slide"
+              className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-400 hover:border-lime-400 hover:text-lime-400"
+            >
+              ›
+            </button>
+          </span>
+        )}
+        </div>
       </div>
 
       {isAdmin && (
-        <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-20"} ${fade}`}>
+        <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-24"} ${fade}`}>
           ✏️ klik op tekst om te typen · sleep via ⠿ of de foto/widget zelf (Shift = vrij slepen) · opslaan gaat vanzelf
         </p>
       )}

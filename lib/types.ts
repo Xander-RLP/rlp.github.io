@@ -120,6 +120,7 @@ export type BeamerBlock = {
   size?: number; // tekst: fontgrootte px; afbeelding: hoogte px
   align?: "left" | "center" | "right"; // tekstuitlijning (default center)
   weight?: number;                      // fontgewicht: 400/600/700/800 (default 700)
+  locked?: boolean;                     // vergrendeld: beschermd tegen per-ongeluk bewerken
   font?: "sans" | "serif" | "mono";    // lettertype (default sans)
 };
 
