@@ -314,10 +314,11 @@ export default function BeamerPage() {
           s.text && <p className="mt-8 whitespace-pre-line text-4xl leading-relaxed text-slate-200">{s.text}</p>
         )}
 
-        {/* foto's uit de presentatie (of eigen); de admin bepaalt de grootte */}
-        {(s.images?.length || isAdmin) && (
-          <div className="mt-10 flex items-center justify-center gap-6">
-            {(s.images ?? []).map((src, fi) => (
+        {/* foto's: exact gecentreerd zoals bezoekers ze zien; de admin-hulpjes
+            zweven er absoluut naast en duwen dus nooit content opzij */}
+        {!!s.images?.length && (
+          <div className="relative mt-10 flex items-center justify-center gap-6">
+            {s.images.map((src, fi) => (
               <span key={fi} className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -338,17 +339,14 @@ export default function BeamerPage() {
               </span>
             ))}
             {isAdmin && (
-              <button
-                onClick={() => fotoToevoegen(i)}
-                title="Foto toevoegen"
-                style={{ height: s.imageSize ?? 208 }}
-                className={`flex w-36 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 text-3xl text-slate-600 hover:border-lime-400/60 hover:text-lime-400 ${fade}`}
-              >
-                📷+
-              </button>
-            )}
-            {isAdmin && !!s.images?.length && (
-              <span className={`flex flex-col gap-1.5 ${fade}`}>
+              <span className={`absolute left-full top-1/2 ml-5 flex -translate-y-1/2 flex-col gap-1.5 ${fade}`}>
+                <button
+                  onClick={() => fotoToevoegen(i)}
+                  title="Foto toevoegen"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-dashed border-slate-700 text-sm text-slate-500 hover:border-lime-400 hover:text-lime-400"
+                >
+                  📷
+                </button>
                 <button
                   onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, imageSize: Math.min(480, (x.imageSize ?? 208) + 32) } : x))); }}
                   title="Foto's groter"
@@ -366,6 +364,15 @@ export default function BeamerPage() {
               </span>
             )}
           </div>
+        )}
+        {/* nog geen foto's: bescheiden knopje dat de layout niet beïnvloedt */}
+        {isAdmin && !s.images?.length && (
+          <button
+            onClick={() => fotoToevoegen(i)}
+            className={`mt-8 cursor-pointer rounded border border-dashed border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400 ${fade}`}
+          >
+            📷 foto toevoegen
+          </button>
         )}
 
         {isAdmin && (
