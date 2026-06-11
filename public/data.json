@@ -924,6 +924,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -936,6 +944,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 1
+                },
+                null
               ]
             },
             {
@@ -948,6 +964,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 1,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -960,6 +984,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 1,
+                  "s": 1
+                },
+                null
               ]
             },
             {
@@ -972,6 +1004,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 2,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -984,30 +1024,10 @@
                   "name": "",
                   "score": null
                 }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
+              ],
+              "outs": [
+                null,
+                null
               ]
             }
           ],
@@ -1022,6 +1042,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -1034,6 +1062,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 1
+                },
+                null
               ]
             },
             {
@@ -1046,6 +1082,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 1,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -1058,6 +1102,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 1,
+                  "s": 1
+                },
+                null
               ]
             }
           ],
@@ -1072,6 +1124,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 3,
+                  "m": 0,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -1084,6 +1144,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 3,
+                  "m": 0,
+                  "s": 1
+                },
+                null
               ]
             }
           ],
@@ -1098,6 +1166,10 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                null,
+                null
               ]
             }
           ]
