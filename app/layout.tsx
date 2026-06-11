@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { TournamentProvider } from "@/lib/store";
+import CoffeeTab from "@/components/CoffeeTab";
 import Header from "@/components/Header";
 import TeamSpeakWidget from "@/components/TeamSpeakWidget";
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TournamentProvider>
           <Header />
           {children}
+          <CoffeeTab />
           <TeamSpeakWidget />
         </TournamentProvider>
       </body>

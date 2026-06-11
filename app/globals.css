@@ -13,3 +13,20 @@ body {
   background: var(--color-slate-950);
   color: var(--color-slate-100);
 }
+
+/* Buy me a Coffee!-tab: half ingeklapt tegen de linker schermrand (alleen het
+   kopje steekt uit), piept periodiek even naar buiten en schuift bij hover
+   en focus helemaal uit */
+.coffee-tab {
+  animation: coffee-peek 8s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+.coffee-tab:hover,
+.coffee-tab:focus-visible {
+  animation: none;
+  transform: translateX(0);
+}
+@keyframes coffee-peek {
+  0%, 72%, 100% { transform: translateX(calc(-100% + 2.5rem)); }
+  80%, 90% { transform: translateX(-0.25rem); }
+}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { COFFEE_URL } from "@/lib/links";
 import { useTournament } from "@/lib/store";
 
 const TS_HOST = "ts.impulzgaming.com";
@@ -71,16 +70,6 @@ export default function TeamSpeakWidget() {
           </p>
         </div>
       )}
-      {/* steun de developer: klein, maar wel overal aanwezig */}
-      <a
-        href={COFFEE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Buy me a Coffee! — doneer aan de developer van deze site"
-        className="flex cursor-pointer items-center gap-2 rounded-full border border-amber-400/60 bg-slate-900/95 px-3 py-2 text-xs font-extrabold text-amber-300 shadow-lg shadow-black/40 backdrop-blur hover:bg-amber-400/10"
-      >
-        ☕ <span className="hidden sm:inline">Buy me a Coffee!</span>
-      </a>
       {/* groepschat op de pc: WhatsApp opent in de browser of de app */}
       {state?.whatsapp && (
         <a
