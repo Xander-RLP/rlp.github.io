@@ -1,5 +1,1623 @@
 {
-  "games": [],
+  "games": [
+    {
+      "id": "cs2-wingman",
+      "name": "CS2 Wingman",
+      "format": "Counter-Strike 2 · 2v2 Wingman · Double Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/cs2-wingman.png",
+      "start": "2026-06-12T10:15",
+      "durationMin": 255,
+      "type": "bracket",
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
+      },
+      "entryType": "team"
+    },
+    {
+      "id": "league-of-legends",
+      "name": "League of Legends",
+      "format": "1v1 · ARAM · 7 spelers",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/league-of-legends.png",
+      "start": "2026-06-12T16:30",
+      "durationMin": 300,
+      "store": {
+        "name": "Riot Games",
+        "url": "https://www.leagueoflegends.com/en-us/download/"
+      },
+      "entryType": "user"
+    },
+    {
+      "id": "rocket-league",
+      "name": "Rocket League",
+      "format": "2v2 · Double Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/rocket-league.png",
+      "start": "2026-06-12T21:30",
+      "durationMin": 270,
+      "type": "bracket",
+      "store": {
+        "name": "Epic Games",
+        "url": "https://store.epicgames.com/nl/p/rocket-league"
+      },
+      "entryType": "team"
+    },
+    {
+      "id": "wc3-reforged",
+      "name": "WC3 Reforged",
+      "format": "1v1 · Solo · Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null,
+                null
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/wc3-reforged.png",
+      "start": "2026-06-13T16:00",
+      "durationMin": 420,
+      "store": {
+        "name": "Battle.net",
+        "url": "https://warcraft3.blizzard.com/",
+        "price": "€ 29,99"
+      },
+      "entryType": "user"
+    },
+    {
+      "id": "shootmania-storm",
+      "name": "Shootmania Storm",
+      "format": "1v1 · Velden van 3 · winnaar door naar de finale",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/shootmania-storm.png",
+      "start": "2026-06-14T12:00",
+      "durationMin": 90,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
+        "price": "€ 19,99"
+      },
+      "entryType": "user",
+      "type": "bracket"
+    },
+    {
+      "id": "lotro",
+      "name": "LOTRO",
+      "type": "race",
+      "format": "MMO · Race naar level 20",
+      "description": "Samen met je squad questen in Midden-aarde — wie als eerste level 20 haalt wint. Onderweg helpen mag (en moet).",
+      "race": {
+        "goalLabel": "Eerste op level 20",
+        "target": 20,
+        "participants": [
+          {
+            "name": "Laszlo",
+            "progress": 0
+          },
+          {
+            "name": "Ronnie",
+            "progress": 0
+          },
+          {
+            "name": "Ennio",
+            "progress": 0
+          },
+          {
+            "name": "Xander",
+            "progress": 0
+          },
+          {
+            "name": "Leon",
+            "progress": 0
+          },
+          {
+            "name": "Bo",
+            "progress": 0
+          },
+          {
+            "name": "Indy",
+            "progress": 0
+          },
+          {
+            "name": "Jean",
+            "progress": 0
+          },
+          {
+            "name": "Sjoerd",
+            "progress": 0
+          }
+        ]
+      },
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "/images/lotro.png",
+      "start": "2026-06-13T10:15",
+      "durationMin": 345,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/212500/"
+      }
+    },
+    {
+      "id": "command-conqure-generals-zero-hour",
+      "name": "Command & Conquer Generals zero hour",
+      "type": "bracket",
+      "format": "1v1",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 1
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 2
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 3
+                },
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 1
+                },
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null
+              ]
+            }
+          ]
+        ]
+      },
+      "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2732960/b1e3243662a5911fadc0924feb4b7e6e9e278403.jpg",
+      "start": "2026-06-11T23:45",
+      "durationMin": 225,
+      "entryType": "user",
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/2732960"
+      }
+    },
+    {
+      "id": "magic-the-gathering",
+      "name": "Magic: The Gathering",
+      "type": "race",
+      "format": "Commander · vrij aantal spelers",
+      "image": "/images/magic-the-gathering.png",
+      "race": {
+        "goalLabel": "Gewonnen Commander-potjes",
+        "target": 2,
+        "participants": [
+          {
+            "name": "Bo",
+            "progress": 0
+          },
+          {
+            "name": "Jean",
+            "progress": 0
+          },
+          {
+            "name": "Indy",
+            "progress": 0
+          },
+          {
+            "name": "Ennio",
+            "progress": 0
+          },
+          {
+            "name": "Laszlo",
+            "progress": 0
+          }
+        ]
+      },
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "start": "2026-06-11T20:00",
+      "durationMin": 225,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/2141910"
+      }
+    },
+    {
+      "id": "the-lord-of-the-rings-the-battle-for-mi",
+      "name": "The Lord of the Rings: The Battle for Middle-earth",
+      "type": "bracket",
+      "format": "Single Elimination",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 1
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 2
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 3
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 4
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 5
+                },
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 6
+                },
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 1
+                },
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 3
+                },
+                null,
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 4
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 3,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                {
+                  "r": 3,
+                  "m": 0,
+                  "s": 1
+                },
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null
+              ]
+            }
+          ]
+        ]
+      },
+      "start": "2026-06-14T10:05",
+      "durationMin": 115,
+      "entryType": "user",
+      "dugout": [
+        "Ronnie",
+        "Ennio",
+        "Sjoerd",
+        "Jean",
+        "Xander",
+        "Leon",
+        "Indy",
+        "Bo",
+        "Ronnie Rifles",
+        "Rush B",
+        "Smoke Bros",
+        "Rolator Jeans"
+      ],
+      "store": {
+        "name": "moddb.com",
+        "url": "https://www.moddb.com/downloads/patch-222"
+      },
+      "image": "https://media.moddb.com/images/downloads/1/224/223640/LOGO_launcher.png"
+    },
+    {
+      "id": "treasure-hunt",
+      "name": "Treasure Hunt",
+      "type": "race",
+      "format": "⚓ Pirate Event · heel het weekend",
+      "description": "Ahoy, brave adventurers of RLP 2026! This year, fate once again calls fer those bold enough to seek the unknown. The Treasure Hunt be back — not fer the faint-hearted, but fer those with sharp eyes and a thirst fer adventure upon the high seas. And mark me words… the hunt has already begun. Only the keenest traveler shall spot the first signs and set foot upon the path to hidden riches and forgotten treasures.",
+      "start": "2026-06-11T15:30",
+      "durationMin": 270,
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "race": {
+        "goalLabel": "Wie vindt de verborgen schat het eerst?",
+        "target": 1,
+        "participants": [
+          {
+            "name": "Laszlo",
+            "progress": 0
+          },
+          {
+            "name": "Ronnie",
+            "progress": 0
+          },
+          {
+            "name": "Ennio",
+            "progress": 0
+          },
+          {
+            "name": "Sjoerd",
+            "progress": 0
+          },
+          {
+            "name": "Jean",
+            "progress": 0
+          },
+          {
+            "name": "Indy",
+            "progress": 0
+          },
+          {
+            "name": "Bo",
+            "progress": 0
+          }
+        ]
+      },
+      "emoji": "🏴‍☠️"
+    },
+    {
+      "id": "fall-guys-ultimate-knockout",
+      "name": "Fall Guys: Ultimate Knockout",
+      "type": "elim",
+      "entryType": "user",
+      "format": "Afvalrace · rondes met afvallers",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "elim": {
+        "rounds": [
+          []
+        ]
+      },
+      "start": "2026-06-13T23:05",
+      "durationMin": 175,
+      "image": "https://cdn2.unrealengine.com/fall-guys-season-pass-2000x1125-b51956a046b0.png",
+      "store": {
+        "name": "Epic Games",
+        "url": "https://store.epicgames.com/p/fall-guys"
+      }
+    }
+  ],
+  "seats": [
+    {
+      "id": "T1",
+      "side": "top",
+      "name": "Laszlo"
+    },
+    {
+      "id": "T2",
+      "side": "top",
+      "name": "Ronnie"
+    },
+    {
+      "id": "L1",
+      "side": "left",
+      "name": "Ennio"
+    },
+    {
+      "id": "L2",
+      "side": "left",
+      "name": "Sjoerd"
+    },
+    {
+      "id": "L3",
+      "side": "left",
+      "name": "Jean"
+    },
+    {
+      "id": "R1",
+      "side": "right",
+      "name": "Xander"
+    },
+    {
+      "id": "R2",
+      "side": "right",
+      "name": "Leon"
+    },
+    {
+      "id": "R3",
+      "side": "right",
+      "name": "Indy"
+    },
+    {
+      "id": "O1",
+      "side": "bottom",
+      "name": "Bo"
+    }
+  ],
+  "eventStart": "2026-06-12T15:00",
+  "eetmomenten": [
+    {
+      "id": "ontbijt-vr",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-12T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "ontbijt-za",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-13T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "ontbijt-zo",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-14T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "bestellen-vr",
+      "title": "Samen eten bestellen",
+      "emoji": "📦",
+      "start": "2026-06-12T18:00",
+      "durationMin": 60
+    },
+    {
+      "id": "bbq-za",
+      "title": "BBQ (€ 15 — Tikkie)",
+      "emoji": "🔥",
+      "start": "2026-06-13T17:30",
+      "durationMin": 120,
+      "tikkie": "https://tikkie.me/pay/bfags7ccgh4sqhdhepsh"
+    },
+    {
+      "id": "opruimen-zo",
+      "title": "Gezamenlijk opruimen",
+      "emoji": "🧹",
+      "start": "2026-06-14T13:30",
+      "durationMin": 60
+    }
+  ],
+  "sponsors": [
+    {
+      "id": "ronnie-kaijser",
+      "name": "Ronnie Kaijser",
+      "tagline": "Sponserd de locatie"
+    },
+    {
+      "id": "xander-de-groot",
+      "name": "Xander de Groot",
+      "tagline": "Sponserd de Website"
+    },
+    {
+      "id": "xander-de-groot-2",
+      "name": "Xander de Groot",
+      "tagline": "Sponsord de Teamspeak"
+    },
+    {
+      "id": "sjovo-installaties",
+      "name": "Sjovo Installaties",
+      "url": "https://sjovo.nl/",
+      "logo": "https://sjovo.nl/wp-content/uploads/2026/01/sjovo-glas-e1769620717465.jpg",
+      "tagline": "\"Buy me a Coffee!\" Donation"
+    }
+  ],
+  "rotatie": {
+    "teamSize": 4,
+    "spelers": [
+      "Laszlo",
+      "Ronnie",
+      "Ennio",
+      "Sjoerd",
+      "Jean",
+      "Xander",
+      "Leon",
+      "Indy",
+      "Bo"
+    ],
+    "rondes": [
+      [
+        [
+          "Laszlo",
+          "Ronnie",
+          "Ennio",
+          "Sjoerd"
+        ],
+        [
+          "Jean",
+          "Xander",
+          "Leon",
+          "Indy"
+        ],
+        [
+          "Bo"
+        ]
+      ],
+      [
+        [
+          "Jean",
+          "Bo",
+          "Laszlo",
+          "Xander"
+        ],
+        [
+          "Leon",
+          "Ronnie",
+          "Indy",
+          "Ennio"
+        ],
+        [
+          "Sjoerd"
+        ]
+      ],
+      [
+        [
+          "Bo",
+          "Ronnie",
+          "Sjoerd",
+          "Jean"
+        ],
+        [
+          "Laszlo",
+          "Leon",
+          "Ennio",
+          "Xander"
+        ],
+        [
+          "Indy"
+        ]
+      ],
+      [
+        [
+          "Jean",
+          "Ennio",
+          "Indy",
+          "Bo"
+        ],
+        [
+          "Xander",
+          "Ronnie",
+          "Sjoerd",
+          "Leon"
+        ],
+        [
+          "Laszlo"
+        ]
+      ]
+    ]
+  },
+  "users": [
+    "Laszlo",
+    "Ronnie",
+    "Ennio",
+    "Sjoerd",
+    "Jean",
+    "Xander",
+    "Leon",
+    "Indy",
+    "Bo"
+  ],
+  "teams": [
+    {
+      "name": "Ronnie Rifles",
+      "members": [
+        "Ronnie",
+        "Laszlo"
+      ]
+    },
+    {
+      "name": "Rush B",
+      "members": [
+        "Xander",
+        "Leon"
+      ]
+    },
+    {
+      "name": "Smoke Bros",
+      "members": [
+        "Indy",
+        "Ennio"
+      ]
+    },
+    {
+      "name": "Rolator Jeans",
+      "members": [
+        "Jean",
+        "Bo"
+      ]
+    }
+  ],
   "beamer": [
     {
       "blocks": [
