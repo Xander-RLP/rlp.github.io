@@ -990,66 +990,6 @@
                 },
                 null
               ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 2,
-                  "m": 0,
-                  "s": 1
-                },
-                null
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 2,
-                  "m": 1,
-                  "s": 0
-                },
-                null
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 2,
-                  "m": 1,
-                  "s": 1
-                },
-                null
-              ]
             }
           ],
           [
