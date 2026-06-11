@@ -735,11 +735,7 @@
                 }
               ],
               "outs": [
-                {
-                  "r": 1,
-                  "m": 0,
-                  "s": 0
-                },
+                null,
                 null
               ],
               "label": "🏆 WB Ronde 1"
@@ -759,7 +755,7 @@
                 null,
                 {
                   "r": 1,
-                  "m": 1,
+                  "m": 0,
                   "s": 1
                 }
               ],
@@ -767,27 +763,6 @@
             }
           ],
           [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 3,
-                  "m": 0,
-                  "s": 0
-                },
-                null
-              ],
-              "label": "🏆 WB Finale"
-            },
             {
               "teams": [
                 {
