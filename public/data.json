@@ -278,7 +278,7 @@
                   "score": null
                 },
                 {
-                  "name": "Bo",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -360,7 +360,8 @@
       "dugout": [
         "Ennio",
         "Xander",
-        "Leon"
+        "Leon",
+        "Bo"
       ]
     },
     {
