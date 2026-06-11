@@ -12,10 +12,10 @@ export default function CoffeeTab() {
       target="_blank"
       rel="noopener noreferrer"
       title="Buy me a Coffee! — steun de developer van deze site"
-      className="coffee-tab fixed left-0 top-[76px] z-40 flex items-center gap-2 rounded-r-full border border-l-0 border-amber-400/60 bg-slate-900/95 py-2 pl-3.5 pr-3 text-xs font-extrabold text-amber-300 shadow-lg shadow-black/40 backdrop-blur"
+      className="coffee-tab fixed left-0 top-[118px] z-40 flex items-center gap-2.5 rounded-r-full border-2 border-l-0 border-amber-400 bg-gradient-to-r from-slate-900 to-amber-950/80 py-3 pl-4 pr-3.5 text-sm font-extrabold text-amber-300 backdrop-blur"
     >
       <span className="whitespace-nowrap">Buy me a Coffee!</span>
-      <span className="text-base leading-none">☕</span>
+      <span className="text-2xl leading-none drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]">☕</span>
     </a>
   );
 }
