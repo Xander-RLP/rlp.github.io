@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, addParticipant, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
@@ -19,6 +19,7 @@ export default function HomeView() {
   const [newFormat, setNewFormat] = useState("");
   const [newSize, setNewSize] = useState("8");
   const [newType, setNewType] = useState<"bracket" | "race" | "double">("bracket");
+  const [newPlayer, setNewPlayer] = useState("");
 
   // game-keuze volgt de URL-hash, zodat tabs en de terug-knop samenwerken
   useEffect(() => {
@@ -76,6 +77,45 @@ export default function HomeView() {
     } else {
       alert(`Geen afbeelding gevonden voor "${game.name}".`);
     }
+  }
+
+  // nieuwe speler/team op de actieve tab — werkt op elk speltype
+  function addPlayer() {
+    const name = newPlayer.trim();
+    if (!name) return;
+    if (game.type === "race") {
+      const race = game.race ?? { goalLabel: "Doel", target: 20, participants: [] };
+      if (race.participants.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
+        alert(`"${name}" doet al mee.`);
+        return;
+      }
+      setRace({ ...race, participants: [...race.participants, { name, progress: 0 }] });
+    } else if (game.type === "double") {
+      const d: DoubleBracket = JSON.parse(JSON.stringify(game.double ?? emptyDouble()));
+      if ([...d.w1[0].teams, ...d.w1[1].teams].some((t) => t.name.toLowerCase() === name.toLowerCase())) {
+        alert(`"${name}" staat al in het bracket.`);
+        return;
+      }
+      // vullen in seed-volgorde: 1 (w1a-boven), 2 (w1b-boven), 3 (w1b-onder), 4 (w1a-onder)
+      const slot = [d.w1[0].teams[0], d.w1[1].teams[0], d.w1[1].teams[1], d.w1[0].teams[1]].find((t) => !t.name);
+      if (!slot) {
+        alert("Double elimination zit vol (max 4 teams).");
+        return;
+      }
+      slot.name = name;
+      setDouble(d);
+    } else {
+      const result = addParticipant(game.bracket, name);
+      if ("error" in result) {
+        alert(result.error);
+        return;
+      }
+      if (result.grownTo && !confirm(`Ronde 1 zit vol — het bracket groeit naar ${result.grownTo} deelnemers. De huidige indeling en scores blijven staan. Doorgaan?`)) {
+        return;
+      }
+      setBracket(result.bracket);
+    }
+    setNewPlayer("");
   }
 
   function removeGame(g: Game) {
@@ -178,6 +218,29 @@ export default function HomeView() {
       </div>
 
       <GameStoreBanner game={game} />
+
+      {isAdmin && (
+        <form
+          onSubmit={(e) => { e.preventDefault(); addPlayer(); }}
+          className="mb-4 flex max-w-md items-center gap-2 rounded-md border border-dashed border-lime-400/40 bg-lime-400/5 px-3 py-2.5"
+        >
+          <span className="text-sm">➕</span>
+          <input
+            value={newPlayer}
+            onChange={(e) => setNewPlayer(e.target.value)}
+            placeholder="Nieuwe speler of team aanmelden…"
+            maxLength={24}
+            className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-2.5 py-1.5 text-xs font-semibold focus:border-lime-400 focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!newPlayer.trim()}
+            className="shrink-0 cursor-pointer rounded bg-lime-400 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-lime-950 hover:bg-lime-300 disabled:opacity-50"
+          >
+            Toevoegen
+          </button>
+        </form>
+      )}
 
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
