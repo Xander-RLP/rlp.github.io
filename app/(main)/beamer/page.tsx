@@ -639,7 +639,7 @@ export default function BeamerPage() {
       <Klok />
 
       {/* het slide-raster */}
-      <div ref={areaRef} className={`absolute bottom-20 right-0 top-28 transition-[left] duration-300 ${isAdmin && bewerkModus ? "left-56" : "left-0"}`}>
+      <div ref={areaRef} className="absolute inset-x-0 bottom-20 top-28">
         {/* raster + middellijnen: faden zacht in tijdens het slepen en weer uit */}
         <div className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${dragActive ? "opacity-100" : bewerkModus ? "opacity-30" : "opacity-0"}`}>
           <div
@@ -986,7 +986,7 @@ export default function BeamerPage() {
 
       {/* filmstrip: slide-viewport links tijdens het bewerken */}
       {isAdmin && bewerkModus && (
-        <aside className="absolute bottom-20 left-0 top-28 z-20 w-56 overflow-y-auto border-r border-slate-800 bg-slate-950/80 p-3 backdrop-blur [scrollbar-width:thin]">
+        <aside className="absolute bottom-20 left-0 top-28 z-20 w-56 overflow-y-auto border-r border-slate-800/80 bg-slate-950/55 p-3 opacity-90 backdrop-blur-sm transition-opacity hover:opacity-100 [scrollbar-width:thin]">
           <div className="flex flex-col gap-2">
             {slides.map((sl, si) => (
               <button
