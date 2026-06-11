@@ -30,10 +30,16 @@ export default function SidebarShell({ children }: { children: React.ReactNode }
     if (localStorage.getItem(KEY) === "0") setOpen(true);
   }, []);
 
-  // laat de rest van de UI (TeamSpeak-bubble) weten of het paneel uitstaat
+  // laat de rest van de UI (TeamSpeak-bubble) weten of het paneel uitstaat;
+  // bij unmount (pagina zonder paneel, bijv. home) melden we ons af
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("rlp-sidebar", { detail: { open } }));
   }, [open]);
+  useEffect(() => {
+    return () => {
+      window.dispatchEvent(new CustomEvent("rlp-sidebar", { detail: { open: false } }));
+    };
+  }, []);
 
   // het paneel valt precies onder de navbar, ook als die over twee regels
   // loopt of (deels) uit beeld is gescrold
