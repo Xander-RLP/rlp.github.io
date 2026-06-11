@@ -854,7 +854,7 @@
       "image": "/images/magic-the-gathering.png",
       "race": {
         "goalLabel": "Gewonnen Commander-potjes",
-        "target": 2,
+        "target": 3,
         "participants": [
           {
             "name": "Bo",
