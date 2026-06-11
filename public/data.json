@@ -1762,25 +1762,25 @@
           "id": "bar-i0",
           "type": "image",
           "content": "/images/beamer/broodje.jpg",
-          "x": 7,
+          "x": 6.5,
           "y": 9,
-          "size": 200
+          "size": 424
         },
         {
           "id": "bar-i1",
           "type": "image",
           "content": "/images/beamer/koffie.webp",
-          "x": 12,
+          "x": 17.5,
           "y": 9,
-          "size": 200
+          "size": 424
         },
         {
           "id": "bar-i2",
           "type": "image",
           "content": "/images/beamer/thee.jpg",
-          "x": 17,
+          "x": 12,
           "y": 9,
-          "size": 200
+          "size": 424
         }
       ]
     },
@@ -1815,24 +1815,12 @@
     {
       "blocks": [
         {
-          "id": "bmq9l24am2btr",
+          "id": "bmq9l23skeepr",
           "type": "text",
-          "content": "Nieuwe slide",
+          "content": "Nieuw\ne slide",
           "x": 12,
           "y": 5,
-          "size": 64
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
-          "id": "bmq9l2ahb9sx4",
-          "type": "text",
-          "content": "Nieuwe slide",
-          "x": 12,
-          "y": 5,
-          "size": 64
+          "size": 104
         }
       ]
     }
