@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useTournament } from "@/lib/store";
+import { allUsers } from "@/lib/users";
 import type { Seat } from "@/lib/types";
 
 type DragPayload = { name: string; fromSeat?: string };
@@ -16,7 +18,10 @@ export default function SeatplanPage() {
 
   const seats = state.seats ?? [];
   const bySide = (side: Seat["side"]) => seats.filter((s) => s.side === side);
-  const unseated = state.unseated ?? [];
+  // de pool is afgeleid: alle centrale users die (nog) geen stoel hebben
+  const unseated = allUsers(state).filter(
+    (n) => !seats.some((s) => s.name && s.name.toLowerCase() === n.toLowerCase())
+  );
   const canEdit = isAdmin;
 
   async function place(seatId: string, name: string) {
@@ -177,6 +182,10 @@ export default function SeatplanPage() {
 
       <p className="mt-4 w-0 min-w-full text-xs text-slate-500">
         De organisatie deelt de stoelen in — wijzigingen staan binnen een minuut voor iedereen op de site.
+        {isAdmin && (
+          <> Spelers toevoegen of verwijderen doe je centraal op de{" "}
+          <Link href="/users" className="font-bold text-lime-400 hover:text-lime-300">Users-pagina</Link>.</>
+        )}
       </p>
     </div>
   );

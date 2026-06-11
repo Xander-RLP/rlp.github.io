@@ -100,10 +100,11 @@ export type Rotatie = {
 export type TournamentState = {
   games: Game[];
   seats?: Seat[];
-  unseated?: string[]; // aangemeld maar nog geen stoel
+  users?: string[];    // centrale gebruikerslijst (beheer op /users)
+  unseated?: string[]; // legacy: opgegaan in users — alleen nog gelezen voor migratie
   eventStart?: string; // startmoment van de LAN zelf (countdown op home)
   sponsors?: Sponsor[];
   eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
-  teams?: TeamDef[];   // teamregister voor het leaderboard
-  rotatie?: Rotatie;   // gegenereerd rouleerschema
+  teams?: TeamDef[];   // teams met leden (beheer op /teams); leden zijn users
+  rotatie?: Rotatie;   // gegenereerd rouleerschema (beheer op /teams)
 };

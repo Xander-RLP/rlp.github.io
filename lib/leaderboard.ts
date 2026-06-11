@@ -1,5 +1,6 @@
 import { propagate, propagateDouble, winnerIdx } from "./bracket";
 import type { Game, TeamDef, TournamentState } from "./types";
+import { allUsers } from "./users";
 
 // de (huidige) winnaar van een compo, of null zolang die niet beslist is
 export function gameWinner(game: Game): string | null {
@@ -31,27 +32,38 @@ export function splitMembers(name: string, registry: TeamDef[]): string[] {
 
 export type LeaderboardEntry = { name: string; wins: number; games: string[] };
 
-// persoonlijk: elke compo-winst telt voor alle (geregistreerde of in de naam
-// genoemde) teamleden; teams: alleen winnaars die uit meer personen bestaan
+// volledig dynamisch: alle bekende users en teams staan erop (ook met 0
+// winsten); elke compo-winst telt voor alle (geregistreerde of in de naam
+// genoemde) teamleden. Teams: winnaars die uit meer personen bestaan.
 export function computeLeaderboards(state: TournamentState): {
   personal: LeaderboardEntry[];
   teams: LeaderboardEntry[];
 } {
   const personal = new Map<string, LeaderboardEntry>();
   const teams = new Map<string, LeaderboardEntry>();
-  const add = (map: Map<string, LeaderboardEntry>, name: string, game: string) => {
+  const ensure = (map: Map<string, LeaderboardEntry>, name: string) => {
     const key = name.toLowerCase();
-    const e = map.get(key) ?? { name, wins: 0, games: [] };
-    e.wins += 1;
-    e.games.push(game);
-    map.set(key, e);
+    if (!map.has(key)) map.set(key, { name, wins: 0, games: [] });
+    return map.get(key)!;
   };
+  // basis: iedereen en elk team doet mee
+  allUsers(state).forEach((u) => ensure(personal, u));
+  (state.teams ?? []).forEach((t) => ensure(teams, t.name));
+  // resultaten eroverheen
   for (const g of state.games) {
     const winner = gameWinner(g);
     if (!winner) continue;
     const members = splitMembers(winner, state.teams ?? []);
-    if (members.length > 1) add(teams, winner, g.name);
-    members.forEach((p) => add(personal, p, g.name));
+    if (members.length > 1) {
+      const e = ensure(teams, winner);
+      e.wins += 1;
+      e.games.push(g.name);
+    }
+    members.forEach((p) => {
+      const e = ensure(personal, p);
+      e.wins += 1;
+      e.games.push(g.name);
+    });
   }
   const sorted = (m: Map<string, LeaderboardEntry>) =>
     [...m.values()].sort((a, b) => b.wins - a.wins || a.name.localeCompare(b.name));

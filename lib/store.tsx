@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { allUsers } from "./users";
 import type { EetMoment, Game, Seat, Sponsor, TournamentState } from "./types";
 
 type SaveStatus = "idle" | "saved" | "error";
@@ -193,17 +194,15 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     const seats: Seat[] = JSON.parse(JSON.stringify(cur.seats ?? []));
     const seat = seats.find((s) => s.id === seatId);
     if (!seat) return "stoel bestaat niet";
-    let unseated = [...(cur.unseated ?? [])];
     if (!name) {
-      if (seat.name) unseated.push(seat.name);
-      seat.name = "";
+      seat.name = ""; // de user blijft gewoon in de centrale lijst staan
     } else {
       if (seat.name) return "deze stoel is al bezet";
       for (const s of seats) if (s.name.toLowerCase() === name.toLowerCase()) s.name = "";
       seat.name = name;
-      unseated = unseated.filter((n) => n.toLowerCase() !== name.toLowerCase());
     }
-    persist({ ...cur, seats, unseated });
+    // centrale users-lijst consolideren; de oude losse unseated-opslag vervalt
+    persist({ ...cur, seats, users: allUsers(cur), unseated: undefined });
     return null;
   }, [persist]);
 
