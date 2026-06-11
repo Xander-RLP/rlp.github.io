@@ -53,7 +53,8 @@
                   "score": null
                 }
               ],
-              "next": {
+              "next": null,
+              "loserNext": {
                 "r": 1,
                 "m": 1,
                 "s": 1
