@@ -1775,8 +1775,8 @@
           "id": "bar-i0",
           "type": "image",
           "content": "/images/beamer/broodje.jpg",
-          "x": 6.5,
-          "y": 9,
+          "x": 5,
+          "y": 7,
           "size": 424
         },
         {
