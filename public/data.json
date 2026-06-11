@@ -90,7 +90,11 @@
                   "score": null
                 }
               ],
-              "next": null
+              "next": {
+                "r": 2,
+                "m": 1,
+                "s": 1
+              }
             }
           ],
           [
