@@ -42,10 +42,18 @@ export type Race = {
   participants: RaceParticipant[];
 };
 
+// afvalrace: rondes met groepen spelers; wie doorgaat staat in de volgende
+// ronde (16 → 8 → 4 → finale, groottes vrij — de admin wijst de doorgangers aan)
+export type Elim = {
+  rounds: string[][]; // ronde 0 = alle deelnemers, daarna steeds de overblijvers
+  winner?: string;    // door de admin aangewezen winnaar in de finaleronde
+};
+
 export type Game = {
   id: string;
   name: string;
-  type?: "bracket" | "race" | "double"; // default: bracket
+  type?: "bracket" | "race" | "double" | "elim"; // default: bracket
+  entryType?: "user" | "team"; // per speler of per team aanmelden (default: user)
   format?: string;
   description?: string; // bijv. uitleg van het quest/level-event
   start?: string; // agenda: datum/tijd (datetime-local), via admin in te stellen
@@ -60,6 +68,7 @@ export type Game = {
   bracket: Bracket;
   race?: Race;
   double?: DoubleBracket;
+  elim?: Elim;
   dugout?: string[]; // aangemelde spelers/teams die (nog) niet in het bracket staan
 };
 

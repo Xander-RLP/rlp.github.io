@@ -111,7 +111,8 @@
         "Rush B",
         "Smoke Bros",
         "Rolator Jeans"
-      ]
+      ],
+      "entryType": "team"
     },
     {
       "id": "league-of-legends",
@@ -228,7 +229,8 @@
         "Sjoerd",
         "Laszlo",
         "Ronnie"
-      ]
+      ],
+      "entryType": "user"
     },
     {
       "id": "rocket-league",
@@ -350,7 +352,8 @@
         "Leon",
         "Indy",
         "Bo"
-      ]
+      ],
+      "entryType": "team"
     },
     {
       "id": "wc3-reforged",
@@ -460,90 +463,15 @@
       },
       "dugout": [
         "Sjoerd"
-      ]
+      ],
+      "entryType": "user"
     },
     {
       "id": "shootmania-storm",
       "name": "Shootmania Storm",
-      "format": "1v1 · Solo · Single Elimination",
+      "format": "1v1 · Afvalrace · rondes met afvallers",
       "bracket": {
         "rounds": [
-          [
-            {
-              "teams": [
-                {
-                  "name": "Ronnie",
-                  "score": null
-                },
-                {
-                  "name": "Ennio",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "Xander",
-                  "score": null
-                },
-                {
-                  "name": "Leon",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
           [
             {
               "teams": [
@@ -568,13 +496,24 @@
         "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
         "price": "€ 19,99"
       },
-      "dugout": [
-        "Bo",
-        "Indy",
-        "Sjoerd",
-        "Jean",
-        "Laszlo"
-      ]
+      "dugout": [],
+      "entryType": "user",
+      "type": "elim",
+      "elim": {
+        "rounds": [
+          [
+            "Ronnie",
+            "Ennio",
+            "Xander",
+            "Leon",
+            "Bo",
+            "Indy",
+            "Sjoerd",
+            "Jean",
+            "Laszlo"
+          ]
+        ]
+      }
     },
     {
       "id": "lotro",
@@ -788,7 +727,8 @@
         "Leon",
         "Indy",
         "Bo"
-      ]
+      ],
+      "entryType": "user"
     },
     {
       "id": "magic-the-gathering",
@@ -1095,7 +1035,8 @@
         "Leon",
         "Indy",
         "Bo"
-      ]
+      ],
+      "entryType": "user"
     },
     {
       "id": "treasure-hunt",

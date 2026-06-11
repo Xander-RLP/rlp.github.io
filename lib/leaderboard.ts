@@ -15,6 +15,9 @@ export function gameWinner(game: Game): string | null {
       .find((p) => p.progress >= game.race!.target);
     return winner?.name ?? null;
   }
+  if (game.type === "elim") {
+    return game.elim?.winner ?? null;
+  }
   const rs = propagate(game.bracket).rounds;
   const gf = rs[rs.length - 1]?.[0];
   const w = gf ? winnerIdx(gf) : -1;
@@ -87,6 +90,7 @@ export function pairsPlayed(state: TournamentState): Map<string, string[]> {
       [...d.w.flat(), ...d.l.flat(), d.gf].forEach((m) => m.teams.forEach((t) => add(t.name)));
     }
     g.race?.participants.forEach((p) => add(p.name));
+    (g.elim?.rounds[0] ?? []).forEach(add);
     (g.dugout ?? []).forEach(add);
 
     for (const name of names.values()) {

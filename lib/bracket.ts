@@ -179,6 +179,8 @@ export function gameNames(game: Game): string[] {
     normalizeDouble(game.double).w[0].forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); }));
   } else if (game.type === "race" && game.race) {
     game.race.participants.forEach((p) => out.push(p.name));
+  } else if (game.type === "elim") {
+    (game.elim?.rounds[0] ?? []).forEach((n) => out.push(n));
   } else {
     game.bracket.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); })));
   }
@@ -457,6 +459,12 @@ export function gameStatus(game: Game): { text: string; champ: boolean } {
     if (winner) return { text: `\u{1F3C6} ${winner.name}`, champ: true };
     if (game.race.participants.some((p) => p.progress > 0)) return { text: "Bezig", champ: false };
     return { text: game.race.participants.length ? "Start binnenkort" : "Aanmeldingen open", champ: false };
+  }
+  if (game.type === "elim") {
+    const rounds = game.elim?.rounds ?? [];
+    if (game.elim?.winner) return { text: `\u{1F3C6} ${game.elim.winner}`, champ: true };
+    if (rounds.length > 1 && rounds.some((r, i) => i > 0 && r.length > 0)) return { text: "Bezig", champ: false };
+    return { text: rounds[0]?.length ? "Start binnenkort" : "Aanmeldingen open", champ: false };
   }
   const rs = game.bracket.rounds;
   const gf = rs[rs.length - 1]?.[0];

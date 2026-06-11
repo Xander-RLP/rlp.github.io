@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import { removePlayer as elimRemovePlayer } from "@/lib/elim";
 import { allUsers } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
@@ -10,6 +11,7 @@ import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
 import DoubleBracketView from "./DoubleBracketView";
 import Dugout from "./Dugout";
+import ElimView from "./ElimView";
 import GameStoreBanner from "./GameStoreBanner";
 import RaceView from "./RaceView";
 
@@ -21,7 +23,8 @@ export default function HomeView() {
   const [newName, setNewName] = useState("");
   const [newFormat, setNewFormat] = useState("");
   const [newSize, setNewSize] = useState("8");
-  const [newType, setNewType] = useState<"bracket" | "race" | "double">("bracket");
+  const [newType, setNewType] = useState<"bracket" | "race" | "double" | "elim">("bracket");
+  const [newEntryType, setNewEntryType] = useState<"user" | "team">("user");
   const [newPlayer, setNewPlayer] = useState("");
 
   // game-keuze volgt de URL-hash, zodat tabs en de terug-knop samenwerken
@@ -54,10 +57,16 @@ export default function HomeView() {
       id: slugify(name, state!.games.map((x) => x.id)),
       name,
       type: newType,
-      format: newFormat.trim() || (newType === "race" ? "Race · Leaderboard" : newType === "double" ? "Double Elimination" : "Single Elimination"),
+      ...(newType !== "race" ? { entryType: newEntryType } : {}),
+      format: newFormat.trim() || (
+        newType === "race" ? "Race · Leaderboard"
+        : newType === "double" ? "Double Elimination"
+        : newType === "elim" ? "Afvalrace · rondes met afvallers"
+        : "Single Elimination"),
       bracket: emptyBracket(newType === "bracket" ? parseInt(newSize, 10) : 4),
       ...(newType === "race" ? { race: { goalLabel: "Eerste bij het doel", target: 20, participants: [] } } : {}),
       ...(newType === "double" ? { double: emptyDouble() } : {}),
+      ...(newType === "elim" ? { elim: { rounds: [[]] } } : {}),
     };
     setImageBusy(true);
     g.image = (await fetchImage(g.id, name).catch(() => null)) ?? undefined;
@@ -124,7 +133,10 @@ export default function HomeView() {
   function returnToDugout(p: DragPayload) {
     if (p.from !== "slot") return;
     const dugoutNext = [...(game.dugout ?? []), p.name];
-    if (game.type === "double") {
+    if (game.type === "elim") {
+      if (!(game.elim?.rounds[0] ?? []).some((n) => n.toLowerCase() === p.name.toLowerCase())) return;
+      patchGame({ elim: elimRemovePlayer(game.elim, 0, p.name), dugout: dugoutNext });
+    } else if (game.type === "double") {
       const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
       const slot = d.w[0][p.m]?.teams[p.s];
       if (!slot || slot.name !== p.name) return;
@@ -280,6 +292,7 @@ export default function HomeView() {
             <h1 className="flex items-center gap-2 text-xl font-extrabold uppercase tracking-wide md:text-2xl">
               {game.type === "race" ? game.name
                 : game.type === "double" ? `${game.name}: Double Elimination`
+                : game.type === "elim" ? `${game.name}: Afvalrace (${game.elim?.rounds[0]?.length ?? 0} deelnemers)`
                 : `${game.name}: ${entryCount(game.bracket)}-Team Bracket`}
               {isAdmin && (
                 <button
@@ -338,17 +351,19 @@ export default function HomeView() {
           isAdmin={isAdmin}
           onReturn={returnToDugout}
           onRemove={removeFromDugout}
-          quickFill={[
-            { label: "➕ alle users (solo)", onClick: () => fillDugout(allUsers(state!)) },
-            ...((state.teams ?? []).length
-              ? [{ label: "➕ alle teams", onClick: () => fillDugout(state!.teams!.map((t) => t.name)) }]
-              : []),
-          ]}
+          quickFill={
+            // het een of het ander: team-toernooien vullen met teams, per-user met users
+            game.entryType === "team"
+              ? [{ label: "➕ alle teams", onClick: () => fillDugout((state!.teams ?? []).map((t) => t.name)) }]
+              : [{ label: "➕ alle users", onClick: () => fillDugout(allUsers(state!)) }]
+          }
         />
       )}
 
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
+      ) : game.type === "elim" ? (
+        <ElimView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       ) : game.type === "double" ? (
         <>
           {isAdmin && (
@@ -372,6 +387,10 @@ export default function HomeView() {
           <b className="text-lime-400">Admin mode:</b>{" "}
           {game.type === "race" ? (
             <>zet de voortgang per deelnemer; wie het doel haalt wint.</>
+          ) : game.type === "elim" ? (
+            <>sleep deelnemers uit de dugout in ronde 1 en klik per ronde wie doorgaat — afvallers
+            blijven doorgestreept staan. Voeg rondes toe tot en met de finale (de grootte bepaal je
+            zelf) en wijs daar met een klik de winnaar aan.</>
           ) : (
             <>nieuwe aanmeldingen komen in de <b>dugout</b>;
             sleep ze via het gekleurde blokje naar een leeg slot en terug. Vul de scores per match in —
@@ -389,6 +408,19 @@ export default function HomeView() {
           {" "}Wijzigingen worden automatisch opgeslagen.
           <div className="mt-2 flex flex-wrap items-center gap-3">
             {game.type !== "race" && (
+              <span className="flex items-center gap-2">
+                Deelname:
+                <select
+                  value={game.entryType ?? "user"}
+                  onChange={(e) => patchGame({ entryType: e.target.value as "user" | "team" })}
+                  className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
+                >
+                  <option value="user">per speler</option>
+                  <option value="team">per team</option>
+                </select>
+              </span>
+            )}
+            {game.type !== "race" && game.type !== "elim" && (
               <span className="flex items-center gap-2">
                 Snel opzetten (vervangt opbouw):
                 <select
@@ -444,13 +476,24 @@ export default function HomeView() {
             />
             <select
               value={newType}
-              onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double")}
+              onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double" | "elim")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
               <option value="bracket">Bracket (knock-out, zelf in te delen rondes)</option>
               <option value="double">Double elimination (winner + loser bracket)</option>
+              <option value="elim">Afvalrace (rondes met afvallers — bijv. Shootmania)</option>
               <option value="race">Vrij format / leaderboard (elk aantal spelers — bijv. Commander, race)</option>
             </select>
+            {newType !== "race" && (
+              <select
+                value={newEntryType}
+                onChange={(e) => setNewEntryType(e.target.value as "user" | "team")}
+                className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
+              >
+                <option value="user">Deelname per speler</option>
+                <option value="team">Deelname per team</option>
+              </select>
+            )}
             {newType === "bracket" && (
               <select
                 value={newSize}
