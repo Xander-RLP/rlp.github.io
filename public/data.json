@@ -923,6 +923,26 @@
                 {
                   "name": "",
                   "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
                 }
               ],
               "outs": [
@@ -931,26 +951,11 @@
                   "m": 0,
                   "s": 0
                 },
-                null
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 1,
-                  "m": 0,
-                  "s": 1
-                },
+                null,
+                null,
+                null,
+                null,
+                null,
                 null
               ]
             }
