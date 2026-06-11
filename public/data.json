@@ -555,7 +555,9 @@
                 null,
                 null
               ]
-            },
+            }
+          ],
+          [
             {
               "teams": [
                 {
@@ -566,10 +568,6 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "outs": [
-                null,
-                null
               ]
             }
           ]
