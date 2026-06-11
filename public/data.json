@@ -401,7 +401,7 @@
       },
       "image": "/images/rocket-league.png",
       "start": "2026-06-12T21:00",
-      "durationMin": 255,
+      "durationMin": 285,
       "type": "double",
       "double": {
         "w1": [
