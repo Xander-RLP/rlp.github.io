@@ -1817,6 +1817,14 @@
           "type": "text",
           "content": "Tekst…",
           "size": 40
+        },
+        {
+          "id": "bmq9kvv0p53ft",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "Tekst…",
+          "size": 40
         }
       ]
     }
