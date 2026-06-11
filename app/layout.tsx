@@ -17,6 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TournamentProvider>
           <Header />
           {children}
+          <footer className="mt-10 border-t border-slate-800 py-5 text-center text-[11px] text-slate-500">
+            © Ronnie LAN Party 2026
+          </footer>
           <CoffeeTab />
           <TeamSpeakWidget />
         </TournamentProvider>
