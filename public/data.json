@@ -298,7 +298,7 @@
             {
               "teams": [
                 {
-                  "name": "Sjoerd",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -363,7 +363,8 @@
         "Leon",
         "Bo",
         "Jean",
-        "Indy"
+        "Indy",
+        "Sjoerd"
       ]
     },
     {
