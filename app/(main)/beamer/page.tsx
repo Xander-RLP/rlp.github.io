@@ -653,7 +653,7 @@ export default function BeamerPage() {
                 {!b.locked && b.type !== "widget" && (
                   <>
                     <button
-                      onClick={() => patchBlock(bi, { size: Math.min(b.type === "image" ? 480 : 160, (b.size ?? (b.type === "image" ? 200 : 40)) + (b.type === "image" ? 32 : 8)) }, true)}
+                      onClick={() => patchBlock(bi, { size: Math.min(b.type === "image" ? 880 : 160, (b.size ?? (b.type === "image" ? 200 : 40)) + (b.type === "image" ? 32 : 8)) }, true)}
                       title="Groter"
                       className="flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 hover:border-lime-400"
                     >
