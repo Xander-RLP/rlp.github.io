@@ -687,11 +687,7 @@
                 }
               ],
               "next": null,
-              "loserNext": {
-                "r": 1,
-                "m": 1,
-                "s": 0
-              }
+              "loserNext": null
             },
             {
               "teams": [
@@ -707,7 +703,7 @@
               "next": {
                 "r": 1,
                 "m": 1,
-                "s": 1
+                "s": 0
               }
             }
           ],
