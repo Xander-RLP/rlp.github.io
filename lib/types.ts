@@ -106,4 +106,12 @@ export type TournamentState = {
   teams?: TeamDef[];   // teams met leden (beheer op /teams); leden zijn users
   whatsapp?: string;   // invite-link van de groepschat (chat.whatsapp.com/…)
   liveStream?: string; // eigen livestream (YouTube/Twitch-URL) — krijgt voorrang in de Game TV
+  beamer?: BeamerSlide[]; // eigen info-slides in de beamer-rotatie (beheer op /beamer)
+};
+
+// info-slide voor de beamerpagina (douchetijden, zelfservice, huisregels, …)
+export type BeamerSlide = {
+  emoji?: string;
+  title: string;
+  text?: string; // regels gescheiden met \n
 };

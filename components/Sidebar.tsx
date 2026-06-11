@@ -211,6 +211,7 @@ export default function Sidebar() {
             <Link href="/" className="hover:text-slate-100">Home</Link>
             <Link href="/teams" className="hover:text-slate-100">Teams</Link>
             <Link href="/schedule" className="hover:text-slate-100">Schedule</Link>
+            <Link href="/beamer" className="hover:text-slate-100">Beamer</Link>
           </div>
           <div>© Ronnie LAN Party 2026</div>
         </div>

@@ -31,6 +31,18 @@ body {
   55%, 100% { opacity: 0.1; }
 }
 
+/* beamer-slides faden rustig in bij elke wissel */
+.beamer-slide {
+  display: flex;
+  flex-direction: column;
+  max-width: 72rem;
+  animation: beamer-in 0.9s ease-out both;
+}
+@keyframes beamer-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* sidebar-secties en nieuwsitems schuiven gestaffeld binnen */
 .news-in {
   animation: news-in 0.5s ease-out both;
