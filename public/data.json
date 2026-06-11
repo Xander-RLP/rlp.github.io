@@ -106,8 +106,7 @@
         "name": "Steam",
         "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
       },
-      "entryType": "team",
-      "video": "c1vdlyD96yA"
+      "entryType": "team"
     },
     {
       "id": "league-of-legends",
@@ -214,8 +213,7 @@
         "name": "Riot Games",
         "url": "https://www.leagueoflegends.com/en-us/download/"
       },
-      "entryType": "user",
-      "video": "J_KaC4CYG2s"
+      "entryType": "user"
     },
     {
       "id": "rocket-league",
@@ -323,8 +321,7 @@
         "name": "Epic Games",
         "url": "https://store.epicgames.com/nl/p/rocket-league"
       },
-      "entryType": "team",
-      "video": "BMqEUm3r1bs"
+      "entryType": "team"
     },
     {
       "id": "wc3-reforged",
@@ -434,8 +431,7 @@
         "url": "https://warcraft3.blizzard.com/",
         "price": "€ 29,99"
       },
-      "entryType": "user",
-      "video": "u052WjpVf74"
+      "entryType": "user"
     },
     {
       "id": "shootmania-storm",
@@ -611,8 +607,7 @@
         "price": "€ 19,99"
       },
       "entryType": "user",
-      "type": "bracket",
-      "video": "VY9DLPJVVfc"
+      "type": "bracket"
     },
     {
       "id": "lotro",
@@ -712,8 +707,7 @@
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/212500/"
-      },
-      "video": "h9Oerv0PabQ"
+      }
     },
     {
       "id": "command-conqure-generals-zero-hour",
@@ -844,8 +838,7 @@
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/2732960"
-      },
-      "video": "xkmFvImqS28"
+      }
     },
     {
       "id": "magic-the-gathering",
@@ -944,8 +937,7 @@
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/2141910"
-      },
-      "video": "tiGFmYMgN3k"
+      }
     },
     {
       "id": "the-lord-of-the-rings-the-battle-for-mi",
@@ -1135,8 +1127,7 @@
       "store": {
         "name": "forums.revora.net",
         "url": "https://forums.revora.net/topic/105190-bfme1bfme2rotwk-games-download-installation-guide/"
-      },
-      "video": "NrS39j70UEQ"
+      }
     },
     {
       "id": "treasure-hunt",
@@ -1347,7 +1338,7 @@
       },
       "start": "2026-06-13T23:05",
       "durationMin": 175,
-      "video": "Lu-LQXHEtmc"
+      "image": "https://cdn2.unrealengine.com/fall-guys-season-pass-2000x1125-b51956a046b0.png"
     }
   ],
   "seats": [
