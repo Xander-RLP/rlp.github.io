@@ -1932,34 +1932,6 @@
     {
       "blocks": [
         {
-          "id": "r13",
-          "type": "text",
-          "content": "🚿",
-          "x": 12,
-          "y": 1,
-          "size": 96
-        },
-        {
-          "id": "r14",
-          "type": "text",
-          "content": "Douchen  10:00 - 11:30  20:00 - 21:30",
-          "x": 12,
-          "y": 4,
-          "size": 64
-        },
-        {
-          "id": "r15",
-          "type": "image",
-          "content": "/images/beamer/pptx/image11.webp",
-          "x": 12,
-          "y": 7.5,
-          "size": 200
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
           "id": "r16",
           "type": "image",
           "content": "/images/beamer/pptx/image5.webp",
