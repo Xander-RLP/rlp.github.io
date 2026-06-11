@@ -1620,16 +1620,7 @@
   ],
   "beamer": [
     {
-      "blocks": [
-        {
-          "id": "bmq9lscyt3qkw",
-          "type": "text",
-          "content": "Nieuwe slide",
-          "x": 12,
-          "y": 5,
-          "size": 64
-        }
-      ]
+      "blocks": []
     },
     {
       "blocks": [
