@@ -1338,7 +1338,11 @@
       },
       "start": "2026-06-13T23:05",
       "durationMin": 175,
-      "image": "https://cdn2.unrealengine.com/fall-guys-season-pass-2000x1125-b51956a046b0.png"
+      "image": "https://cdn2.unrealengine.com/fall-guys-season-pass-2000x1125-b51956a046b0.png",
+      "store": {
+        "name": "Epic Games",
+        "url": "https://store.epicgames.com/p/fall-guys"
+      }
     }
   ],
   "seats": [
