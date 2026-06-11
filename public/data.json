@@ -2963,6 +2963,14 @@
           "type": "text",
           "content": "Mini bar + Stoel!",
           "size": 40
+        },
+        {
+          "id": "bmq9qskmzbsun",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "🤫",
+          "size": 96
         }
       ]
     },
