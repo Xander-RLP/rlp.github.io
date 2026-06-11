@@ -345,7 +345,7 @@
       },
       "image": "/images/league-of-legends.png",
       "start": "2026-06-12T16:30",
-      "durationMin": 270,
+      "durationMin": 300,
       "store": {
         "name": "Riot Games",
         "url": "https://www.leagueoflegends.com/en-us/download/"
