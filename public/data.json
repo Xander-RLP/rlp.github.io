@@ -706,7 +706,7 @@
     {
       "id": "L2",
       "side": "left",
-      "name": "Xander"
+      "name": ""
     },
     {
       "id": "L3",
@@ -739,7 +739,8 @@
     "Indy",
     "Jean",
     "Sjoerd",
-    "Leon"
+    "Leon",
+    "Xander"
   ],
   "eventStart": "2026-06-12T10:00"
 }
