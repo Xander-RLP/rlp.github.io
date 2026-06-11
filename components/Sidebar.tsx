@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { allMatches } from "@/lib/bracket";
+import { COFFEE_URL } from "@/lib/links";
 import { useTournament } from "@/lib/store";
 
 const NEWS = [
@@ -10,6 +11,7 @@ const NEWS = [
   { accent: "border-lime-500", html: <><b className="text-slate-100">Line-up:</b> CS2 Wingman, League of Legends (ARAM), Rocket League, WC3 Reforged en Shootmania Storm.</> },
   { accent: "border-amber-400", html: <><b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.</> },
   { accent: "border-red-500", html: <><b className="text-slate-100">Schedule:</b> definitieve tijden volgen zodra de aanmeldingen rond zijn.</> },
+  { accent: "border-amber-400", html: <><b className="text-slate-100">☕ Deze site is door één developer gebouwd.</b> Steun &apos;m met een kleine donatie: <a href={COFFEE_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-amber-400 hover:text-amber-300">Buy me a Coffee!</a></> },
 ];
 
 const BAR_COLORS = ["bg-teal-500", "bg-lime-500", "bg-amber-400", "bg-red-500"];

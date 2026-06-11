@@ -1,5 +1,6 @@
 "use client";
 
+import { COFFEE_URL } from "@/lib/links";
 import { useTournament } from "@/lib/store";
 
 export default function ContactPage() {
@@ -53,6 +54,18 @@ export default function ContactPage() {
         <div className="rounded-md border border-slate-700 bg-slate-800 p-4 text-[13px] leading-relaxed">
           <div className="mb-1.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-400">Locatie</div>
           RLP26 main stage: Roswinkelerstraat 136, 7895 AS Roswinkel — tijden volgen via het schedule.
+        </div>
+        <div className="rounded-md border border-amber-400/40 bg-amber-400/5 p-4 text-[13px] leading-relaxed">
+          <div className="mb-1.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-400">☕ Buy me a Coffee!</div>
+          Deze site is in de avonduren gebouwd door één developer. Vind je &apos;m tof? Steun &apos;m met een kleine donatie!
+          <a
+            href={COFFEE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2.5 flex items-center justify-center gap-2 rounded bg-amber-400 px-3 py-2 text-xs font-extrabold uppercase tracking-wide text-amber-950 hover:bg-amber-300"
+          >
+            ☕ Buy me a Coffee!
+          </a>
         </div>
       </div>
 
