@@ -99,9 +99,13 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     }
     try {
       const res = await fetch("/data.json", { cache: "no-store" });
-      setState(await res.json());
+      const data = (await res.json()) as TournamentState;
+      if (!Array.isArray(data.games)) throw new Error("ongeldige data");
+      setState(data);
     } catch {
-      setState({ games: [] });
+      // NOOIT terugvallen op een lege-maar-werkende staat: een mislukte load
+      // mag niet via een latere save de echte data kunnen overschrijven.
+      // state blijft null ("Laden…") tot een load wél slaagt.
     }
   }, [loadFromGitHub]);
 
@@ -166,6 +170,13 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, [loadFromGitHub]);
 
   const persist = useCallback((next: TournamentState) => {
+    // noodrem: een staat zonder games én zonder users is vrijwel zeker een
+    // mislukte load — die committen zou de hele LAN-data wissen
+    if (next.games.length === 0 && (next.users ?? []).length === 0 && (next.seats ?? []).length === 0) {
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus("idle"), 2500);
+      return;
+    }
     setState(next);
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
