@@ -1127,7 +1127,8 @@
       "store": {
         "name": "moddb.com",
         "url": "https://www.moddb.com/downloads/patch-222"
-      }
+      },
+      "image": "https://media.moddb.com/images/downloads/1/224/223640/LOGO_launcher.png"
     },
     {
       "id": "treasure-hunt",
