@@ -840,5 +840,42 @@
     "Bo",
     "Indy"
   ],
-  "eventStart": "2026-04-12T10:00"
+  "eventStart": "2026-04-12T10:00",
+  "eetmomenten": [
+    {
+      "id": "ontbijt-vr",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-12T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "ontbijt-za",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-13T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "ontbijt-zo",
+      "title": "Ontbijt: ei & spek",
+      "emoji": "🍳",
+      "start": "2026-06-14T09:00",
+      "durationMin": 60
+    },
+    {
+      "id": "bestellen-vr",
+      "title": "Samen eten bestellen",
+      "emoji": "📦",
+      "start": "2026-06-12T18:00",
+      "durationMin": 60
+    },
+    {
+      "id": "bbq-za",
+      "title": "BBQ (€ 15 — Tikkie)",
+      "emoji": "🔥",
+      "start": "2026-06-13T17:30",
+      "durationMin": 120
+    }
+  ]
 }

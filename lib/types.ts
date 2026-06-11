@@ -54,10 +54,19 @@ export type Sponsor = {
   tagline?: string; // bijv. "Sponsort de prize pool"
 };
 
+export type EetMoment = {
+  id: string;
+  title: string;
+  emoji?: string;
+  start: string; // datetime-local
+  durationMin: number;
+};
+
 export type TournamentState = {
   games: Game[];
   seats?: Seat[];
   unseated?: string[]; // aangemeld maar nog geen stoel
   eventStart?: string; // startmoment van de LAN zelf (countdown op home)
   sponsors?: Sponsor[];
+  eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
 };
