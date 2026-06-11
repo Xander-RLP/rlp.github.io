@@ -36,7 +36,11 @@
                   "score": null
                 }
               ],
-              "next": null
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 1
+              }
             }
           ],
           [
