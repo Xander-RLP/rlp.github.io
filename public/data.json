@@ -1484,6 +1484,13 @@
       "id": "xander-de-groot-2",
       "name": "Xander de Groot",
       "tagline": "Sponsord de Teamspeak"
+    },
+    {
+      "id": "sjovo-installaties",
+      "name": "Sjovo Installaties",
+      "url": "https://sjovo.nl/",
+      "logo": "https://sjovo.nl/wp-content/uploads/2026/01/sjovo-glas-e1769620717465.jpg",
+      "tagline": "\"Buy me a Coffee!\" Donation"
     }
   ],
   "rotatie": {
