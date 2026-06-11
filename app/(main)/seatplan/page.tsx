@@ -187,6 +187,25 @@ export default function SeatplanPage() {
           <Link href="/users" className="font-bold text-lime-400 hover:text-lime-300">Users-pagina</Link>.</>
         )}
       </p>
+
+      {/* de beruchte leenstoel — en een subtiele sponsor-hint */}
+      <div className="mt-5 flex w-0 min-w-full items-center gap-4 rounded-md border border-slate-700 bg-slate-900/60 p-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/leenstoel.jpeg"
+          alt="De RLP26-leenstoel: een tijdloos kantoorklassiekertje"
+          className="h-24 w-24 shrink-0 rounded-md border border-slate-700 object-cover"
+        />
+        <div className="text-[12px] leading-relaxed text-slate-400">
+          <b className="text-slate-200">🪑 Zelf geen gamestoel mee?</b> Geen zorgen — dan krijg je dit
+          prachtexemplaar uit onze exclusieve leencollectie. Liever een échte racing seat? Die huur je
+          normaal bij onze sponsor <s className="text-slate-500">speedseats.com</s>{" "}
+          <span className="text-slate-500">(kon er deze LAN helaas niet bij zijn 💔)</span>.
+          <br />
+          Sponsors zoals dat zoeken we nog:{" "}
+          <Link href="/sponsors" className="font-bold text-lime-400 hover:text-lime-300">sponsor worden? →</Link>
+        </div>
+      </div>
     </div>
   );
 }
