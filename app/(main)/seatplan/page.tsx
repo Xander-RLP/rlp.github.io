@@ -199,7 +199,8 @@ export default function SeatplanPage() {
         <div className="text-[12px] leading-relaxed text-slate-400">
           <b className="text-slate-200">🪑 Zelf geen gamestoel mee?</b> Geen zorgen — dan krijg je dit
           prachtexemplaar uit onze exclusieve leencollectie. Liever een échte racing seat? Die huur je
-          normaal bij onze sponsor <s className="text-slate-500">speedseats.com</s>{" "}
+          normaal bij onze sponsor{" "}
+          <a href="https://www.speedseats.eu/" target="_blank" rel="noopener noreferrer" className="text-slate-500 line-through hover:text-slate-300">speedseats.eu</a>{" "}
           <span className="text-slate-500">(kon er deze LAN helaas niet bij zijn 💔)</span>.
           <br />
           Sponsors zoals dat zoeken we nog:{" "}
