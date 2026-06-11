@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import { allUsers } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
@@ -143,6 +144,17 @@ export default function HomeView() {
   function removeFromDugout(name: string) {
     if (!confirm(`"${name}" uitschrijven?`)) return;
     patchGame({ dugout: (game.dugout ?? []).filter((n) => n !== name) });
+  }
+
+  // dugout snel vullen met centrale users of teams (alleen wie nog niet meedoet)
+  function fillDugout(names: string[]) {
+    const have = gameNames(game).map((n) => n.toLowerCase());
+    const add = names.filter((n) => !have.includes(n.toLowerCase()));
+    if (!add.length) {
+      alert("Niets toe te voegen — iedereen doet al mee.");
+      return;
+    }
+    patchGame({ dugout: [...(game.dugout ?? []), ...add] });
   }
 
   // double elimination → vrij bewerkbaar bracket: indeling, scores en alle
@@ -326,6 +338,12 @@ export default function HomeView() {
           isAdmin={isAdmin}
           onReturn={returnToDugout}
           onRemove={removeFromDugout}
+          quickFill={[
+            { label: "➕ alle users (solo)", onClick: () => fillDugout(allUsers(state!)) },
+            ...((state.teams ?? []).length
+              ? [{ label: "➕ alle teams", onClick: () => fillDugout(state!.teams!.map((t) => t.name)) }]
+              : []),
+          ]}
         />
       )}
 

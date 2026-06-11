@@ -300,7 +300,6 @@
       "dugout": [
         "Ronnie Rifles",
         "Rush B",
-        "Team klaas",
         "Smoke Bros",
         "Rolator Jeans"
       ]
@@ -417,7 +416,9 @@
         "Bo",
         "Jean",
         "Indy",
-        "Sjoerd"
+        "Sjoerd",
+        "Laszlo",
+        "Ronnie"
       ]
     },
     {
@@ -632,7 +633,10 @@
         "name": "Battle.net",
         "url": "https://warcraft3.blizzard.com/",
         "price": "€ 29,99"
-      }
+      },
+      "dugout": [
+        "Sjoerd"
+      ]
     },
     {
       "id": "shootmania-storm",
@@ -744,7 +748,8 @@
         "Bo",
         "Indy",
         "Sjoerd",
-        "Jean"
+        "Jean",
+        "Laszlo"
       ]
     },
     {
@@ -950,7 +955,15 @@
       "start": "2026-06-11T23:45",
       "durationMin": 225,
       "dugout": [
-        "Ennio"
+        "Ennio",
+        "Laszlo",
+        "Ronnie",
+        "Sjoerd",
+        "Jean",
+        "Xander",
+        "Leon",
+        "Indy",
+        "Bo"
       ]
     },
     {
@@ -977,6 +990,26 @@
           },
           {
             "name": "Ennio",
+            "progress": 0
+          },
+          {
+            "name": "Laszlo",
+            "progress": 0
+          },
+          {
+            "name": "Ronnie",
+            "progress": 0
+          },
+          {
+            "name": "Sjoerd",
+            "progress": 0
+          },
+          {
+            "name": "Xander",
+            "progress": 0
+          },
+          {
+            "name": "Leon",
             "progress": 0
           }
         ]
@@ -1227,7 +1260,18 @@
       },
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1003400/0d5efab904702c16d2b926860f9f12faba7a2404.jpg",
       "start": "2026-06-14T10:05",
-      "durationMin": 115
+      "durationMin": 115,
+      "dugout": [
+        "Laszlo",
+        "Ronnie",
+        "Ennio",
+        "Sjoerd",
+        "Jean",
+        "Xander",
+        "Leon",
+        "Indy",
+        "Bo"
+      ]
     },
     {
       "id": "treasure-hunt",
@@ -1373,7 +1417,6 @@
       "name": "Bo"
     }
   ],
-  "unseated": [],
   "eventStart": "2026-06-12T15:00",
   "eetmomenten": [
     {
@@ -1515,5 +1558,74 @@
         ]
       ]
     ]
-  }
+  },
+  "users": [
+    "Laszlo",
+    "Ronnie",
+    "Ennio",
+    "Sjoerd",
+    "Jean",
+    "Xander",
+    "Leon",
+    "Indy",
+    "Bo"
+  ],
+  "teams": [
+    {
+      "name": "Ronnie Rifles",
+      "members": [
+        "Ronnie",
+        "Laszlo"
+      ]
+    },
+    {
+      "name": "Rush B",
+      "members": [
+        "Xander",
+        "Ennio"
+      ]
+    },
+    {
+      "name": "Smoke Bros",
+      "members": [
+        "Bo",
+        "Jean"
+      ]
+    },
+    {
+      "name": "Rolator Jeans",
+      "members": [
+        "Leon",
+        "Indy"
+      ]
+    },
+    {
+      "name": "Boost Boys",
+      "members": [
+        "Ronnie",
+        "Bo"
+      ]
+    },
+    {
+      "name": "Aerial Aces",
+      "members": [
+        "Xander",
+        "Indy"
+      ]
+    },
+    {
+      "name": "Demo Kings",
+      "members": [
+        "Jean",
+        "Laszlo"
+      ]
+    },
+    {
+      "name": "Whiff Squad",
+      "members": [
+        "Leon",
+        "Sjoerd"
+      ]
+    }
+  ]
 }
