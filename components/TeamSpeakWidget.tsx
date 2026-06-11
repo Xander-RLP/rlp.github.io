@@ -91,24 +91,27 @@ export default function TeamSpeakWidget() {
           <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
             De verbindknop opent de TeamSpeak-app. Lukt dat niet? Kopieer het adres hierboven.
           </p>
-          <div className="mt-2 border-t border-slate-800 pt-2.5 text-center">
+          {/* het hele host-blok is klikbaar: subtiel, maar wel duidelijk een link */}
+          <a
+            href={COFFEE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Draag iets bij aan hosting, stroom & onderhoud"
+            className="group mt-2.5 block rounded-md border border-slate-800 px-2 pb-2.5 pt-2 text-center transition-colors hover:border-amber-400/50 hover:bg-amber-400/5"
+          >
             <p className="text-[10px] uppercase tracking-wide text-slate-500">Draait op</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/ugreen-nas.webp"
               alt="UGREEN DXP8800 Plus"
-              className="mx-auto h-28 w-auto"
+              className="mx-auto h-28 w-auto transition-transform duration-300 group-hover:scale-[1.04]"
             />
             <p className="text-[11px] font-bold tracking-wide text-slate-300">UGREEN DXP8800 Plus</p>
-            <a
-              href={COFFEE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-block text-[10px] text-slate-500 underline decoration-dotted underline-offset-2 transition-colors hover:text-amber-300"
-            >
-              hosting, stroom & onderhoud — draag iets bij
-            </a>
-          </div>
+            <p className="mt-1 text-[10px] text-slate-400">
+              hosting, stroom & onderhoud —{" "}
+              <span className="font-bold text-amber-400/90 underline decoration-dotted underline-offset-2 group-hover:text-amber-300">draag iets bij</span>
+            </p>
+          </a>
         </div>
       )}
       {/* groepschat op de pc: WhatsApp opent in de browser of de app */}
