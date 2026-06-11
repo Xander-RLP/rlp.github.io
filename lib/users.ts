@@ -62,19 +62,12 @@ export function renameEverywhere(state: TournamentState, from: string, to: strin
     unseated: undefined,
     seats: (state.seats ?? []).map((s) => ({ ...s, name: ren(s.name) })),
     teams: (state.teams ?? []).map((t) => ({ name: ren(t.name), members: t.members.map(ren) })),
-    rotatie: state.rotatie
-      ? {
-          ...state.rotatie,
-          spelers: state.rotatie.spelers.map(ren),
-          rondes: state.rotatie.rondes.map((r) => r.map((team) => team.map(ren))),
-        }
-      : undefined,
     games,
   };
 }
 
-// user verwijderen: uit de centrale lijst, het stoelenplan, teams en het
-// rouleerschema. Toernooi-uitslagen blijven bewust staan (historie).
+// user verwijderen: uit de centrale lijst, het stoelenplan en teams.
+// Toernooi-uitslagen blijven bewust staan (historie).
 export function removeUserEverywhere(state: TournamentState, name: string): Partial<TournamentState> {
   const eq = (n: string) => norm(n) === norm(name);
   return {
@@ -82,9 +75,6 @@ export function removeUserEverywhere(state: TournamentState, name: string): Part
     unseated: undefined,
     seats: (state.seats ?? []).map((s) => (eq(s.name) ? { ...s, name: "" } : s)),
     teams: (state.teams ?? []).map((t) => ({ ...t, members: t.members.filter((m) => !eq(m)) })),
-    rotatie: state.rotatie
-      ? { ...state.rotatie, spelers: state.rotatie.spelers.filter((n) => !eq(n)) }
-      : undefined,
   };
 }
 

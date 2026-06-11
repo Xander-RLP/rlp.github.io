@@ -70,61 +70,41 @@ export function computeLeaderboards(state: TournamentState): {
   return { personal: sorted(personal), teams: sorted(teams) };
 }
 
-// rouleerschema: per ronde worden teams greedy gevormd (steeds de speler die
-// het minst vaak met de huidige teamleden speelde erbij); elke ronde proberen
-// we alle startposities en houden we de indeling met de minste herhaalde duo's —
-// zo heeft iedereen zo snel mogelijk één keer met iedereen gespeeld
-export function generateRotatie(players: string[], teamSize: number, numRounds: number): string[][][] {
-  const pairKey = (a: string, b: string) => [a, b].sort().join("|");
-  const pairCount = new Map<string, number>();
-  const pairs = (team: string[]) =>
-    team.flatMap((a, i) => team.slice(i + 1).map((b) => pairKey(a, b)));
-  const buildRound = (shift: number): { teams: string[][]; penalty: number } => {
-    const pool = [...players.slice(shift), ...players.slice(0, shift)];
-    const teams: string[][] = [];
-    while (pool.length) {
-      const team = [pool.shift()!];
-      while (team.length < teamSize && pool.length) {
-        let bestIdx = 0;
-        let bestScore = Infinity;
-        pool.forEach((cand, i) => {
-          const score = team.reduce((s, t) => s + (pairCount.get(pairKey(cand, t)) ?? 0), 0);
-          if (score < bestScore) {
-            bestScore = score;
-            bestIdx = i;
-          }
-        });
-        team.push(pool.splice(bestIdx, 1)[0]);
-      }
-      teams.push(team);
+// analytisch: wie heeft al met wie samengespeeld? Afgeleid uit de echte
+// toernooi-data — elke team-inschrijving (geregistreerd team of naam als
+// "Xander + Bo") telt als samenspelen voor de leden in die compo.
+export function pairsPlayed(state: TournamentState): Map<string, string[]> {
+  const norm = (n: string) => n.trim().toLowerCase();
+  const key = (a: string, b: string) => [norm(a), norm(b)].sort().join("|");
+  const played = new Map<string, string[]>();
+  for (const g of state.games) {
+    // alle namen die in deze compo voorkomen (bracket, dugout, race), ontdubbeld
+    const names = new Map<string, string>();
+    const add = (n: string) => { if (n) names.set(norm(n), n); };
+    g.bracket?.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => add(t.name))));
+    if (g.type === "double" && g.double) {
+      const d = propagateDouble(g.double);
+      [...d.w.flat(), ...d.l.flat(), d.gf].forEach((m) => m.teams.forEach((t) => add(t.name)));
     }
-    const penalty = teams.flatMap(pairs).reduce((s, k) => s + (pairCount.get(k) ?? 0), 0);
-    return { teams, penalty };
-  };
+    g.race?.participants.forEach((p) => add(p.name));
+    (g.dugout ?? []).forEach(add);
 
-  const rondes: string[][][] = [];
-  for (let r = 0; r < numRounds; r++) {
-    // startpositie draait per ronde mee, anders valt elke ronde hetzelfde uit
-    const start = (r * teamSize) % players.length;
-    let best = buildRound(start);
-    for (let i = 1; i < players.length && best.penalty > 0; i++) {
-      const cand = buildRound((start + i) % players.length);
-      if (cand.penalty < best.penalty) best = cand;
+    for (const name of names.values()) {
+      const members = splitMembers(name, state.teams ?? []);
+      if (members.length < 2) continue;
+      members.forEach((a, i) =>
+        members.slice(i + 1).forEach((b) => {
+          const k = key(a, b);
+          const games = played.get(k) ?? [];
+          if (!games.includes(g.name)) games.push(g.name);
+          played.set(k, games);
+        })
+      );
     }
-    best.teams.flatMap(pairs).forEach((k) => pairCount.set(k, (pairCount.get(k) ?? 0) + 1));
-    rondes.push(best.teams);
   }
-  return rondes;
+  return played;
 }
 
-// welk deel van alle mogelijke duo's heeft al eens samengespeeld?
-export function pairCoverage(players: string[], rondes: string[][][]): { played: number; total: number } {
-  const seen = new Set<string>();
-  rondes.forEach((teams) =>
-    teams.forEach((team) =>
-      team.forEach((a, i) => team.slice(i + 1).forEach((b) => seen.add([a, b].sort().join("|"))))
-    )
-  );
-  const n = players.length;
-  return { played: seen.size, total: (n * (n - 1)) / 2 };
+export function pairKey(a: string, b: string): string {
+  return [a.trim().toLowerCase(), b.trim().toLowerCase()].sort().join("|");
 }

@@ -89,14 +89,6 @@ export type EetMoment = {
 // vast team met leden — winst van dit team telt persoonlijk mee voor de leden
 export type TeamDef = { name: string; members: string[] };
 
-// rouleerschema: per ronde een teamindeling, zodat iedereen (zo snel mogelijk)
-// één keer met iedereen heeft samengespeeld; punten blijven persoonlijk
-export type Rotatie = {
-  teamSize: number;
-  spelers: string[];
-  rondes: string[][][]; // rondes → teams → namen
-};
-
 export type TournamentState = {
   games: Game[];
   seats?: Seat[];
@@ -106,5 +98,4 @@ export type TournamentState = {
   sponsors?: Sponsor[];
   eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
   teams?: TeamDef[];   // teams met leden (beheer op /teams); leden zijn users
-  rotatie?: Rotatie;   // gegenereerd rouleerschema (beheer op /teams)
 };
