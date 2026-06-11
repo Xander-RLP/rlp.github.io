@@ -2544,7 +2544,8 @@
           "x": 12,
           "y": 4.5,
           "type": "widget",
-          "content": "spotify"
+          "content": "spotify",
+          "locked": true
         }
       ]
     },
