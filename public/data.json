@@ -526,7 +526,13 @@
       "store": {
         "name": "Epic Games",
         "url": "https://store.epicgames.com/nl/p/rocket-league"
-      }
+      },
+      "dugout": [
+        "Ronnie Rifles",
+        "Rush B",
+        "Smoke Bros",
+        "Rolator Jeans"
+      ]
     },
     {
       "id": "wc3-reforged",
