@@ -120,7 +120,11 @@
                   "score": null
                 }
               ],
-              "next": null
+              "next": {
+                "r": 1,
+                "m": 3,
+                "s": 0
+              }
             },
             {
               "teams": [
