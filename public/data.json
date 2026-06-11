@@ -286,7 +286,7 @@
             {
               "teams": [
                 {
-                  "name": "Indy",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -362,7 +362,8 @@
         "Xander",
         "Leon",
         "Bo",
-        "Jean"
+        "Jean",
+        "Indy"
       ]
     },
     {
