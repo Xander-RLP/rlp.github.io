@@ -29,6 +29,7 @@ const WIDGETS: Record<string, string> = {
   kampioenen: "👑 Kampioenen",
   teams: "👥 Teams & leden",
   gametv: "🎬 Game TV (video)",
+  spotify: "🎵 LAN Playlist (Spotify)",
 };
 
 // vaste emoji-library: de admin kiest, niet zoeken
@@ -404,6 +405,22 @@ export default function BeamerPage() {
     window.addEventListener("pointerup", up);
   }
 
+  // mini-weergave van een slide (gedeeld door manager en filmstrip)
+  function miniatuur(sl: BeamerSlide) {
+    return (sl.blocks ?? []).map((b) => {
+      const f = 130 / AREA_BASIS;
+      const stijlPos = { left: `${(b.x / COLS) * 100}%`, top: `${(b.y / ROWS) * 100}%` } as React.CSSProperties;
+      if (b.type === "image") {
+        // eslint-disable-next-line @next/next/no-img-element
+        return <img key={b.id} src={b.content} alt="" style={{ ...stijlPos, height: (b.size ?? 200) * f }} className="absolute w-auto -translate-x-1/2 rounded-sm" />;
+      }
+      if (b.type === "widget") {
+        return <span key={b.id} style={stijlPos} className="absolute -translate-x-1/2 whitespace-nowrap rounded bg-lime-400/20 px-1 text-[8px] font-bold text-lime-300">{WIDGETS[b.content] ?? b.content}</span>;
+      }
+      return <span key={b.id} style={{ ...stijlPos, fontSize: Math.max(4, (b.size ?? 40) * f) }} className="absolute -translate-x-1/2 whitespace-pre-line text-center font-bold leading-tight">{b.content}</span>;
+    });
+  }
+
   function widgetBody(naam: string) {
     if (naam === "vandaag") {
       return (
@@ -468,6 +485,20 @@ export default function BeamerPage() {
       );
     }
     if (naam === "klok") return <GroteKlok />;
+    if (naam === "spotify") {
+      return (
+        <iframe
+          src="https://open.spotify.com/embed/playlist/4drxBWX7uZiXWBfuikt30S?theme=0"
+          width="520"
+          height="352"
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          className="rounded-xl"
+          title="RLP2026 Spotify playlist"
+        />
+      );
+    }
     if (naam === "lanstart") {
       const start = state!.eventStart ? new Date(state!.eventStart) : null;
       if (!start) return <p className="text-3xl text-slate-400">Startmoment nog niet ingesteld (kan via de homepage)</p>;
@@ -602,7 +633,7 @@ export default function BeamerPage() {
       <Klok />
 
       {/* het slide-raster */}
-      <div ref={areaRef} className="absolute inset-x-0 bottom-20 top-28">
+      <div ref={areaRef} className={`absolute bottom-20 right-0 top-28 transition-[left] duration-300 ${isAdmin && bewerkModus ? "left-56" : "left-0"}`}>
         {/* raster + middellijnen: faden zacht in tijdens het slepen en weer uit */}
         <div className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${dragActive ? "opacity-100" : bewerkModus ? "opacity-30" : "opacity-0"}`}>
           <div
@@ -929,6 +960,41 @@ export default function BeamerPage() {
         </div>
       )}
 
+      {/* filmstrip: slide-viewport links tijdens het bewerken */}
+      {isAdmin && bewerkModus && (
+        <aside className="absolute bottom-20 left-0 top-28 z-20 w-56 overflow-y-auto border-r border-slate-800 bg-slate-950/80 p-3 backdrop-blur [scrollbar-width:thin]">
+          <div className="flex flex-col gap-2">
+            {slides.map((sl, si) => (
+              <button
+                key={si}
+                onClick={() => setIdx(si)}
+                title={`Naar slide ${si + 1} — sleep om de volgorde te wijzigen`}
+                draggable
+                onDragStart={(e) => e.dataTransfer.setData("text/plain", String(si))}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const van = parseInt(e.dataTransfer.getData("text/plain"), 10);
+                  if (isNaN(van) || van === si) return;
+                  const d = [...startEdit()];
+                  const [verplaatst] = d.splice(van, 1);
+                  d.splice(si, 0, verplaatst);
+                  bewaar(d);
+                  setIdx(si);
+                }}
+                className={`relative block aspect-video w-full cursor-pointer overflow-hidden rounded border bg-slate-950 transition-colors ${
+                  si === idx % totaal ? "border-lime-400" : "border-slate-700 hover:border-slate-500"
+                } ${sl.hidden ? "opacity-40" : ""}`}
+              >
+                {miniatuur(sl)}
+                <span className="absolute bottom-0.5 left-1 rounded bg-slate-900/80 px-1 text-[9px] font-bold text-slate-400">{si + 1}</span>
+                {sl.hidden && <span className="absolute right-1 top-1 text-[9px]">🙈</span>}
+              </button>
+            ))}
+          </div>
+        </aside>
+      )}
+
       {/* slide-manager: alle slides als miniaturen beheren */}
       {isAdmin && managerOpen && (
         <div className="absolute inset-0 z-30 overflow-y-auto bg-slate-950/95 p-10 backdrop-blur">
@@ -948,18 +1014,7 @@ export default function BeamerPage() {
                   className="relative block aspect-video w-full cursor-pointer overflow-hidden rounded-t-md bg-slate-950"
                   title={`Naar slide ${si + 1}`}
                 >
-                  {(sl.blocks ?? []).map((b) => {
-                    const f = 130 / AREA_BASIS; // miniatuur-schaal
-                    const stijlPos = { left: `${(b.x / COLS) * 100}%`, top: `${(b.y / ROWS) * 100}%` } as React.CSSProperties;
-                    if (b.type === "image") {
-                      // eslint-disable-next-line @next/next/no-img-element
-                      return <img key={b.id} src={b.content} alt="" style={{ ...stijlPos, height: (b.size ?? 200) * f }} className="absolute w-auto -translate-x-1/2 rounded-sm" />;
-                    }
-                    if (b.type === "widget") {
-                      return <span key={b.id} style={stijlPos} className="absolute -translate-x-1/2 whitespace-nowrap rounded bg-lime-400/20 px-1 text-[8px] font-bold text-lime-300">{WIDGETS[b.content] ?? b.content}</span>;
-                    }
-                    return <span key={b.id} style={{ ...stijlPos, fontSize: Math.max(4, (b.size ?? 40) * f) }} className="absolute -translate-x-1/2 whitespace-pre-line text-center font-bold leading-tight">{b.content}</span>;
-                  })}
+                  {miniatuur(sl)}
                   {sl.hidden && <span className="absolute right-1 top-1 rounded bg-slate-900/90 px-1.5 text-[9px] font-bold text-amber-400">verborgen</span>}
                 </button>
                 <div className="flex items-center justify-between gap-1 px-2 py-1.5">
