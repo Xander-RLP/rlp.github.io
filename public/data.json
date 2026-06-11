@@ -792,7 +792,7 @@
       },
       "image": "/images/lotro.png",
       "start": "2026-06-13T10:15",
-      "durationMin": 240,
+      "durationMin": 345,
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/212500/"
