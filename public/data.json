@@ -793,14 +793,6 @@
                 {
                   "name": "Sjoerd",
                   "score": 4
-                },
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
                 }
               ],
               "outs": [
@@ -814,8 +806,6 @@
                   "m": 0,
                   "s": 1
                 },
-                null,
-                null,
                 null,
                 null
               ]
