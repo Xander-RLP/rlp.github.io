@@ -62,6 +62,14 @@ export function nextOf(b: Bracket, r: number, m: number): SlotRef | null {
   return { r: r + 1, m: tm, s: (m % 2) as 0 | 1 };
 }
 
+// de verliezer-lijn van een match (double-elimination-stijl): alleen expliciet
+export function loserNextOf(b: Bracket, r: number, m: number): SlotRef | null {
+  const nxt = b.rounds[r][m].loserNext;
+  if (!nxt) return null;
+  if (nxt.r > r && b.rounds[nxt.r]?.[nxt.m]) return { r: nxt.r, m: nxt.m, s: nxt.s ? 1 : 0 };
+  return null;
+}
+
 // slots waar een lijn naartoe loopt; die worden door propagate gevuld en zijn
 // dus niet handmatig in te vullen of te beslepen
 export function fedSlots(b: Bracket): Set<string> {
@@ -70,9 +78,18 @@ export function fedSlots(b: Bracket): Set<string> {
     round.forEach((_, m) => {
       const t = nextOf(b, r, m);
       if (t) fed.add(`${t.r}-${t.m}-${t.s}`);
+      const lt = loserNextOf(b, r, m);
+      if (lt) fed.add(`${lt.r}-${lt.m}-${lt.s}`);
     })
   );
   return fed;
+}
+
+// aantal deelnemersplekken = slots zonder inkomende lijn; beweegt automatisch
+// mee als de admin rondes/wedstrijden of lijntjes toevoegt of weghaalt
+export function entryCount(b: Bracket): number {
+  const total = b.rounds.reduce((s, round) => s + round.length * 2, 0);
+  return total - fedSlots(b).size;
 }
 
 // impliciete (klassieke) lijntjes expliciet maken, zodat structuurwijzigingen
@@ -96,15 +113,19 @@ export function addMatch(bracket: Bracket, r: number): Bracket {
   return b;
 }
 
+const LINK_KEYS = ["next", "loserNext"] as const;
+
 export function removeMatch(bracket: Bracket, r: number, m: number): Bracket {
   const b = materializeLinks(bracket);
   b.rounds[r].splice(m, 1);
   b.rounds.forEach((round) =>
     round.forEach((match) => {
-      const t = match.next;
-      if (!t || t.r !== r) return;
-      if (t.m === m) match.next = null;
-      else if (t.m > m) t.m -= 1;
+      for (const key of LINK_KEYS) {
+        const t = match[key];
+        if (!t || t.r !== r) continue;
+        if (t.m === m) match[key] = null;
+        else if (t.m > m) t.m -= 1;
+      }
     })
   );
   return b;
@@ -115,26 +136,35 @@ export function removeRound(bracket: Bracket, r: number): Bracket {
   b.rounds.splice(r, 1);
   b.rounds.forEach((round) =>
     round.forEach((match) => {
-      const t = match.next;
-      if (!t) return;
-      if (t.r === r) match.next = null;
-      else if (t.r > r) t.r -= 1;
+      for (const key of LINK_KEYS) {
+        const t = match[key];
+        if (!t) continue;
+        if (t.r === r) match[key] = null;
+        else if (t.r > r) t.r -= 1;
+      }
     })
   );
   return b;
 }
 
-// een slot heeft hooguit één inkomende lijn: een andere match die al naar
-// hetzelfde slot wees, raakt zijn lijn kwijt
-export function setLink(bracket: Bracket, from: { r: number; m: number }, to: SlotRef | null): Bracket {
+// een slot heeft hooguit één inkomende lijn (winnaar óf verliezer): een andere
+// match die al naar hetzelfde slot wees, raakt die lijn kwijt
+export function setLink(
+  bracket: Bracket,
+  from: { r: number; m: number },
+  to: SlotRef | null,
+  kind: "next" | "loserNext" = "next",
+): Bracket {
   const b = materializeLinks(bracket);
-  b.rounds[from.r][from.m].next = to;
+  b.rounds[from.r][from.m][kind] = to;
   if (to) {
     b.rounds.forEach((round, r) =>
       round.forEach((match, m) => {
-        if (r === from.r && m === from.m) return;
-        const t = match.next;
-        if (t && t.r === to.r && t.m === to.m && t.s === to.s) match.next = null;
+        for (const key of LINK_KEYS) {
+          if (r === from.r && m === from.m && key === kind) continue;
+          const t = match[key];
+          if (t && t.r === to.r && t.m === to.m && t.s === to.s) match[key] = null;
+        }
       })
     );
   }
@@ -166,19 +196,27 @@ export function winnerIdx(match: Match, firstRound = false): number {
   return a.score > b.score ? 0 : 1;
 }
 
-// winnaars stromen door langs hun lijntje; onbesliste feeds maken het slot leeg
+// winnaars (en verliezers, als die lijn er ligt) stromen door langs hun
+// lijntje; onbesliste feeds maken het slot leeg
 export function propagate(bracket: Bracket): Bracket {
   const b: Bracket = JSON.parse(JSON.stringify(bracket));
+  const feed = (t: SlotRef, name: string) => {
+    const slot = b.rounds[t.r][t.m].teams[t.s];
+    if (slot.name !== name) {
+      slot.name = name;
+      slot.score = null;
+    }
+  };
   for (let r = 0; r < b.rounds.length; r++) {
     b.rounds[r].forEach((match, m) => {
-      const t = nextOf(b, r, m);
-      if (!t) return;
       const w = winnerIdx(match, r === 0);
-      const slot = b.rounds[t.r][t.m].teams[t.s];
-      const newName = w < 0 ? "" : match.teams[w].name;
-      if (slot.name !== newName) {
-        slot.name = newName;
-        slot.score = null;
+      const t = nextOf(b, r, m);
+      if (t) feed(t, w < 0 ? "" : match.teams[w].name);
+      const lt = loserNextOf(b, r, m);
+      if (lt) {
+        // een bye heeft geen verliezer: alleen doorgeven als beide namen bekend zijn
+        const bothNamed = !!(match.teams[0].name && match.teams[1].name);
+        feed(lt, w >= 0 && bothNamed ? match.teams[1 - w].name : "");
       }
     });
   }
@@ -283,6 +321,61 @@ export function propagateDouble(double: DoubleBracket | LegacyDoubleBracket | un
   feed(d.gf.teams[0], wf.winner);
   feed(d.gf.teams[1], lf.winner);
   return d;
+}
+
+// double elimination → vrij bewerkbaar bracket: zelfde matches, namen en
+// scores, met expliciete winnaar- én verliezer-lijnen die de double-elim
+// doorstroom exact nabootsen. Kolommen: WB ronde r → kolom r, LB ronde li →
+// kolom li+1, grand finals achteraan.
+export function doubleToBracket(double: DoubleBracket | LegacyDoubleBracket | undefined): Bracket {
+  const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(double)));
+  const W = d.w.length;
+  const L = d.l.length;
+  const numCols = L + 2;
+  const rounds: Match[][] = Array.from({ length: numCols }, () => []);
+  const pos = new Map<string, { r: number; m: number }>();
+  const place = (key: string, col: number, match: Match) => {
+    pos.set(key, { r: col, m: rounds[col].length });
+    rounds[col].push(match);
+  };
+  d.w.forEach((round, r) => round.forEach((match, i) => place(`w-${r}-${i}`, r, match)));
+  d.l.forEach((round, li) => round.forEach((match, i) => place(`l-${li}-${i}`, li + 1, match)));
+  place("gf", numCols - 1, d.gf);
+
+  const link = (fromKey: string, kind: "next" | "loserNext", toKey: string, s: 0 | 1) => {
+    const f = pos.get(fromKey)!;
+    const t = pos.get(toKey)!;
+    rounds[f.r][f.m][kind] = { r: t.r, m: t.m, s };
+  };
+  // winners bracket: winnaar door, finale naar GF-slot boven
+  for (let r = 0; r < W; r++) {
+    d.w[r].forEach((_, m) => {
+      if (r < W - 1) link(`w-${r}-${m}`, "next", `w-${r + 1}-${Math.floor(m / 2)}`, (m % 2) as 0 | 1);
+      else link(`w-${r}-${m}`, "next", "gf", 0);
+    });
+  }
+  // verliezers: WB R1 gepaard de intake in; latere WB-verliezers vallen in de
+  // bijbehorende major-ronde (slot onder)
+  d.w[0].forEach((_, m) => link(`w-0-${m}`, "loserNext", `l-0-${Math.floor(m / 2)}`, (m % 2) as 0 | 1));
+  for (let k = 1; k < W; k++) {
+    const li = 2 * k - 1;
+    if (!d.l[li]) continue;
+    d.w[k].forEach((_, m) => link(`w-${k}-${m}`, "loserNext", `l-${li}-${m}`, 1));
+  }
+  // losers bracket intern; LB-finale naar GF-slot onder
+  for (let li = 0; li < L; li++) {
+    d.l[li].forEach((_, m) => {
+      if (li === L - 1) {
+        link(`l-${li}-${m}`, "next", "gf", 1);
+      } else if (d.l[li + 1].length < d.l[li].length) {
+        link(`l-${li}-${m}`, "next", `l-${li + 1}-${Math.floor(m / 2)}`, (m % 2) as 0 | 1);
+      } else {
+        link(`l-${li}-${m}`, "next", `l-${li + 1}-${m}`, 0);
+      }
+    });
+  }
+  // resterende impliciete lijnen bevriezen (GF krijgt expliciet "geen lijn")
+  return materializeLinks({ rounds });
 }
 
 export function roundTitle(r: number, totalRounds: number, teams: number): string {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, emptyBracket, emptyDouble, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
@@ -145,6 +145,16 @@ export default function HomeView() {
     patchGame({ dugout: (game.dugout ?? []).filter((n) => n !== name) });
   }
 
+  // double elimination → vrij bewerkbaar bracket: indeling, scores en alle
+  // lijnen (winnaar + verliezer) blijven exact staan, daarna is alles aanpasbaar
+  function convertDoubleToBracket() {
+    if (!confirm(
+      "Om rondes, wedstrijden en lijntjes zelf te bewerken wordt dit double-elimination bracket omgezet naar een vrij bewerkbaar bracket.\n\n" +
+      "De huidige indeling, scores en alle lijnen (groen = winnaar, rood = verliezer) blijven staan. Daarna beheer je de opbouw volledig zelf via 🔧 Bracket bewerken. Doorgaan?"
+    )) return;
+    patchGame({ type: "bracket", bracket: doubleToBracket(game.double), double: undefined });
+  }
+
   function removeGame(g: Game) {
     if (!confirm(`Spel "${g.name}" en het bijbehorende bracket verwijderen?`)) return;
     updateGames(state!.games.filter((x) => x.id !== g.id));
@@ -258,7 +268,7 @@ export default function HomeView() {
             <h1 className="flex items-center gap-2 text-xl font-extrabold uppercase tracking-wide md:text-2xl">
               {game.type === "race" ? game.name
                 : game.type === "double" ? `${game.name}: Double Elimination`
-                : `${game.name}: ${teamCount(game.bracket)}-Team Bracket`}
+                : `${game.name}: ${entryCount(game.bracket)}-Team Bracket`}
               {isAdmin && (
                 <button
                   onClick={() => {
@@ -322,7 +332,19 @@ export default function HomeView() {
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
       ) : game.type === "double" ? (
-        <DoubleBracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
+        <>
+          {isAdmin && (
+            <div className="mb-3">
+              <button
+                onClick={convertDoubleToBracket}
+                className="cursor-pointer rounded border border-slate-700 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-400 hover:border-lime-400 hover:text-lime-400"
+              >
+                🔧 Bracket bewerken (zet om naar vrij bracket)
+              </button>
+            </div>
+          )}
+          <DoubleBracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
+        </>
       ) : (
         <BracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       )}
@@ -339,13 +361,18 @@ export default function HomeView() {
           )}
           {(game.type === "bracket" || !game.type) && (
             <> Met <b>🔧 Bracket bewerken</b> voeg je zelf rondes en wedstrijden toe en bepaal je de
-            lijntjes (klik de →-knop op een wedstrijd en daarna het doel-slot).</>
+            lijntjes: → voor de winnaar, ↘ voor de verliezer (rode lijn, double-elim). Het aantal teams
+            in de titel volgt automatisch de opbouw.</>
+          )}
+          {game.type === "double" && (
+            <> Wil je rondes of lijntjes aanpassen? Gebruik <b>🔧 Bracket bewerken</b> boven het bracket
+            om het om te zetten naar een vrij bewerkbaar bracket.</>
           )}
           {" "}Wijzigingen worden automatisch opgeslagen.
           <div className="mt-2 flex flex-wrap items-center gap-3">
             {game.type !== "race" && (
               <span className="flex items-center gap-2">
-                Standaard-opzet:
+                Snel opzetten (vervangt opbouw):
                 <select
                   value={game.type === "double" ? normalizeDouble(game.double).w[0].length * 2 : teamCount(game.bracket)}
                   onChange={(e) => (game.type === "double" ? resizeDouble : resize)(parseInt(e.target.value, 10))}

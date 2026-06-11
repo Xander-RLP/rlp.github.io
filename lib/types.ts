@@ -9,6 +9,9 @@ export type Match = {
   // undefined = klassiek (volgende ronde, match m/2, slot m%2),
   // null = geen lijn, anders een expliciet door de admin gekozen slot
   next?: SlotRef | null;
+  // waar de verliezer naartoe stroomt (double-elimination-stijl);
+  // alleen expliciet — geen klassieke standaard
+  loserNext?: SlotRef | null;
 };
 
 export type Bracket = { rounds: Match[][] };

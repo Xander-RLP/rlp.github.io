@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  addMatch, addRound, fedSlots, logoColor, nextOf, propagate, removeMatch, removeRound,
+  addMatch, addRound, fedSlots, logoColor, loserNextOf, nextOf, propagate, removeMatch, removeRound,
   roundTitle, seedOf, seedPairs, setLink, teamCount, winnerIdx,
 } from "@/lib/bracket";
 import { getDragPayload, setDragPayload } from "@/lib/dnd";
-import type { Bracket, Game } from "@/lib/types";
+import type { Bracket, Game, SlotRef } from "@/lib/types";
 
 type Line = { left: number; top: number; width: number; height: number };
+type LinkKind = "next" | "loserNext";
 
 type Props = {
   game: Game;
@@ -27,8 +28,9 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
   const [lines, setLines] = useState<Line[]>([]);
+  const [loserLines, setLoserLines] = useState<Line[]>([]);
   const [editStructure, setEditStructure] = useState(false);
-  const [linkFrom, setLinkFrom] = useState<{ r: number; m: number } | null>(null);
+  const [linkFrom, setLinkFrom] = useState<{ r: number; m: number; kind: LinkKind } | null>(null);
   const [dropOver, setDropOver] = useState<string | null>(null);
 
   const recompute = useCallback(() => {
@@ -36,29 +38,34 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
     if (!container) return;
     const origin = container.getBoundingClientRect();
     const next: Line[] = [];
-    const line = (left: number, top: number, width: number, height: number) =>
-      next.push({ left, top, width: Math.max(width, 1.5), height: Math.max(height, 1.5) });
+    const loser: Line[] = [];
+    const draw = (r: number, m: number, t: SlotRef | null, into: Line[]) => {
+      if (!t) return;
+      const srcEl = matchRefs.current.get(`${r}-${m}`);
+      const dstEl = matchRefs.current.get(`${t.r}-${t.m}`);
+      if (!srcEl || !dstEl) return;
+      const line = (left: number, top: number, width: number, height: number) =>
+        into.push({ left, top, width: Math.max(width, 1.5), height: Math.max(height, 1.5) });
+      const src = srcEl.getBoundingClientRect();
+      const dst = dstEl.getBoundingClientRect();
+      const srcY = src.top + src.height / 2 - origin.top;
+      const dstY = dst.top + dst.height * (t.s === 0 ? 0.25 : 0.75) - origin.top;
+      const srcX = src.right - origin.left;
+      const dstX = dst.left - origin.left;
+      const midX = (srcX + dstX) / 2;
+      line(srcX, srcY, midX - srcX, 0);
+      line(midX, Math.min(srcY, dstY), 0, Math.abs(dstY - srcY));
+      line(midX, dstY, dstX - midX, 0);
+    };
 
     bracket.rounds.forEach((round, r) =>
       round.forEach((_, m) => {
-        const t = nextOf(bracket, r, m);
-        if (!t) return;
-        const srcEl = matchRefs.current.get(`${r}-${m}`);
-        const dstEl = matchRefs.current.get(`${t.r}-${t.m}`);
-        if (!srcEl || !dstEl) return;
-        const src = srcEl.getBoundingClientRect();
-        const dst = dstEl.getBoundingClientRect();
-        const srcY = src.top + src.height / 2 - origin.top;
-        const dstY = dst.top + dst.height * (t.s === 0 ? 0.25 : 0.75) - origin.top;
-        const srcX = src.right - origin.left;
-        const dstX = dst.left - origin.left;
-        const midX = (srcX + dstX) / 2;
-        line(srcX, srcY, midX - srcX, 0);
-        line(midX, Math.min(srcY, dstY), 0, Math.abs(dstY - srcY));
-        line(midX, dstY, dstX - midX, 0);
+        draw(r, m, nextOf(bracket, r, m), next);
+        draw(r, m, loserNextOf(bracket, r, m), loser);
       })
     );
     setLines(next);
+    setLoserLines(loser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, isAdmin, editStructure]);
 
@@ -149,7 +156,7 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
   // stond er al een handmatige naam in het doelslot, dan gaat die naar de dugout
   function clickSlotForLink(r: number, m: number, s: 0 | 1) {
     if (!linkFrom || r <= linkFrom.r) return;
-    const b = setLink(game.bracket, linkFrom, { r, m, s });
+    const b = setLink(game.bracket, linkFrom, { r, m, s }, linkFrom.kind);
     const slot = b.rounds[r][m].teams[s];
     const patch: Partial<Game> = { bracket: b };
     if (slot.name && !fed.has(`${r}-${m}-${s}`)) {
@@ -163,7 +170,9 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
 
   const gf = bracket.rounds[totalRounds - 1]?.[0];
   const champ = gf ? winnerIdx(gf) : -1;
-  const curLinkTarget = linkFrom ? nextOf(bracket, linkFrom.r, linkFrom.m) : null;
+  const curLinkTarget = linkFrom
+    ? (linkFrom.kind === "next" ? nextOf : loserNextOf)(bracket, linkFrom.r, linkFrom.m)
+    : null;
 
   return (
     <div>
@@ -181,14 +190,15 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
           </button>
           {editStructure && !linkFrom && (
             <span className="text-[11px] text-slate-400">
-              Voeg rondes en wedstrijden toe of haal ze weg. Lijntje leggen: klik de <b className="text-sky-400">→</b> op een wedstrijd en daarna het doel-slot.
+              Voeg rondes en wedstrijden toe of haal ze weg. Lijntje leggen: klik de <b className="text-sky-400">→</b> (winnaar)
+              of <b className="text-red-400">↘</b> (verliezer) op een wedstrijd en daarna het doel-slot.
             </span>
           )}
           {linkFrom && (
             <span className="flex items-center gap-2 rounded border border-sky-400/50 bg-sky-400/10 px-2.5 py-1 text-[11px] text-sky-200">
-              Klik op een team-slot in een latere ronde om de lijn te leggen.
+              Klik op een team-slot in een latere ronde om de {linkFrom.kind === "next" ? "winnaar" : "verliezer"}-lijn te leggen.
               <button
-                onClick={() => { onUpdate({ bracket: setLink(game.bracket, linkFrom, null) }); setLinkFrom(null); }}
+                onClick={() => { onUpdate({ bracket: setLink(game.bracket, linkFrom, null, linkFrom.kind) }); setLinkFrom(null); }}
                 className="cursor-pointer rounded border border-sky-400/60 px-1.5 py-0.5 font-bold hover:bg-sky-400/20"
               >
                 ⊘ Geen lijn
@@ -212,6 +222,9 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
         {lines.map((l, i) => (
           <div key={i} className="pointer-events-none absolute bg-lime-500/40" style={l} />
         ))}
+        {loserLines.map((l, i) => (
+          <div key={`l${i}`} className="pointer-events-none absolute bg-red-500/35" style={l} />
+        ))}
 
         {bracket.rounds.map((matches, r) => {
           const isFinal = r === totalRounds - 1;
@@ -233,7 +246,10 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
                 {matches.map((match, m) => {
                   const w = winnerIdx(match, r === 0);
                   const isLinkSrc = linkFrom?.r === r && linkFrom?.m === m;
+                  const isWinSrc = isLinkSrc && linkFrom?.kind === "next";
+                  const isLoseSrc = isLinkSrc && linkFrom?.kind === "loserNext";
                   const hasLink = !!nextOf(bracket, r, m);
+                  const hasLoserLink = !!loserNextOf(bracket, r, m);
                   return (
                     <div
                       key={m}
@@ -254,10 +270,10 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
                             ×
                           </button>
                           <button
-                            onClick={() => setLinkFrom(isLinkSrc ? null : { r, m })}
-                            title={isLinkSrc ? "Lijn leggen annuleren" : "Lijn van deze wedstrijd leggen"}
-                            className={`absolute -right-3 top-1/2 z-20 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border text-[11px] leading-none ${
-                              isLinkSrc
+                            onClick={() => setLinkFrom(isWinSrc ? null : { r, m, kind: "next" })}
+                            title={isWinSrc ? "Lijn leggen annuleren" : "Winnaar-lijn van deze wedstrijd leggen"}
+                            className={`absolute -right-3 top-1/3 z-20 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border text-[11px] leading-none ${
+                              isWinSrc
                                 ? "border-sky-400 bg-sky-400 text-sky-950"
                                 : hasLink
                                 ? "border-lime-400/60 bg-slate-900 text-lime-400 hover:border-sky-400 hover:text-sky-400"
@@ -265,6 +281,19 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
                             }`}
                           >
                             →
+                          </button>
+                          <button
+                            onClick={() => setLinkFrom(isLoseSrc ? null : { r, m, kind: "loserNext" })}
+                            title={isLoseSrc ? "Lijn leggen annuleren" : "Verliezer-lijn van deze wedstrijd leggen (double-elim)"}
+                            className={`absolute -right-3 top-2/3 z-20 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border text-[11px] leading-none ${
+                              isLoseSrc
+                                ? "border-sky-400 bg-sky-400 text-sky-950"
+                                : hasLoserLink
+                                ? "border-red-400/70 bg-slate-900 text-red-400 hover:border-sky-400 hover:text-sky-400"
+                                : "border-slate-600 bg-slate-900 text-slate-500 hover:border-sky-400 hover:text-sky-400"
+                            }`}
+                          >
+                            ↘
                           </button>
                         </>
                       )}
