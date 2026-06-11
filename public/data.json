@@ -2016,18 +2016,6 @@
     {
       "blocks": [
         {
-          "id": "r24",
-          "type": "image",
-          "content": "/images/beamer/pptx/image2.webp",
-          "x": 12,
-          "y": 2,
-          "size": 600
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
           "id": "r25",
           "type": "image",
           "content": "/images/beamer/pptx/image16.webp",
