@@ -875,8 +875,14 @@
       "title": "BBQ (€ 15 — Tikkie)",
       "emoji": "🔥",
       "start": "2026-06-13T17:30",
-      "durationMin": 120,
-      "tikkie": "https://tikkie.me/pay/bfags7ccgh4sqhdhepsh"
+      "durationMin": 120
+    }
+  ],
+  "sponsors": [
+    {
+      "id": "ronnie-kaisjer",
+      "name": "Ronnie Kaisjer",
+      "tagline": "sponserd de locatie"
     }
   ]
 }
