@@ -53,68 +53,180 @@
       "durationMin": 345,
       "type": "double",
       "double": {
-        "w1": [
-          {
-            "teams": [
-              {
-                "name": "Ronnie Rifles",
-                "score": null
-              },
-              {
-                "name": "Rush B",
-                "score": null
-              }
-            ]
-          },
-          {
-            "teams": [
-              {
-                "name": "Smoke Bros",
-                "score": null
-              },
-              {
-                "name": "Rolator Jeans",
-                "score": null
-              }
-            ]
-          }
+        "w": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "Ronnie Rifles",
+                  "score": null
+                },
+                {
+                  "name": "Rush B",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Smoke Bros",
+                  "score": null
+                },
+                {
+                  "name": "Rolator Jeans",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Team klaas",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
         ],
-        "wf": {
-          "teams": [
+        "l": [
+          [
             {
-              "name": "",
-              "score": null
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             },
             {
-              "name": "",
-              "score": null
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             }
-          ]
-        },
-        "l1": {
-          "teams": [
+          ],
+          [
             {
-              "name": "",
-              "score": null
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             },
             {
-              "name": "",
-              "score": null
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             }
           ]
-        },
-        "lf": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        },
+        ],
         "gf": {
           "teams": [
             {
