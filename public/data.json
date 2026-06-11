@@ -763,7 +763,7 @@
                   "s": 1
                 }
               ],
-              "label": "🏆 WB Ronde 1"
+              "label": "Loser Ronde 1"
             }
           ],
           [
@@ -2049,7 +2049,7 @@
           "content": "/images/beamer/pptx/image22.webp",
           "x": 12,
           "y": 2,
-          "size": 472
+          "size": 600
         }
       ]
     },
