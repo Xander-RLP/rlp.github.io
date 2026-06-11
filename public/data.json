@@ -1282,7 +1282,7 @@
     {
       "id": "T1",
       "side": "top",
-      "name": ""
+      "name": "Laszlo"
     },
     {
       "id": "T2",
@@ -1325,9 +1325,7 @@
       "name": "Bo"
     }
   ],
-  "unseated": [
-    "Laszlo"
-  ],
+  "unseated": [],
   "eventStart": "2026-06-11T14:00",
   "eetmomenten": [
     {
