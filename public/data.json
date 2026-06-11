@@ -953,26 +953,6 @@
                 },
                 null
               ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 1,
-                  "m": 1,
-                  "s": 0
-                },
-                null
-              ]
             }
           ],
           [
