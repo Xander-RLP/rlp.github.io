@@ -30,7 +30,7 @@ function hostname(url: string): string | null {
 }
 
 export default function SponsorsPage() {
-  const { state, isAdmin, updateSponsors, saveStatus } = useTournament();
+  const { state, isAdmin, updateSponsors, updateState, saveStatus } = useTournament();
   const [addOpen, setAddOpen] = useState(false);
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
@@ -52,6 +52,21 @@ export default function SponsorsPage() {
     updateSponsors([...sponsors, sponsor]);
     setAddOpen(false);
     setName(""); setUrl(""); setLogo(""); setTagline("");
+  }
+
+  // koffie-donateur: in één klik sponsor + flitsende shoutout op de beamer
+  function addDonateur() {
+    const naam = prompt("Naam van de koffie-donateur (komt als sponsor op de site + shoutout op de beamer):")?.trim();
+    if (!naam) return;
+    const sponsor: Sponsor = {
+      id: `${naam.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-koffie`,
+      name: naam,
+      tagline: "☕ Kocht een koffie voor de developer",
+    };
+    updateState({
+      sponsors: [...sponsors, sponsor],
+      shoutout: { naam, tot: new Date(Date.now() + 10 * 60000).toISOString() },
+    });
   }
 
   function removeSponsor(s: Sponsor) {
@@ -108,12 +123,21 @@ export default function SponsorsPage() {
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
         <h2 className="text-[22px] font-extrabold uppercase tracking-wide">Sponsors</h2>
         {isAdmin && (
+          <span className="flex gap-2">
+          <button
+            onClick={addDonateur}
+            title="Donateur als sponsor toevoegen én 10 minuten flitsend op de beamer tonen"
+            className="cursor-pointer rounded border border-amber-400/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-amber-300 hover:bg-amber-400/10"
+          >
+            ☕ Koffie-donateur
+          </button>
           <button
             onClick={() => setAddOpen(true)}
             className="cursor-pointer rounded border border-dashed border-slate-600 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-lime-400 hover:bg-lime-400/10"
           >
             + Sponsor toevoegen
           </button>
+          </span>
         )}
       </div>
       <p className="mb-5 text-[13px] text-slate-400">

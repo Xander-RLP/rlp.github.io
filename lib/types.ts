@@ -107,6 +107,7 @@ export type TournamentState = {
   whatsapp?: string;   // invite-link van de groepschat (chat.whatsapp.com/…)
   liveStream?: string; // eigen livestream (YouTube/Twitch-URL) — krijgt voorrang in de Game TV
   beamer?: BeamerSlide[]; // eigen info-slides in de beamer-rotatie (beheer op /beamer)
+  shoutout?: { naam: string; tot: string }; // tijdelijke beamer-shoutout (bijv. koffie-donateur)
 };
 
 // blok op een beamer-slide: vrij te plaatsen op een raster van 24×14

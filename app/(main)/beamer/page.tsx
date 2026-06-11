@@ -1032,6 +1032,24 @@ export default function BeamerPage() {
         </div>
       )}
 
+      {/* shoutout: koffie-donateur flitsend in beeld */}
+      {state.shoutout && new Date(state.shoutout.tot).getTime() > Date.now() && (
+        <div className="pointer-events-none absolute inset-x-0 top-24 z-40 flex justify-center">
+          <div className="shoutout-banner flex items-center gap-4 rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 px-10 py-5 text-3xl font-extrabold text-amber-950 shadow-[0_0_60px_rgba(251,191,36,0.7)]">
+            ☕ <span>{state.shoutout.naam} kocht een koffie voor de developer!</span> 🎉
+          </div>
+          {["☕", "🎉", "⚡", "☕", "🎉", "☕", "⚡", "🎉"].map((e, i) => (
+            <span
+              key={i}
+              className="confetti absolute top-0 text-3xl"
+              style={{ left: `${12 + i * 10}%`, animationDelay: `${i * 0.45}s` }}
+            >
+              {e}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* terug naar de site + fullscreen; faden weg bij stilte */}
       <div className={`absolute bottom-8 right-8 flex items-center gap-2 ${fade}`}>
         <a
