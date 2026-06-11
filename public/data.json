@@ -2493,7 +2493,7 @@
           "y": 4.5,
           "type": "widget",
           "content": "spotify",
-          "locked": true
+          "locked": false
         }
       ]
     },
