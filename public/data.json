@@ -1084,6 +1084,62 @@
         ]
       },
       "emoji": "🏴‍☠️"
+    },
+    {
+      "id": "fall-guys-ultimate-knockout",
+      "name": "Fall Guys: Ultimate Knockout",
+      "type": "elim",
+      "entryType": "user",
+      "format": "Afvalrace · rondes met afvallers",
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "elim": {
+        "rounds": [
+          []
+        ]
+      }
     }
   ],
   "seats": [
