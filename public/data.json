@@ -815,12 +815,12 @@
             {
               "teams": [
                 {
-                  "name": "",
+                  "name": "Sjoerd",
                   "score": null
                 },
                 {
-                  "name": "",
-                  "score": null
+                  "name": "Ennio",
+                  "score": 2
                 }
               ],
               "outs": [
