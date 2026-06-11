@@ -538,17 +538,7 @@
                   "name": "Aerial Aces",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 1,
-                "m": 0,
-                "s": 0
-              },
-              "loserNext": {
-                "r": 1,
-                "m": 1,
-                "s": 0
-              }
+              ]
             },
             {
               "teams": [
@@ -560,41 +550,7 @@
                   "name": "Whiff Squad",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 1,
-                "m": 0,
-                "s": 1
-              },
-              "loserNext": {
-                "r": 1,
-                "m": 1,
-                "s": 1
-              }
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 3,
-                "m": 0,
-                "s": 0
-              },
-              "loserNext": {
-                "r": 2,
-                "m": 0,
-                "s": 1
-              }
+              ]
             },
             {
               "teams": [
@@ -606,12 +562,19 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 2,
-                "m": 0,
-                "s": 0
-              }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             }
           ],
           [
@@ -625,12 +588,19 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 3,
-                "m": 0,
-                "s": 1
-              }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             }
           ],
           [
@@ -644,8 +614,7 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": null
+              ]
             }
           ]
         ]
