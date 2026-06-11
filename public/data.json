@@ -878,11 +878,5 @@
       "durationMin": 120
     }
   ],
-  "sponsors": [
-    {
-      "id": "ronnie-kaisjer",
-      "name": "Ronnie Kaisjer",
-      "tagline": "sponserd de locatie"
-    }
-  ]
+  "sponsors": []
 }
