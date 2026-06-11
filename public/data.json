@@ -1118,7 +1118,11 @@
         "Rush B",
         "Smoke Bros",
         "Rolator Jeans"
-      ]
+      ],
+      "store": {
+        "name": "forums.revora.net",
+        "url": "https://forums.revora.net/topic/105190-bfme1bfme2rotwk-games-download-installation-guide/"
+      }
     },
     {
       "id": "treasure-hunt",
