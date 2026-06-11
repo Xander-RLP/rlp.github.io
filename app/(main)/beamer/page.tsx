@@ -687,24 +687,32 @@ export default function BeamerPage() {
                   ⠿
                 </button>
                 )}
-                {!b.locked && b.type !== "widget" && (
-                  <>
-                    <button
-                      onClick={() => patchBlock(bi, { size: Math.min(b.type === "image" ? 880 : 160, (b.size ?? (b.type === "image" ? 200 : 40)) + (b.type === "image" ? 32 : 8)) }, true)}
-                      title="Groter"
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 hover:border-lime-400"
-                    >
-                      🔍+
-                    </button>
-                    <button
-                      onClick={() => patchBlock(bi, { size: Math.max(b.type === "image" ? 96 : 16, (b.size ?? (b.type === "image" ? 200 : 40)) - (b.type === "image" ? 32 : 8)) }, true)}
-                      title="Kleiner"
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 hover:border-lime-400"
-                    >
-                      🔍−
-                    </button>
-                  </>
-                )}
+                {!b.locked && (() => {
+                  // schaal-parameters per bloktype: foto in px, tekst in fontgrootte,
+                  // widget als percentage (transform-scale)
+                  const basis = b.type === "image" ? 200 : b.type === "text" ? 40 : 100;
+                  const stap = b.type === "image" ? 32 : b.type === "text" ? 8 : 10;
+                  const max = b.type === "image" ? 880 : b.type === "text" ? 160 : 220;
+                  const min = b.type === "image" ? 96 : b.type === "text" ? 16 : 40;
+                  return (
+                    <>
+                      <button
+                        onClick={() => patchBlock(bi, { size: Math.min(max, (b.size ?? basis) + stap) }, true)}
+                        title="Groter"
+                        className="flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 hover:border-lime-400"
+                      >
+                        🔍+
+                      </button>
+                      <button
+                        onClick={() => patchBlock(bi, { size: Math.max(min, (b.size ?? basis) - stap) }, true)}
+                        title="Kleiner"
+                        className="flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-600 bg-slate-900 text-xs text-slate-300 hover:border-lime-400"
+                      >
+                        🔍−
+                      </button>
+                    </>
+                  );
+                })()}
                 {!b.locked && b.type === "text" && (
                   <>
                     <button
@@ -787,6 +795,7 @@ export default function BeamerPage() {
             {b.type === "widget" && (
               <div
                 onPointerDown={b.locked ? undefined : (e) => dragBlock(e, bi)}
+                style={{ transform: `scale(${(b.size ?? 100) / 100})`, transformOrigin: "top center" }}
                 className={`w-max ${isAdmin && !b.locked ? "cursor-grab active:cursor-grabbing" : ""}`}
               >
                 {widgetBody(b.content)}
