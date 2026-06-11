@@ -1761,7 +1761,7 @@
           "x": 12,
           "y": 4,
           "size": 64,
-          "font": "serif"
+          "font": "sans"
         },
         {
           "id": "bar-x",
