@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { COFFEE_URL } from "@/lib/links";
 import { useTournament } from "@/lib/store";
 
 const TS_HOST = "ts.impulzgaming.com";
@@ -99,6 +100,14 @@ export default function TeamSpeakWidget() {
               className="mx-auto h-28 w-auto"
             />
             <p className="text-[11px] font-bold tracking-wide text-slate-300">UGREEN DXP8800 Plus</p>
+            <a
+              href={COFFEE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-block text-[10px] text-slate-500 underline decoration-dotted underline-offset-2 transition-colors hover:text-amber-300"
+            >
+              hosting, stroom & onderhoud — draag iets bij
+            </a>
           </div>
         </div>
       )}
