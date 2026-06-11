@@ -409,7 +409,7 @@
                   "score": null
                 },
                 {
-                  "name": "Jean",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -473,7 +473,8 @@
         "Xander",
         "Leon",
         "Bo",
-        "Indy"
+        "Indy",
+        "Jean"
       ],
       "entryType": "user"
     },
