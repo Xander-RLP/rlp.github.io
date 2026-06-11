@@ -678,7 +678,7 @@
             {
               "teams": [
                 {
-                  "name": "Bo",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -773,7 +773,10 @@
         "name": "Steam",
         "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
         "price": "€ 19,99"
-      }
+      },
+      "dugout": [
+        "Bo"
+      ]
     },
     {
       "id": "lotro",
