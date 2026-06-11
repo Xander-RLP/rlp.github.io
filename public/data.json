@@ -706,7 +706,7 @@
     {
       "id": "L2",
       "side": "left",
-      "name": ""
+      "name": "Xander"
     },
     {
       "id": "L3",
@@ -735,7 +735,6 @@
     }
   ],
   "unseated": [
-    "Xander",
     "Bo",
     "Indy",
     "Jean",
