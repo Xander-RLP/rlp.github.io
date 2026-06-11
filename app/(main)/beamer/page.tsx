@@ -52,6 +52,28 @@ export default function BeamerPage() {
   const [bezig, setBezig] = useState(false); // admin is aan het typen → rotatie pauzeren
   const [pickerOpen, setPickerOpen] = useState(false);
   const [isFull, setIsFull] = useState(false);
+  const [actief, setActief] = useState(true); // muis recent bewogen?
+
+  // na 5s stilte faden alle bedien-elementen langzaam weg (presentatiemodus);
+  // elke beweging, klik of toets haalt ze terug
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    const wake = () => {
+      setActief(true);
+      clearTimeout(t);
+      t = setTimeout(() => setActief(false), 5000);
+    };
+    wake();
+    window.addEventListener("mousemove", wake);
+    window.addEventListener("mousedown", wake);
+    window.addEventListener("keydown", wake);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("mousemove", wake);
+      window.removeEventListener("mousedown", wake);
+      window.removeEventListener("keydown", wake);
+    };
+  }, []);
 
   // fullscreen-knop verdwijnt zodra we echt fullscreen staan
   useEffect(() => {
@@ -118,6 +140,10 @@ export default function BeamerPage() {
   }, [totaal]);
 
   if (!state) return null;
+
+  // bedien-elementen (bolletjes, bewerkknopjes) faden weg bij stilte
+  const chrome = actief || bezig || pickerOpen;
+  const fade = `transition-opacity duration-1000 ${chrome ? "opacity-100" : "pointer-events-none opacity-0"}`;
 
   // ---- inline bewerken ----
   function startEdit(): BeamerSlide[] {
@@ -304,7 +330,7 @@ export default function BeamerPage() {
                   <button
                     onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, images: x.images?.filter((_, k) => k !== fi) } : x))); }}
                     title="Foto weghalen"
-                    className="absolute -right-2 -top-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-slate-600 bg-slate-900 text-xs text-slate-400 hover:border-red-500 hover:text-red-500"
+                    className={`absolute -right-2 -top-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-slate-600 bg-slate-900 text-xs text-slate-400 hover:border-red-500 hover:text-red-500 ${fade}`}
                   >
                     ×
                   </button>
@@ -316,13 +342,13 @@ export default function BeamerPage() {
                 onClick={() => fotoToevoegen(i)}
                 title="Foto toevoegen"
                 style={{ height: s.imageSize ?? 208 }}
-                className="flex w-36 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 text-3xl text-slate-600 transition-colors hover:border-lime-400/60 hover:text-lime-400"
+                className={`flex w-36 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 text-3xl text-slate-600 hover:border-lime-400/60 hover:text-lime-400 ${fade}`}
               >
                 📷+
               </button>
             )}
             {isAdmin && !!s.images?.length && (
-              <span className="flex flex-col gap-1.5">
+              <span className={`flex flex-col gap-1.5 ${fade}`}>
                 <button
                   onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, imageSize: Math.min(480, (x.imageSize ?? 208) + 32) } : x))); }}
                   title="Foto's groter"
@@ -345,7 +371,7 @@ export default function BeamerPage() {
         {isAdmin && (
           <button
             onClick={() => verwijderSlide(i)}
-            className="mt-8 cursor-pointer rounded border border-slate-800 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:border-red-500 hover:text-red-500"
+            className={`mt-8 cursor-pointer rounded border border-slate-800 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:border-red-500 hover:text-red-500 ${fade}`}
           >
             × slide verwijderen
           </button>
@@ -379,7 +405,7 @@ export default function BeamerPage() {
       <div className="flex h-full items-center justify-center overflow-y-auto px-24 py-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{slide}</div>
 
       {/* voortgangsbolletjes + admin-acties */}
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5">
+      <div className={`absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5 ${fade}`}>
         {Array.from({ length: totaal }, (_, i) => (
           <button
             key={i}
@@ -400,7 +426,7 @@ export default function BeamerPage() {
       </div>
 
       {isAdmin && idx >= 3 && (
-        <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-20"}`}>
+        <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-20"} ${fade}`}>
           ✏️ klik op de emoji, titel of tekst om direct te bewerken — opslaan gaat vanzelf
         </p>
       )}
@@ -410,7 +436,7 @@ export default function BeamerPage() {
         <button
           onClick={() => void document.documentElement.requestFullscreen().catch(() => {})}
           title="Fullscreen (zoals F11) — Esc om terug te keren"
-          className="absolute bottom-8 right-8 flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 transition-colors hover:border-lime-400 hover:text-lime-400"
+          className={`absolute bottom-8 right-8 flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 hover:border-lime-400 hover:text-lime-400 ${fade}`}
         >
           ⛶ Fullscreen
         </button>
