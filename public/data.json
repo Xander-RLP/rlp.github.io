@@ -696,7 +696,7 @@
             {
               "teams": [
                 {
-                  "name": "Jean",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -777,7 +777,8 @@
       "dugout": [
         "Bo",
         "Indy",
-        "Sjoerd"
+        "Sjoerd",
+        "Jean"
       ]
     },
     {
