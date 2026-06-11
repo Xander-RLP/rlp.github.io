@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { FOTOS_WACHTWOORD_KEY, decryptFotoUrl, unlockFotos } from "@/lib/fotos";
 
-// Diashow van LAN-foto's achter de hero. De foto's zijn versleuteld; de show
-// draait alleen voor bezoekers die het foto-wachtwoord al hebben ingevoerd
-// op /fotos — voor de rest blijft de gewone hero-achtergrond staan.
+// Diashow van LAN-foto's achter de hero. Met het foto-wachtwoord draait de
+// volledige (versleutelde) set; zonder wachtwoord vallen we terug op de
+// publieke, gecureerde hero-foto's in public/images/hero/ (1.jpg, 2.jpg, …)
+// zodat élke bezoeker een levende hero ziet.
 
 const MAX_FOTOS = 6;
+const MAX_PUBLIC = 12;
 const INTERVAL_MS = 5000;
 
 export default function HeroSlideshow() {
@@ -15,23 +17,38 @@ export default function HeroSlideshow() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const pw = localStorage.getItem(FOTOS_WACHTWOORD_KEY);
-    if (!pw) return;
     let cancelled = false;
     const made: string[] = [];
+
+    // publieke hero-foto's: /images/hero/1.jpg, 2.jpg, … — wat er bestaat
+    async function loadPublic() {
+      for (let i = 1; i <= MAX_PUBLIC; i++) {
+        const url = `/images/hero/${i}.jpg`;
+        const ok = await fetch(url, { method: "HEAD" }).then((r) => r.ok).catch(() => false);
+        if (cancelled) return;
+        if (!ok) break; // aansluitend genummerd: eerste gat = einde van de set
+        setUrls((cur) => [...cur, url]);
+      }
+    }
+
     (async () => {
-      try {
-        const { key, photos } = await unlockFotos(pw);
-        // pak een spreiding over de hele set i.p.v. alleen de eerste paar
-        const step = Math.max(1, Math.floor(photos.length / MAX_FOTOS));
-        const pick = photos.filter((_, i) => i % step === 0).slice(0, MAX_FOTOS);
-        for (const id of pick) {
-          const url = await decryptFotoUrl(key, `/fotos/${id}.full.enc`);
-          if (cancelled) return URL.revokeObjectURL(url);
-          made.push(url);
-          setUrls((cur) => [...cur, url]);
-        }
-      } catch { /* wachtwoord klopt niet meer — dan gewoon geen diashow */ }
+      const pw = localStorage.getItem(FOTOS_WACHTWOORD_KEY);
+      if (pw) {
+        try {
+          const { key, photos } = await unlockFotos(pw);
+          // pak een spreiding over de hele set i.p.v. alleen de eerste paar
+          const step = Math.max(1, Math.floor(photos.length / MAX_FOTOS));
+          const pick = photos.filter((_, i) => i % step === 0).slice(0, MAX_FOTOS);
+          for (const id of pick) {
+            const url = await decryptFotoUrl(key, `/fotos/${id}.full.enc`);
+            if (cancelled) return URL.revokeObjectURL(url);
+            made.push(url);
+            setUrls((cur) => [...cur, url]);
+          }
+          return;
+        } catch { /* wachtwoord klopt niet meer — val terug op de publieke set */ }
+      }
+      await loadPublic();
     })();
     return () => {
       cancelled = true;
