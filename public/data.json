@@ -1102,7 +1102,6 @@
           ]
         ]
       },
-      "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1003400/0d5efab904702c16d2b926860f9f12faba7a2404.jpg",
       "start": "2026-06-14T10:05",
       "durationMin": 115,
       "entryType": "team",
@@ -1119,11 +1118,7 @@
         "Rush B",
         "Smoke Bros",
         "Rolator Jeans"
-      ],
-      "store": {
-        "name": "Steam",
-        "url": "https://store.steampowered.com/app/1003400"
-      }
+      ]
     },
     {
       "id": "treasure-hunt",

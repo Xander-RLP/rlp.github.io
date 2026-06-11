@@ -18,7 +18,7 @@ type TournamentContext = {
   updateSponsors: (sponsors: Sponsor[]) => void;
   updateEetmomenten: (eetmomenten: EetMoment[]) => void;
   fetchImage: (gameId: string, query: string) => Promise<string | null>;
-  fetchStore: (query: string) => Promise<Game["store"] | null>;
+  fetchStore: (query: string) => Promise<{ store: NonNullable<Game["store"]>; matchedName: string } | null>;
   reload: () => Promise<void>;
   claimSeat: (seatId: string, name: string) => Promise<string | null>; // null = ok, anders foutmelding
 };
@@ -46,6 +46,24 @@ function fromBase64(b64: string): string {
 function b64ToBytes(b64: string): Uint8Array {
   return Uint8Array.from(atob(b64.replace(/\n/g, "")), (c) => c.charCodeAt(0));
 }
+
+// lijkt een zoekresultaat echt op de gevraagde titel? Voorkomt dat bijv.
+// "Battle for Middle-earth" (niet op Steam) op een willekeurig ander
+// LOTR-spel matcht — dan liever geen resultaat en handmatig invullen
+function goodTitleMatch(query: string, candidate: string): boolean {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const a = norm(query);
+  const b = norm(candidate);
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const [short, long] = a.length < b.length ? [a, b] : [b, a];
+  return long.includes(short) && short.length / long.length >= 0.6;
+}
+
+// winkelnamen van CheapShark-storeID's die we herkennen
+const SHARK_STORES: Record<string, string> = {
+  "1": "Steam", "7": "GOG", "8": "Origin", "11": "Humble Bundle", "13": "Ubisoft", "25": "Epic Games",
+};
 
 export function TournamentProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<TournamentState | null>(null);
@@ -224,13 +242,16 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
         q.trim().match(/^(\d{3,})$/)?.[1] ?? null;
       let smallIcon: string | null = null;
       if (!appid) {
-        // zoeken op naam: Steam stuurt geen CORS-headers, dus via een proxy
+        // zoeken op naam: Steam stuurt geen CORS-headers, dus via een proxy.
+        // Alleen accepteren als de titel echt lijkt — anders liever het
+        // Epic/Wikipedia-vangnet dan het plaatje van een verkeerd spel
         const target = `https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(q)}`;
         const res = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
         if (!res.ok) return null;
         const apps = (await res.json()) as { appid: string; name: string; icon?: string }[];
-        appid = apps[0]?.appid ?? null;
-        smallIcon = apps[0]?.icon ?? null; // vierkant 32px-icoontje, vast vangnet
+        const hit = apps.find((a) => goodTitleMatch(q, a.name));
+        appid = hit?.appid ?? null;
+        smallIcon = hit?.icon ?? null; // vierkant 32px-icoontje, vast vangnet
       }
       if (!appid) return null;
       // de icon-hashes staan in Steam's appinfo; api.steamcmd.net serveert die CORS-open
@@ -257,11 +278,7 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
         const res = await fetch(`https://www.cheapshark.com/api/1.0/games?title=${encodeURIComponent(q)}&limit=10`);
         if (!res.ok) return null;
         const games = (await res.json()) as { external: string; thumb?: string }[];
-        const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
-        const target = clean(q);
-        const best =
-          games.find((g) => clean(g.external) === target) ??
-          games.filter((g) => clean(g.external).includes(target)).sort((a, b) => a.external.length - b.external.length)[0];
+        const best = games.filter((g) => goodTitleMatch(q, g.external)).sort((a, b) => a.external.length - b.external.length)[0];
         return best?.thumb ?? null;
       } catch {
         return null;
@@ -292,28 +309,58 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  // store-/downloadlink zoeken: Steam-zoekresultaat + prijs via appdetails.
-  // Niet gevonden (bijv. Epic-exclusives)? Dan vult de admin zelf een URL in.
-  const fetchStore = useCallback(async (query: string): Promise<Game["store"] | null> => {
+  // store-/downloadlink zoeken: eerst Steam (met prijs), daarna Epic/GOG e.d.
+  // via CheapShark. Alleen resultaten waarvan de titel echt klopt; de admin
+  // bevestigt de match en kan altijd nog zelf een URL invullen.
+  const fetchStore = useCallback(async (query: string): Promise<{ store: NonNullable<Game["store"]>; matchedName: string } | null> => {
+    // 1. Steam
     try {
       const target = `https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(query)}`;
       const res = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
-      if (!res.ok) return null;
-      const apps = (await res.json()) as { appid: string; name: string }[];
-      const appid = apps[0]?.appid;
-      if (!appid) return null;
-      let price: string | undefined;
-      try {
-        const pd = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(
-          `https://store.steampowered.com/api/appdetails?appids=${appid}&cc=nl&filters=price_overview,basic`
-        )}`);
-        const data = (await pd.json())?.[appid]?.data as
-          { is_free?: boolean; price_overview?: { final_formatted?: string } } | undefined;
-        if (data && !data.is_free && data.price_overview?.final_formatted) {
-          price = data.price_overview.final_formatted;
+      if (res.ok) {
+        const apps = (await res.json()) as { appid: string; name: string }[];
+        const hit = apps.find((a) => goodTitleMatch(query, a.name));
+        if (hit) {
+          let price: string | undefined;
+          try {
+            const pd = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(
+              `https://store.steampowered.com/api/appdetails?appids=${hit.appid}&cc=nl&filters=price_overview,basic`
+            )}`);
+            const data = (await pd.json())?.[hit.appid]?.data as
+              { is_free?: boolean; price_overview?: { final_formatted?: string } } | undefined;
+            if (data && !data.is_free && data.price_overview?.final_formatted) {
+              price = data.price_overview.final_formatted;
+            }
+          } catch { /* prijs is een nice-to-have */ }
+          return {
+            store: { name: "Steam", url: `https://store.steampowered.com/app/${hit.appid}`, ...(price ? { price } : {}) },
+            matchedName: hit.name,
+          };
         }
-      } catch { /* prijs is een nice-to-have */ }
-      return { name: "Steam", url: `https://store.steampowered.com/app/${appid}`, ...(price ? { price } : {}) };
+      }
+    } catch { /* niet op Steam — probeer de andere winkels */ }
+    // 2. Epic/GOG/Origin e.d. via CheapShark
+    try {
+      const res = await fetch(`https://www.cheapshark.com/api/1.0/games?title=${encodeURIComponent(query)}&limit=15`);
+      if (!res.ok) return null;
+      const games = (await res.json()) as { gameID: string; external: string }[];
+      const best = games.filter((g) => goodTitleMatch(query, g.external)).sort((a, b) => a.external.length - b.external.length)[0];
+      if (!best) return null;
+      const info = await fetch(`https://www.cheapshark.com/api/1.0/games?id=${best.gameID}`);
+      if (!info.ok) return null;
+      const deals = ((await info.json())?.deals ?? []) as { storeID: string; dealID: string; price: string }[];
+      // voorkeur voor Epic, anders de voordeligste bekende winkel
+      const deal = deals.find((d) => d.storeID === "25") ?? deals.find((d) => SHARK_STORES[d.storeID]) ?? deals[0];
+      if (!deal) return null;
+      const prijs = parseFloat(deal.price);
+      return {
+        store: {
+          name: SHARK_STORES[deal.storeID] ?? "Store",
+          url: `https://www.cheapshark.com/redirect?dealID=${deal.dealID}`,
+          ...(prijs > 0 ? { price: `$${deal.price}` } : {}),
+        },
+        matchedName: best.external,
+      };
     } catch {
       return null;
     }

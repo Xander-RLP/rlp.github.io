@@ -72,7 +72,7 @@ export default function HomeView() {
       fetchStore(name).catch(() => null),
     ]);
     g.image = image ?? undefined;
-    g.store = store ?? undefined;
+    g.store = store?.store ?? undefined;
     setImageBusy(false);
     updateGames([...state!.games, g]);
     window.location.hash = g.id;
@@ -92,18 +92,21 @@ export default function HomeView() {
     }
   }
 
-  // store-/downloadlink zoeken (Steam); niet gevonden? Dan zelf een URL plakken
-  // (bijv. een Epic-pagina zoals store.epicgames.com/p/fall-guys)
+  // store-/downloadlink zoeken (Steam → Epic/GOG via CheapShark). De admin
+  // bevestigt de gevonden match; niets (goeds) gevonden? Dan zelf een URL
+  // plakken (bijv. een Epic-pagina zoals store.epicgames.com/p/fall-guys)
   async function refreshStore() {
     setStoreBusy(true);
-    const store = await fetchStore(game.name).catch(() => null);
+    const found = await fetchStore(game.name).catch(() => null);
     setStoreBusy(false);
-    if (store) {
-      patchGame({ store });
+    if (found && confirm(
+      `Gevonden: "${found.matchedName}" bij ${found.store.name}${found.store.price ? ` (${found.store.price})` : " (gratis)"}.\n${found.store.url}\n\nGebruiken als downloadlink?`
+    )) {
+      patchGame({ store: found.store });
       return;
     }
     const url = prompt(
-      `"${game.name}" niet op Steam gevonden. Plak zelf een store-/download-URL (bijv. een Epic-pagina).\nLeeg laten = geen downloadbanner.`,
+      `${found ? "Oké — plak" : `"${game.name}" niet (betrouwbaar) gevonden bij Steam/Epic/GOG. Plak`} zelf een store-/download-URL (bijv. een Epic-pagina).\nLeeg laten = geen downloadbanner.`,
       game.store?.url ?? "",
     )?.trim();
     if (url == null) return;

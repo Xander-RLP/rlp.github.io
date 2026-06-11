@@ -101,4 +101,5 @@ export type TournamentState = {
   sponsors?: Sponsor[];
   eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
   teams?: TeamDef[];   // teams met leden (beheer op /teams); leden zijn users
+  whatsapp?: string;   // invite-link van de groepschat (chat.whatsapp.com/…)
 };

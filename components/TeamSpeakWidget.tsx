@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTournament } from "@/lib/store";
 
 const TS_HOST = "ts.impulzgaming.com";
 const TS_DOWNLOAD = "https://teamspeak.com/en/downloads/";
@@ -8,6 +9,7 @@ const TS_DOWNLOAD = "https://teamspeak.com/en/downloads/";
 const NOISE_IMG = "/images/teamspeak-noise.png";
 
 export default function TeamSpeakWidget() {
+  const { state } = useTournament();
   const [open, setOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [imgOk, setImgOk] = useState(true);
@@ -67,6 +69,18 @@ export default function TeamSpeakWidget() {
             De verbindknop opent de TeamSpeak-app. Lukt dat niet? Kopieer het adres hierboven.
           </p>
         </div>
+      )}
+      {/* groepschat op de pc: WhatsApp opent in de browser of de app */}
+      {state?.whatsapp && (
+        <a
+          href={state.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Groepschat openen (WhatsApp)"
+          className="flex cursor-pointer items-center gap-2 rounded-full border border-[#25D366]/60 bg-slate-900/95 px-4 py-2.5 text-xs font-extrabold uppercase tracking-wide text-[#25D366] shadow-lg shadow-black/40 backdrop-blur hover:bg-[#25D366]/10"
+        >
+          💬 Groepschat
+        </a>
       )}
       <button
         onClick={() => setOpen((v) => !v)}
