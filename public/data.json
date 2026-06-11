@@ -682,7 +682,7 @@
                   "score": null
                 },
                 {
-                  "name": "Indy",
+                  "name": "",
                   "score": null
                 }
               ],
@@ -775,7 +775,8 @@
         "price": "€ 19,99"
       },
       "dugout": [
-        "Bo"
+        "Bo",
+        "Indy"
       ]
     },
     {
