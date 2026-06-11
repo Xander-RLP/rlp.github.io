@@ -15,6 +15,28 @@ export default function TeamSpeakWidget() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [imgOk, setImgOk] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // fictief stroomverbruik: een TeamSpeak-servertje is vrijwel idle load,
+  // dus we zweven rond de ~45 W (spec: idle ±35-60 W) met af en toe een
+  // uitschietertje als de NAS "iets doet"
+  const [watt, setWatt] = useState(46);
+
+  useEffect(() => {
+    if (!open) return;
+    const t = setInterval(() => {
+      setWatt((w) => {
+        if (Math.random() < 0.06) return 68 + Math.round(Math.random() * 14); // schijfje wakker
+        const richtingIdle = (46 - w) * 0.3; // zachtjes terug naar idle
+        return Math.min(84, Math.max(38, Math.round(w + richtingIdle + (Math.random() * 6 - 3))));
+      });
+    }, 1600);
+    return () => clearInterval(t);
+  }, [open]);
+
+  // "vandaag verbruikt": uren sinds middernacht × gemiddeld ±46 W
+  const kwhVandaag = (() => {
+    const d = new Date();
+    return ((d.getHours() + d.getMinutes() / 60) * 0.046).toFixed(1);
+  })();
 
   // schuif opzij (met animatie) wanneer het Tournament News-paneel uitstaat
   useEffect(() => {
@@ -120,6 +142,9 @@ export default function TeamSpeakWidget() {
               </span>
             </span>
             <p className="text-[11px] font-bold tracking-wide text-slate-300">UGREEN DXP8800 Plus</p>
+            <p className="mt-0.5 font-mono text-[10px] tabular-nums text-lime-400/90">
+              ⚡ {watt} W · {kwhVandaag} kWh vandaag
+            </p>
             <p className="mt-1 text-[10px] text-slate-400">
               hosting, stroom & onderhoud —{" "}
               <span className="font-bold text-amber-400/90 underline decoration-dotted underline-offset-2 group-hover:text-amber-300">draag iets bij</span>
