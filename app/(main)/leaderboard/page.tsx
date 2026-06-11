@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import CoffeeHint from "@/components/CoffeeHint";
 import { logoColor } from "@/lib/bracket";
 import { computeLeaderboards, pairKey, pairsPlayed, type LeaderboardEntry } from "@/lib/leaderboard";
 import { useTournament } from "@/lib/store";
@@ -73,10 +74,19 @@ export default function LeaderboardPage() {
         en de toernooi-uitslagen — teamwinsten tellen persoonlijk mee voor de teamleden.
       </p>
 
-      <div className="mb-8 flex flex-wrap gap-7">
+      <div className="mb-3 flex flex-wrap gap-7">
         <Board title="🧑 Persoonlijk" hint="Gewonnen compo's per persoon (incl. teamwinsten)." entries={personal} />
         <Board title="👥 Teams" hint="Gewonnen compo's per team." entries={teams} />
       </div>
+
+      {/* piekmoment: er staat iemand op het bord — hét moment voor een knipoog */}
+      {personal[0]?.wins > 0 && (
+        <div className="mb-8">
+          <CoffeeHint>
+            🥇 Er staan al winnaars op het bord! Werkt het systeem lekker? Denk dan ook eens aan de developer —
+          </CoffeeHint>
+        </div>
+      )}
 
       {/* analytisch: wie heeft al met wie samengespeeld (uit de team-inschrijvingen per compo) */}
       {users.length > 1 && (
