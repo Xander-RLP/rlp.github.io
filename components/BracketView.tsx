@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  addMatch, addRound, fedSlots, logoColor, loserNextOf, nextOf, propagate, removeMatch, removeRound,
-  roundTitle, seedOf, seedPairs, setLink, teamCount, winnerIdx,
+  addLosersBracket, addMatch, addRound, fedSlots, logoColor, loserNextOf, nextOf, propagate,
+  removeMatch, removeRound, roundTitle, seedOf, seedPairs, setLink, teamCount, winnerIdx,
 } from "@/lib/bracket";
 import { getDragPayload, setDragPayload } from "@/lib/dnd";
 import type { Bracket, Game, SlotRef } from "@/lib/types";
@@ -126,6 +126,21 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
     onUpdate({ bracket: addRound(game.bracket) });
   }
 
+  // in één klik een double elimination maken van de huidige knock-out
+  function structAddLosersBracket() {
+    const result = addLosersBracket(game.bracket);
+    if ("error" in result) {
+      alert(result.error);
+      return;
+    }
+    if (!confirm(
+      "Dit bouwt onder het huidige bracket een volledig losers bracket + grand finals (double elimination), " +
+      "met alle winnaar- en verliezer-lijnen. Bestaande wedstrijden en scores blijven staan. Doorgaan?"
+    )) return;
+    setLinkFrom(null);
+    onUpdate({ bracket: result });
+  }
+
   function structAddMatch(r: number) {
     onUpdate({ bracket: addMatch(game.bracket, r) });
   }
@@ -188,6 +203,15 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
           >
             {editStructure ? "✓ Klaar met bewerken" : "🔧 Bracket bewerken"}
           </button>
+          {editStructure && (
+            <button
+              onClick={structAddLosersBracket}
+              title="Bouwt een losers bracket + grand finals onder de huidige knock-out (double elimination)"
+              className="cursor-pointer rounded border border-red-400/50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-red-400 hover:bg-red-400/10"
+            >
+              ➕ Verliezersbracket genereren
+            </button>
+          )}
           {editStructure && !linkFrom && (
             <span className="text-[11px] text-slate-400">
               Voeg rondes en wedstrijden toe of haal ze weg. Lijntje leggen: klik de <b className="text-sky-400">→</b> (winnaar)

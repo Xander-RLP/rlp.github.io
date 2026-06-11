@@ -378,6 +378,33 @@ export function doubleToBracket(double: DoubleBracket | LegacyDoubleBracket | un
   return materializeLinks({ rounds });
 }
 
+// bouwt onder een klassiek knock-out bracket het volledige losers bracket +
+// grand finals (double elimination), met alle winnaar- en verliezer-lijnen.
+// Bestaande wedstrijden, namen en scores blijven staan (zij worden de winners-kant).
+export function addLosersBracket(bracket: Bracket): Bracket | { error: string } {
+  const rs = bracket.rounds;
+  const n = (rs[0]?.length ?? 0) * 2;
+  const isPow2 = n >= 4 && (n & (n - 1)) === 0;
+  const classic = isPow2 && rs.length === Math.log2(n) && rs.every((round, i) => round.length === n / 2 ** (i + 1));
+  if (!classic) {
+    return {
+      error:
+        "Verliezersbracket genereren werkt vanaf een standaard knock-out (4/8/16/32 deelnemers, halverende rondes). " +
+        "Zet eerst de winners-kant op via 'Snel opzetten' of bouw hem klassiek op.",
+    };
+  }
+  const d = emptyDouble(n);
+  rs.forEach((round, r) =>
+    round.forEach((m, i) => {
+      const copy: Match = JSON.parse(JSON.stringify(m));
+      delete copy.next; // doubleToBracket legt alle lijnen opnieuw en expliciet
+      delete copy.loserNext;
+      d.w[r][i] = copy;
+    })
+  );
+  return doubleToBracket(d);
+}
+
 export function roundTitle(r: number, totalRounds: number, teams: number): string {
   const fromEnd = totalRounds - r;
   const ro = teams / 2 ** r;
