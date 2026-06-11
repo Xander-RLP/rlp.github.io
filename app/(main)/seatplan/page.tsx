@@ -106,7 +106,7 @@ export default function SeatplanPage() {
   }
 
   return (
-    <div>
+    <div className="mx-auto w-fit max-w-full">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Seatplan</h2>
       <p className="mb-5 max-w-2xl text-[13px] text-slate-400">
         {canEdit

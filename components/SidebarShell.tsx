@@ -5,6 +5,23 @@ import Sidebar from "./Sidebar";
 
 const KEY = "rlp26-sidebar-dicht";
 
+function Chevron({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
 export default function SidebarShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(true);
 
@@ -20,41 +37,61 @@ export default function SidebarShell({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div
-      className={`grid min-h-[calc(100vh-64px)] grid-cols-1 transition-[grid-template-columns] duration-300 ${
-        open ? "lg:grid-cols-[1fr_320px]" : "lg:grid-cols-[1fr_36px]"
-      }`}
-    >
-      <main className="min-w-0 overflow-x-auto px-4 py-5 md:px-7 md:py-6">
+    <div className="flex min-h-[calc(100vh-64px)] flex-col lg:flex-row">
+      <main className="min-w-0 flex-1 overflow-x-auto px-4 py-5 md:px-7 md:py-6">
         <div className="mx-auto w-full max-w-6xl">{children}</div>
       </main>
 
-      <div className="relative overflow-hidden border-t border-slate-700 bg-slate-900 lg:border-l lg:border-t-0">
-        {open ? (
-          <>
-            <button
-              onClick={toggle}
-              aria-label="Zijpaneel inklappen"
-              title="Inklappen"
-              className="absolute right-3 top-4 z-10 rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 text-xs leading-none text-slate-400 hover:border-teal-500 hover:text-slate-100"
-            >
-              <span className="hidden lg:inline">»</span>
-              <span className="lg:hidden">▴</span>
-            </button>
+      <aside
+        className={`relative border-t border-slate-700 bg-slate-900 transition-[width] duration-300 ease-in-out lg:border-l lg:border-t-0 ${
+          open ? "lg:w-80" : "lg:w-12"
+        }`}
+      >
+        {/* desktop: ronde toggle-knop, zwevend op de rand */}
+        <button
+          onClick={toggle}
+          aria-label={open ? "Zijpaneel inklappen" : "Zijpaneel uitklappen"}
+          aria-expanded={open}
+          title={open ? "Inklappen" : "Uitklappen"}
+          className="absolute -left-3.5 top-7 z-20 hidden h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-300 shadow-md transition-colors hover:border-teal-400 hover:text-teal-300 lg:flex"
+        >
+          <Chevron className={`h-4 w-4 transition-transform duration-300 ${open ? "" : "rotate-180"}`} />
+        </button>
+
+        {/* mobiel: kopbalk die het paneel open/dicht klapt */}
+        <button
+          onClick={toggle}
+          aria-expanded={open}
+          className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-[13px] font-extrabold uppercase tracking-wide hover:text-teal-300 lg:hidden"
+        >
+          Tournament News
+          <Chevron className={`h-4 w-4 transition-transform duration-300 ${open ? "-rotate-90" : "rotate-90"}`} />
+        </button>
+
+        {/* inhoud: vaste breedte binnenin, zodat tekst niet hersaust tijdens de animatie */}
+        <div
+          className={`overflow-hidden transition-opacity duration-200 ease-in-out lg:h-full ${
+            open ? "opacity-100" : "hidden opacity-0 lg:block"
+          } ${open ? "" : "lg:pointer-events-none"}`}
+        >
+          <div className="lg:w-80">
             <Sidebar />
-          </>
-        ) : (
+          </div>
+        </div>
+
+        {/* desktop dichtgeklapt: verticaal label, klikken opent */}
+        {!open && (
           <button
             onClick={toggle}
-            aria-label="Zijpaneel openen"
-            className="flex w-full items-center justify-center gap-1.5 py-2 text-[11px] font-extrabold uppercase tracking-wide text-slate-400 hover:text-teal-400 lg:h-full lg:flex-col lg:py-4"
+            aria-label="Zijpaneel uitklappen"
+            className="absolute inset-0 hidden w-full cursor-pointer items-start justify-center pt-20 text-slate-500 transition-colors hover:text-teal-300 lg:flex"
           >
-            <span className="lg:hidden">Tournament News ▾</span>
-            <span className="hidden lg:inline">«</span>
-            <span className="hidden lg:inline lg:[writing-mode:vertical-rl]">Tournament News</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-widest [writing-mode:vertical-rl]">
+              Tournament News
+            </span>
           </button>
         )}
-      </div>
+      </aside>
     </div>
   );
 }

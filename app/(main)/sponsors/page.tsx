@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function SponsorsPage() {
   return (
-    <div>
+    <div className="mx-auto max-w-xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Sponsors</h2>
       <p className="mb-5 text-[13px] text-slate-400">RLP26 zoekt nog sponsors!</p>
 

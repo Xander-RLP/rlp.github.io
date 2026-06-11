@@ -20,7 +20,8 @@ export default function Sidebar() {
   return (
     <aside className="flex h-full flex-col gap-6 px-4.5 py-5 lg:min-w-[280px]">
       <section>
-        <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">Tournament News</h2>
+        {/* op mobiel is de kopbalk van SidebarShell al de titel */}
+        <h2 className="mb-3 hidden text-[13px] font-extrabold uppercase tracking-wide lg:block">Tournament News</h2>
         {NEWS.map((item, i) => (
           <div key={i} className={`mb-2 rounded-r border-l-[3px] ${item.accent} bg-slate-800 px-2.5 py-2 text-[11px] leading-relaxed text-slate-400`}>
             {item.html}

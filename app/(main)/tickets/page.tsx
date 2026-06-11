@@ -2,7 +2,7 @@ const PAY_LINK = "https://betaalverzoek.rabobank.nl/betaalverzoek/?id=ideLfpUOTq
 
 export default function TicketsPage() {
   return (
-    <div>
+    <div className="mx-auto max-w-xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Tickets</h2>
       <p className="mb-5 text-[13px] text-slate-400">
         Doe mee met de Ronnie LAN Party 2026 — regel je ticket in één minuut.

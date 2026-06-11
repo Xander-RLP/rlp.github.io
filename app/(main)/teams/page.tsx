@@ -9,7 +9,7 @@ export default function TeamsPage() {
   if (!state) return <p className="text-sm text-slate-400">Laden…</p>;
 
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Teams</h2>
       <p className="mb-5 text-[13px] text-slate-400">Aangemelde teams en spelers per toernooi.</p>
 

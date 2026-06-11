@@ -20,7 +20,7 @@ export default function AdminPage() {
 
   if (isAdmin) {
     return (
-      <div>
+      <div className="mx-auto max-w-xl">
         <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Admin</h2>
         <div className="max-w-xl rounded-md border border-slate-700 bg-slate-800 p-6">
           <p className="mb-4 text-[13px] text-slate-300">
@@ -45,7 +45,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Admin</h2>
       <p className="mb-5 max-w-xl text-[13px] text-slate-400">
         Log in met de beheer-token van de organisatie. Die blijft in je browser

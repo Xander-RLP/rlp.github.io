@@ -1,6 +1,6 @@
 export default function ContactPage() {
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Contact</h2>
       <p className="mb-5 text-[13px] text-slate-400">
         Vragen over de Ronnie LAN Party, aanmeldingen of sponsoring?
