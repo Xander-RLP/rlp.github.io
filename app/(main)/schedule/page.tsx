@@ -208,7 +208,9 @@ export default function SchedulePage() {
     );
 
     if (!g) {
-      // eetmoment: amber blokje; voor bezoekers klikbaar naar /eten
+      // eetmoment: amber blokje; voor bezoekers klikbaar naar /eten,
+      // of direct naar de Tikkie als die eraan hangt
+      const tikkie = ev.eet?.tikkie;
       const inner = (
         <>
           <div className="flex items-center gap-1.5">
@@ -216,17 +218,26 @@ export default function SchedulePage() {
             <span className="truncate text-xs font-extrabold text-amber-200">{ev.title}</span>
           </div>
           <div className="mt-0.5 text-[10px] font-bold text-amber-300/80">{tijd}</div>
-          <div className="truncate text-[10px] text-slate-400">Eten &amp; drinken</div>
+          <div className="truncate text-[10px] text-slate-400">
+            {tikkie ? <span className="font-bold text-lime-400">💸 Betaal via Tikkie</span> : <>Eten &amp; drinken</>}
+          </div>
         </>
       );
       const cls = `absolute overflow-hidden rounded-md border-l-4 border-l-amber-400 bg-amber-400/10 p-2 shadow-md ring-1 ring-amber-400/30 ${
         dragging ? "z-10 ring-amber-300" : ""
       }`;
-      return isAdmin ? (
-        <div {...adminDrag} className={`${cls} cursor-grab touch-none select-none active:cursor-grabbing`} style={pos} title={ev.title}>
+      if (isAdmin) {
+        return (
+          <div {...adminDrag} className={`${cls} cursor-grab touch-none select-none active:cursor-grabbing`} style={pos} title={ev.title}>
+            {inner}
+            {resizeHandle}
+          </div>
+        );
+      }
+      return tikkie ? (
+        <a href={tikkie} target="_blank" rel="noopener noreferrer" className={`${cls} transition-colors hover:bg-amber-400/20`} style={pos} title={`${ev.title} — betaal via Tikkie`}>
           {inner}
-          {resizeHandle}
-        </div>
+        </a>
       ) : (
         <Link href="/eten" className={`${cls} transition-colors hover:bg-amber-400/20`} style={pos} title={`${ev.title} — zie Eten & Drinken`}>
           {inner}
@@ -392,6 +403,13 @@ export default function SchedulePage() {
                     <option key={d} value={d}>{d} min</option>
                   ))}
                 </select>
+                <input
+                  value={m.tikkie ?? ""}
+                  onChange={(e) => patchMoment(m, { tikkie: e.target.value.trim() || undefined })}
+                  placeholder="Tikkie-link (optioneel)"
+                  className="w-52 rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
+                />
+                {m.tikkie && <span title="Betaalknop actief">💸</span>}
                 <button
                   onClick={() => removeMoment(m)}
                   title="Eetmoment verwijderen"

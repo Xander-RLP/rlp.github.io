@@ -1,5 +1,10 @@
-// Tikkie voor de BBQ van zaterdag (€ 15,00 — "BBQ RLP2026", geldig t/m 24 juni)
-const BBQ_TIKKIE_LINK = "https://tikkie.me/pay/bfags7ccgh4sqhdhepsh";
+"use client";
+
+import { useTournament } from "@/lib/store";
+
+// vangnet zolang de BBQ-Tikkie nog niet via de admin aan het eetmoment hangt
+// (€ 15,00 — "BBQ RLP2026", geldig t/m 24 juni)
+const BBQ_TIKKIE_FALLBACK = "https://tikkie.me/pay/bfags7ccgh4sqhdhepsh";
 
 const DAGELIJKS = [
   {
@@ -19,7 +24,33 @@ const DAGELIJKS = [
   },
 ];
 
+function TikkieKnop({ href, label }: { href?: string; label: string }) {
+  if (!href) {
+    return (
+      <span className="inline-block rounded border border-dashed border-slate-600 px-4 py-2 text-xs font-bold uppercase tracking-wide text-slate-400">
+        Tikkie volgt
+      </span>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block rounded bg-amber-400 px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-amber-950 hover:bg-amber-300"
+    >
+      💸 {label}
+    </a>
+  );
+}
+
 export default function EtenPage() {
+  const { state } = useTournament();
+  // betaallinks hangen aan de eetmomenten (beheerbaar via admin op /schedule)
+  const tikkieVan = (id: string) => state?.eetmomenten?.find((m) => m.id === id)?.tikkie;
+  const bestellenTikkie = tikkieVan("bestellen-vr");
+  const bbqTikkie = tikkieVan("bbq-za") ?? BBQ_TIKKIE_FALLBACK;
+
   return (
     <div className="mx-auto max-w-3xl">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Eten &amp; Drinken</h2>
@@ -48,10 +79,11 @@ export default function EtenPage() {
             </span>
           </div>
           <div className="mb-1 text-sm font-extrabold">Samen eten bestellen</div>
-          <p className="text-[13px] leading-relaxed text-slate-400">
+          <p className="mb-4 text-[13px] leading-relaxed text-slate-400">
             Op vrijdag bestellen we met z&apos;n allen eten — kies mee in de groepschat
-            wat het wordt.
+            wat het wordt. Afrekenen gaat achteraf via Tikkie.
           </p>
+          <TikkieKnop href={bestellenTikkie} label="Betaal je deel via Tikkie" />
         </div>
 
         <div className="rounded-md border border-amber-400/50 bg-slate-800 p-5">
@@ -66,14 +98,7 @@ export default function EtenPage() {
             Zaterdag gaat de barbecue aan! We delen de kosten: <b className="text-slate-200">€ 15,00 p.p.</b> —
             betaal je bijdrage vooraf via Tikkie.
           </p>
-          <a
-            href={BBQ_TIKKIE_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block rounded bg-amber-400 px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-amber-950 hover:bg-amber-300"
-          >
-            💸 Betaal € 15,00 via Tikkie
-          </a>
+          <TikkieKnop href={bbqTikkie} label="Betaal € 15,00 via Tikkie" />
           <p className="mt-2.5 text-[11px] text-slate-500">
             De link is geldig t/m 24 juni — daarna even aankloppen bij de organisatie.
           </p>

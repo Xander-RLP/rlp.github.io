@@ -60,6 +60,7 @@ export type EetMoment = {
   emoji?: string;
   start: string; // datetime-local
   durationMin: number;
+  tikkie?: string; // betaallink — toont een betaalknop op /eten en in de kalender
 };
 
 export type TournamentState = {
