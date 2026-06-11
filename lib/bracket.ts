@@ -371,8 +371,15 @@ export function doubleToBracket(double: DoubleBracket | LegacyDoubleBracket | un
     pos.set(key, { r: col, m: rounds[col].length });
     rounds[col].push(match);
   };
-  d.w.forEach((round, r) => round.forEach((match, i) => place(`w-${r}-${i}`, r, match)));
-  d.l.forEach((round, li) => round.forEach((match, i) => place(`l-${li}-${i}`, li + 1, match)));
+  d.w.forEach((round, r) => round.forEach((match, i) => {
+    match.label = r === W - 1 ? "🏆 WB Finale" : `🏆 WB Ronde ${r + 1}`;
+    place(`w-${r}-${i}`, r, match);
+  }));
+  d.l.forEach((round, li) => round.forEach((match, i) => {
+    match.label = li === L - 1 ? "💀 LB Finale" : `💀 LB Ronde ${li + 1}`;
+    place(`l-${li}-${i}`, li + 1, match);
+  }));
+  d.gf.label = "👑 Grand Finals";
   place("gf", numCols - 1, d.gf);
 
   const link = (fromKey: string, kind: "next" | "loserNext", toKey: string, s: 0 | 1) => {

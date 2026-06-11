@@ -30,6 +30,7 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
+  const rowRefs = useRef(new Map<string, HTMLDivElement>());
   const [lines, setLines] = useState<Line[]>([]);
   const [editStructure, setEditStructure] = useState(false);
   const [linkFrom, setLinkFrom] = useState<{ r: number; m: number; rank: number } | null>(null);
@@ -53,9 +54,12 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
             next.push({ left, top, width: Math.max(width, 1.5), height: Math.max(height, 1.5), rank });
           const src = srcEl.getBoundingClientRect();
           const dst = dstEl.getBoundingClientRect();
+          // doel-Y op de echte slot-rij (klopt ook met labels en +slot-knoppen)
+          const rowEl = rowRefs.current.get(`${t.r}-${t.m}-${t.s}`);
+          const row = rowEl?.getBoundingClientRect();
           const dstSlots = bracket.rounds[t.r][t.m].teams.length;
           const srcY = src.top + src.height / 2 - origin.top;
-          const dstY = dst.top + (dst.height * (t.s + 0.5)) / dstSlots - origin.top;
+          const dstY = (row ? row.top + row.height / 2 : dst.top + (dst.height * (t.s + 0.5)) / dstSlots) - origin.top;
           const srcX = src.right - origin.left;
           const dstX = dst.left - origin.left;
           const midX = (srcX + dstX) / 2;
@@ -92,6 +96,16 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
     const name = prompt("Naam aanpassen:", current)?.trim();
     if (!name || name === current) return;
     setName(r, m, s, name);
+  }
+
+  // kopje boven het vakje, bijv. winner/loser ronde — tik in bewerkmodus
+  function editLabel(r: number, m: number) {
+    const current = game.bracket.rounds[r][m].label ?? "";
+    const label = prompt('Label voor deze wedstrijd — bijv. "🏆 Winner ronde" of "💀 Loser ronde".\nLeeg laten = geen label.', current);
+    if (label == null) return;
+    const b: Bracket = JSON.parse(JSON.stringify(game.bracket));
+    b.rounds[r][m].label = label.trim() || undefined;
+    onUpdate({ bracket: b });
   }
 
   function setScore(r: number, m: number, s: number, value: string) {
@@ -280,6 +294,17 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
                           ×
                         </button>
                       )}
+                      {(match.label || editStructure) && (
+                        <div
+                          onClick={isAdmin && editStructure ? () => editLabel(r, m) : undefined}
+                          title={isAdmin && editStructure ? "Tik om het label aan te passen (bijv. 🏆 winner / 💀 loser ronde)" : undefined}
+                          className={`border-b border-slate-700 px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-wide ${
+                            match.label ? "text-slate-400" : "italic normal-case text-slate-600"
+                          } ${isAdmin && editStructure ? "cursor-pointer hover:bg-slate-700/60 hover:text-lime-400" : ""}`}
+                        >
+                          {match.label ?? "🏷️ label…"}
+                        </div>
+                      )}
                       {match.teams.map((team, s) => {
                         const slotKey = `${r}-${m}-${s}`;
                         const free = !fed.has(slotKey);
@@ -297,6 +322,7 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
                         return (
                           <div
                             key={s}
+                            ref={(el) => { if (el) rowRefs.current.set(slotKey, el); else rowRefs.current.delete(slotKey); }}
                             onClick={linkTarget ? () => clickSlotForLink(r, m, s) : undefined}
                             onDragOver={droppable ? (e) => { e.preventDefault(); setDropOver(slotKey); } : undefined}
                             onDragLeave={droppable ? () => setDropOver(null) : undefined}

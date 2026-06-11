@@ -6,6 +6,8 @@ export type SlotRef = { r: number; m: number; s: number };
 export type Match = {
   // 2 of meer slots: 1v1-wedstrijden, maar ook velden van 3, 4+ spelers
   teams: Team[];
+  // kopje boven het vakje, bijv. "🏆 WB Ronde 1" of "💀 LB Finale"
+  label?: string;
   // lijnen per eindpositie: outs[0] = waar nummer 1 naartoe stroomt,
   // outs[1] = nummer 2 (bij 1v1 de verliezer), enz. null = geen lijn
   outs?: (SlotRef | null)[];
