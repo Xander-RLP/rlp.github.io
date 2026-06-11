@@ -128,6 +128,7 @@ export type BeamerBlock = {
 // de eenvoudige velden (emoji/title/…) worden bij het lezen omgezet
 export type BeamerSlide = {
   blocks?: BeamerBlock[];
+  hidden?: boolean; // verborgen: blijft bewaard maar draait niet mee in de rotatie
   emoji?: string;
   title?: string;
   text?: string;

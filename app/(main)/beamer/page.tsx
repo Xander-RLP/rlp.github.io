@@ -16,6 +16,7 @@ const SLIDE_MS = 12000;
 const POLL_MS = 15000;
 const COLS = 24;
 const ROWS = 14;
+const AREA_BASIS = 888; // referentiehoogte van het slide-vlak op 1080p
 
 const WIDGETS: Record<string, string> = {
   vandaag: "📅 Programma van vandaag",
@@ -147,6 +148,7 @@ export default function BeamerPage() {
   const [fotoMenu, setFotoMenu] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [bewerkModus, setBewerkModus] = useState(false);
+  const [managerOpen, setManagerOpen] = useState(false);
   const [hulplijn, setHulplijn] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
   const [isFull, setIsFull] = useState(false);
   const [actief, setActief] = useState(true);
@@ -211,10 +213,17 @@ export default function BeamerPage() {
 
   // automatische rotatie
   useEffect(() => {
-    if (bezig || bewerkModus || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % totaal), SLIDE_MS);
+    if (bezig || bewerkModus || managerOpen || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null) return;
+    const t = setInterval(() => setIdx((i) => {
+      // verborgen slides overslaan in de rotatie
+      for (let stap = 1; stap <= totaal; stap++) {
+        const kandidaat = (i + stap) % totaal;
+        if (!slides[kandidaat]?.hidden) return kandidaat;
+      }
+      return i;
+    }), SLIDE_MS);
     return () => clearInterval(t);
-  }, [totaal, bezig, bewerkModus, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
+  }, [totaal, slides, bezig, bewerkModus, managerOpen, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
 
   // presenteren zoals Keynote/PowerPoint: pijltjes, spatie, PageUp/Down
   useEffect(() => {
@@ -252,7 +261,7 @@ export default function BeamerPage() {
 
   if (!state) return null;
 
-  const chrome = actief || bezig || bewerkModus || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null;
+  const chrome = actief || bezig || bewerkModus || managerOpen || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null;
   const fade = `transition-opacity duration-1000 ${chrome ? "opacity-100" : "pointer-events-none opacity-0"}`;
 
   // ---- bewerken ----
@@ -304,6 +313,28 @@ export default function BeamerPage() {
     d.splice(plek, 0, { blocks: [{ id: uid(), type: "text" as const, content: "Nieuwe slide", x: 12, y: 5, size: 64 }] });
     bewaar(d);
     setIdx(plek);
+  }
+
+  function toggleVerborgen(si: number) {
+    const d = startEdit().map((sl, j) => (j === si ? { ...sl, hidden: !sl.hidden } : sl));
+    bewaar(d);
+  }
+
+  function verwijderSlideOp(si: number) {
+    if (!confirm(`Slide ${si + 1} verwijderen?`)) return;
+    const d = startEdit().filter((_, j) => j !== si);
+    bewaar(d);
+    if (idx >= d.length) setIdx(0);
+  }
+
+  function verplaatsSlideOp(si: number, richting: -1 | 1) {
+    const naar = si + richting;
+    if (naar < 0 || naar >= totaal) return;
+    const d = [...startEdit()];
+    const [slide] = d.splice(si, 1);
+    d.splice(naar, 0, slide);
+    bewaar(d);
+    if (idx % totaal === si) setIdx(naar);
   }
 
   // huidige slide een plek naar voren of achteren schuiven
@@ -762,6 +793,15 @@ export default function BeamerPage() {
           </button>
         )}
         {isAdmin && (
+          <button
+            onClick={() => setManagerOpen(true)}
+            title="Alle slides beheren: overzicht, verbergen, verplaatsen, verwijderen"
+            className="cursor-pointer rounded-full border border-slate-700 px-3 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 hover:border-lime-400 hover:text-lime-400"
+          >
+            ⊞ overzicht
+          </button>
+        )}
+        {isAdmin && (
           <div className="flex items-center gap-2.5">
 
             <button onClick={nieuweSlide} title="Nieuwe slide" className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400">
@@ -886,6 +926,54 @@ export default function BeamerPage() {
           saveStatus === "saved" ? "border-lime-400 bg-slate-800 text-lime-400" : "border-red-500 bg-slate-800 text-red-500"
         }`}>
           {saveStatus === "saved" ? "✓ Opgeslagen" : "⚠ Opslaan mislukt — check verbinding/login"}
+        </div>
+      )}
+
+      {/* slide-manager: alle slides als miniaturen beheren */}
+      {isAdmin && managerOpen && (
+        <div className="absolute inset-0 z-30 overflow-y-auto bg-slate-950/95 p-10 backdrop-blur">
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-xl font-extrabold uppercase tracking-wide">
+              Slides beheren <span className="text-sm font-semibold normal-case text-slate-400">— {slides.filter((x) => !x.hidden).length} zichtbaar van {totaal}; klik een miniatuur om ernaartoe te gaan</span>
+            </h2>
+            <button onClick={() => setManagerOpen(false)} className="cursor-pointer rounded border border-slate-600 px-4 py-1.5 text-xs font-bold uppercase text-slate-300 hover:border-lime-400 hover:text-lime-400">
+              ✕ sluiten
+            </button>
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4">
+            {slides.map((sl, si) => (
+              <div key={si} className={`rounded-md border ${si === idx % totaal ? "border-lime-400" : "border-slate-700"} ${sl.hidden ? "opacity-45" : ""} bg-slate-900`}>
+                <button
+                  onClick={() => { setIdx(si); setManagerOpen(false); }}
+                  className="relative block aspect-video w-full cursor-pointer overflow-hidden rounded-t-md bg-slate-950"
+                  title={`Naar slide ${si + 1}`}
+                >
+                  {(sl.blocks ?? []).map((b) => {
+                    const f = 130 / AREA_BASIS; // miniatuur-schaal
+                    const stijlPos = { left: `${(b.x / COLS) * 100}%`, top: `${(b.y / ROWS) * 100}%` } as React.CSSProperties;
+                    if (b.type === "image") {
+                      // eslint-disable-next-line @next/next/no-img-element
+                      return <img key={b.id} src={b.content} alt="" style={{ ...stijlPos, height: (b.size ?? 200) * f }} className="absolute w-auto -translate-x-1/2 rounded-sm" />;
+                    }
+                    if (b.type === "widget") {
+                      return <span key={b.id} style={stijlPos} className="absolute -translate-x-1/2 whitespace-nowrap rounded bg-lime-400/20 px-1 text-[8px] font-bold text-lime-300">{WIDGETS[b.content] ?? b.content}</span>;
+                    }
+                    return <span key={b.id} style={{ ...stijlPos, fontSize: Math.max(4, (b.size ?? 40) * f) }} className="absolute -translate-x-1/2 whitespace-pre-line text-center font-bold leading-tight">{b.content}</span>;
+                  })}
+                  {sl.hidden && <span className="absolute right-1 top-1 rounded bg-slate-900/90 px-1.5 text-[9px] font-bold text-amber-400">verborgen</span>}
+                </button>
+                <div className="flex items-center justify-between gap-1 px-2 py-1.5">
+                  <span className="text-[10px] font-bold text-slate-500">#{si + 1}</span>
+                  <span className="flex gap-1">
+                    <button onClick={() => verplaatsSlideOp(si, -1)} title="Naar voren" className="cursor-pointer rounded border border-slate-700 px-1.5 text-[10px] text-slate-400 hover:border-lime-400 hover:text-lime-400">◀</button>
+                    <button onClick={() => verplaatsSlideOp(si, 1)} title="Naar achteren" className="cursor-pointer rounded border border-slate-700 px-1.5 text-[10px] text-slate-400 hover:border-lime-400 hover:text-lime-400">▶</button>
+                    <button onClick={() => toggleVerborgen(si)} title={sl.hidden ? "Weer tonen in de rotatie" : "Verbergen uit de rotatie (blijft bewaard)"} className="cursor-pointer rounded border border-slate-700 px-1.5 text-[10px] text-slate-400 hover:border-amber-400 hover:text-amber-300">{sl.hidden ? "🙈" : "👁"}</button>
+                    <button onClick={() => verwijderSlideOp(si)} title="Verwijderen" className="cursor-pointer rounded border border-slate-700 px-1.5 text-[10px] text-slate-400 hover:border-red-500 hover:text-red-500">×</button>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
