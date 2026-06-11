@@ -46,9 +46,18 @@ export type Seat = {
   name: string; // leeg = vrij
 };
 
+export type Sponsor = {
+  id: string;
+  name: string;
+  url?: string;     // website van de sponsor
+  logo?: string;    // logo-URL; leeg = favicon van de site of initialen
+  tagline?: string; // bijv. "Sponsort de prize pool"
+};
+
 export type TournamentState = {
   games: Game[];
   seats?: Seat[];
   unseated?: string[]; // aangemeld maar nog geen stoel
   eventStart?: string; // startmoment van de LAN zelf (countdown op home)
+  sponsors?: Sponsor[];
 };

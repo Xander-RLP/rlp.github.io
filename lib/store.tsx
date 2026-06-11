@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import type { Game, Seat, TournamentState } from "./types";
+import type { Game, Seat, Sponsor, TournamentState } from "./types";
 
 type SaveStatus = "idle" | "saved" | "error";
 
@@ -13,6 +13,7 @@ type TournamentContext = {
   logout: () => void;
   updateGames: (games: Game[]) => void;
   updateEventStart: (value: string) => void;
+  updateSponsors: (sponsors: Sponsor[]) => void;
   fetchImage: (gameId: string, query: string) => Promise<string | null>;
   reload: () => Promise<void>;
   claimSeat: (seatId: string, name: string) => Promise<string | null>; // null = ok, anders foutmelding
@@ -164,6 +165,12 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     persist({ ...cur, eventStart: value || undefined });
   }, [persist]);
 
+  const updateSponsors = useCallback((sponsors: Sponsor[]) => {
+    const cur = stateRef.current;
+    if (!cur) return;
+    persist({ ...cur, sponsors });
+  }, [persist]);
+
   const claimSeat = useCallback(async (seatId: string, name: string) => {
     const cur = stateRef.current;
     if (!cur) return "nog niet geladen";
@@ -252,7 +259,7 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateEventStart, fetchImage, reload: load, claimSeat }}>
+    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateEventStart, updateSponsors, fetchImage, reload: load, claimSeat }}>
       {children}
     </Ctx.Provider>
   );
