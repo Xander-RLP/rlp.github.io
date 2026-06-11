@@ -1627,7 +1627,7 @@
           "y": 5.25,
           "type": "widget",
           "content": "lanstart",
-          "locked": false
+          "locked": true
         }
       ]
     },
