@@ -740,7 +740,24 @@
               ]
             }
           ],
-          [],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null
+              ]
+            }
+          ],
           []
         ]
       },
