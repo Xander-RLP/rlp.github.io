@@ -1823,6 +1823,18 @@
           "size": 40
         }
       ]
+    },
+    {
+      "blocks": [
+        {
+          "id": "bmq9l9w7l1k60",
+          "type": "text",
+          "content": "Nieuwe slide",
+          "x": 12,
+          "y": 5,
+          "size": 64
+        }
+      ]
     }
   ]
 }
