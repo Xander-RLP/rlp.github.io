@@ -369,7 +369,7 @@
             {
               "teams": [
                 {
-                  "name": "Laszlo",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -466,7 +466,8 @@
         "price": "€ 29,99"
       },
       "dugout": [
-        "Sjoerd"
+        "Sjoerd",
+        "Laszlo"
       ],
       "entryType": "user"
     },
