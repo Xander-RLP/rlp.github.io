@@ -798,7 +798,12 @@
       "race": {
         "goalLabel": "Gewonnen Commander-potjes",
         "target": 2,
-        "participants": []
+        "participants": [
+          {
+            "name": "Bo",
+            "progress": 0
+          }
+        ]
       },
       "bracket": {
         "rounds": [
