@@ -1645,7 +1645,8 @@
         "/images/beamer/broodje.jpg",
         "/images/beamer/koffie.webp",
         "/images/beamer/thee.jpg"
-      ]
+      ],
+      "imageSize": 240
     },
     {
       "emoji": "😴",
