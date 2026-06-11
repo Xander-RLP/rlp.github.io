@@ -651,7 +651,12 @@
                   "name": "Ennio",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 0
+              }
             },
             {
               "teams": [
@@ -663,7 +668,12 @@
                   "name": "Leon",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 1
+              }
             },
             {
               "teams": [
@@ -675,7 +685,13 @@
                   "name": "Indy",
                   "score": null
                 }
-              ]
+              ],
+              "next": null,
+              "loserNext": {
+                "r": 1,
+                "m": 1,
+                "s": 0
+              }
             },
             {
               "teams": [
@@ -687,7 +703,12 @@
                   "name": "Sjoerd",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 1,
+                "s": 1
+              }
             }
           ],
           [
@@ -701,7 +722,12 @@
                   "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 2,
+                "m": 0,
+                "s": 0
+              }
             },
             {
               "teams": [
@@ -713,7 +739,12 @@
                   "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 2,
+                "m": 0,
+                "s": 1
+              }
             }
           ],
           [
@@ -727,7 +758,8 @@
                   "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": null
             }
           ]
         ]
