@@ -375,14 +375,6 @@ export default function BeamerPage() {
           </button>
         )}
 
-        {isAdmin && (
-          <button
-            onClick={() => verwijderSlide(i)}
-            className={`mt-8 cursor-pointer rounded border border-slate-800 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:border-red-500 hover:text-red-500 ${fade}`}
-          >
-            × slide verwijderen
-          </button>
-        )}
       </div>
     );
   })();
@@ -428,6 +420,15 @@ export default function BeamerPage() {
             className="ml-2 cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400 hover:text-lime-400"
           >
             + slide
+          </button>
+        )}
+        {isAdmin && idx >= 3 && (
+          <button
+            onClick={() => verwijderSlide(idx - 3)}
+            title="Deze slide verwijderen"
+            className="cursor-pointer rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-red-500 hover:text-red-500"
+          >
+            × slide
           </button>
         )}
       </div>
