@@ -1,16 +1,18 @@
 export type Team = { name: string; score: number | null };
 
-// verwijzing naar een team-slot: ronde r, match m, slot s (0 = boven, 1 = onder)
-export type SlotRef = { r: number; m: number; s: 0 | 1 };
+// verwijzing naar een team-slot: ronde r, match m, slot s (0 = bovenste)
+export type SlotRef = { r: number; m: number; s: number };
 
 export type Match = {
-  teams: [Team, Team];
-  // waar de winnaar naartoe stroomt (het "lijntje"):
-  // undefined = klassiek (volgende ronde, match m/2, slot m%2),
-  // null = geen lijn, anders een expliciet door de admin gekozen slot
+  // 2 of meer slots: 1v1-wedstrijden, maar ook velden van 3, 4+ spelers
+  teams: Team[];
+  // lijnen per eindpositie: outs[0] = waar nummer 1 naartoe stroomt,
+  // outs[1] = nummer 2 (bij 1v1 de verliezer), enz. null = geen lijn
+  outs?: (SlotRef | null)[];
+  // legacy lijnen (worden bij het lezen genormaliseerd naar outs):
+  // next = winnaar (undefined = klassiek: volgende ronde, match m/2, slot m%2),
+  // loserNext = verliezer
   next?: SlotRef | null;
-  // waar de verliezer naartoe stroomt (double-elimination-stijl);
-  // alleen expliciet — geen klassieke standaard
   loserNext?: SlotRef | null;
 };
 
@@ -42,17 +44,10 @@ export type Race = {
   participants: RaceParticipant[];
 };
 
-// afvalrace: rondes met groepen spelers; wie doorgaat staat in de volgende
-// ronde (16 → 8 → 4 → finale, groottes vrij — de admin wijst de doorgangers aan)
-export type Elim = {
-  rounds: string[][]; // ronde 0 = alle deelnemers, daarna steeds de overblijvers
-  winner?: string;    // door de admin aangewezen winnaar in de finaleronde
-};
-
 export type Game = {
   id: string;
   name: string;
-  type?: "bracket" | "race" | "double" | "elim"; // default: bracket
+  type?: "bracket" | "race" | "double"; // default: bracket
   entryType?: "user" | "team"; // per speler of per team aanmelden (default: user)
   format?: string;
   description?: string; // bijv. uitleg van het quest/level-event
@@ -68,7 +63,6 @@ export type Game = {
   bracket: Bracket;
   race?: Race;
   double?: DoubleBracket;
-  elim?: Elim;
   dugout?: string[]; // legacy: de dugout is nu afgeleid van users/teams (lib/users.ts dugoutNames)
 };
 

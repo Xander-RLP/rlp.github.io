@@ -90,8 +90,6 @@ export function placedNames(game: Game): string[] {
     matches.forEach((m) => m.teams.forEach((t) => add(t.name)));
   } else if (game.type === "race" && game.race) {
     game.race.participants.forEach((p) => add(p.name));
-  } else if (game.type === "elim") {
-    (game.elim?.rounds[0] ?? []).forEach(add);
   } else {
     game.bracket.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => add(t.name))));
   }

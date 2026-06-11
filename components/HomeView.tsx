@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
-import { removePlayer as elimRemovePlayer } from "@/lib/elim";
 import { dugoutNames } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
@@ -11,19 +10,19 @@ import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
 import DoubleBracketView from "./DoubleBracketView";
 import Dugout from "./Dugout";
-import ElimView from "./ElimView";
 import GameStoreBanner from "./GameStoreBanner";
 import RaceView from "./RaceView";
 
 export default function HomeView() {
-  const { state, isAdmin, updateGames, saveStatus, fetchImage } = useTournament();
+  const { state, isAdmin, updateGames, saveStatus, fetchImage, fetchStore } = useTournament();
   const [imageBusy, setImageBusy] = useState(false);
+  const [storeBusy, setStoreBusy] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newFormat, setNewFormat] = useState("");
   const [newSize, setNewSize] = useState("8");
-  const [newType, setNewType] = useState<"bracket" | "race" | "double" | "elim">("bracket");
+  const [newType, setNewType] = useState<"bracket" | "race" | "double">("bracket");
   const [newEntryType, setNewEntryType] = useState<"user" | "team">("user");
   const [newPlayer, setNewPlayer] = useState("");
 
@@ -61,15 +60,19 @@ export default function HomeView() {
       format: newFormat.trim() || (
         newType === "race" ? "Race · Leaderboard"
         : newType === "double" ? "Double Elimination"
-        : newType === "elim" ? "Afvalrace · rondes met afvallers"
         : "Single Elimination"),
       bracket: emptyBracket(newType === "bracket" ? parseInt(newSize, 10) : 4),
       ...(newType === "race" ? { race: { goalLabel: "Eerste bij het doel", target: 20, participants: [] } } : {}),
       ...(newType === "double" ? { double: emptyDouble() } : {}),
-      ...(newType === "elim" ? { elim: { rounds: [[]] } } : {}),
     };
     setImageBusy(true);
-    g.image = (await fetchImage(g.id, name).catch(() => null)) ?? undefined;
+    // plaatje én store-link in één moeite meezoeken (Steam → Epic/GOG → Wikipedia)
+    const [image, store] = await Promise.all([
+      fetchImage(g.id, name).catch(() => null),
+      fetchStore(name).catch(() => null),
+    ]);
+    g.image = image ?? undefined;
+    g.store = store ?? undefined;
     setImageBusy(false);
     updateGames([...state!.games, g]);
     window.location.hash = g.id;
@@ -87,6 +90,40 @@ export default function HomeView() {
     } else {
       alert(`Geen afbeelding gevonden voor "${game.name}". Kies via ✏️ Eigen icoon zelf een emoji of afbeelding-URL.`);
     }
+  }
+
+  // store-/downloadlink zoeken (Steam); niet gevonden? Dan zelf een URL plakken
+  // (bijv. een Epic-pagina zoals store.epicgames.com/p/fall-guys)
+  async function refreshStore() {
+    setStoreBusy(true);
+    const store = await fetchStore(game.name).catch(() => null);
+    setStoreBusy(false);
+    if (store) {
+      patchGame({ store });
+      return;
+    }
+    const url = prompt(
+      `"${game.name}" niet op Steam gevonden. Plak zelf een store-/download-URL (bijv. een Epic-pagina).\nLeeg laten = geen downloadbanner.`,
+      game.store?.url ?? "",
+    )?.trim();
+    if (url == null) return;
+    if (!url) {
+      patchGame({ store: undefined });
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      alert("Dat lijkt geen URL.");
+      return;
+    }
+    const host = new URL(url).hostname;
+    const naam = host.includes("epicgames") ? "Epic Games"
+      : host.includes("steampowered") ? "Steam"
+      : host.includes("gog.com") ? "GOG"
+      : host.includes("battle.net") ? "Battle.net"
+      : host.includes("riotgames") ? "Riot Games"
+      : host.replace(/^www\./, "");
+    const price = prompt("Prijs (leeg = gratis):", game.store?.price ?? "")?.trim() || undefined;
+    patchGame({ store: { name: naam, url, ...(price ? { price } : {}) } });
   }
 
   // zelf een icoon kiezen: een emoji, of een URL/pad naar een afbeelding
@@ -123,9 +160,7 @@ export default function HomeView() {
   // slot leegmaken = de speler verschijnt vanzelf weer in de afgeleide dugout
   function returnToDugout(p: DragPayload) {
     if (p.from !== "slot") return;
-    if (game.type === "elim") {
-      patchGame({ elim: elimRemovePlayer(game.elim, 0, p.name) });
-    } else if (game.type === "double") {
+    if (game.type === "double") {
       const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
       const slot = d.w[0][p.m]?.teams[p.s];
       if (!slot || slot.name !== p.name) return;
@@ -265,7 +300,6 @@ export default function HomeView() {
             <h1 className="flex items-center gap-2 text-xl font-extrabold uppercase tracking-wide md:text-2xl">
               {game.type === "race" ? game.name
                 : game.type === "double" ? `${game.name}: Double Elimination`
-                : game.type === "elim" ? `${game.name}: Afvalrace (${game.elim?.rounds[0]?.length ?? 0} deelnemers)`
                 : `${game.name}: ${entryCount(game.bracket)}-Team Bracket`}
               {isAdmin && (
                 <button
@@ -329,8 +363,6 @@ export default function HomeView() {
 
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
-      ) : game.type === "elim" ? (
-        <ElimView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       ) : game.type === "double" ? (
         <>
           {isAdmin && (
@@ -354,19 +386,14 @@ export default function HomeView() {
           <b className="text-lime-400">Admin mode:</b>{" "}
           {game.type === "race" ? (
             <>zet de voortgang per deelnemer; wie het doel haalt wint.</>
-          ) : game.type === "elim" ? (
-            <>sleep deelnemers uit de dugout in ronde 1 en klik per ronde wie doorgaat — afvallers
-            blijven doorgestreept staan. Voeg rondes toe tot en met de finale (de grootte bepaal je
-            zelf) en wijs daar met een klik de winnaar aan.</>
           ) : (
-            <>nieuwe aanmeldingen komen in de <b>dugout</b>;
-            sleep ze via het gekleurde blokje naar een leeg slot en terug. Vul de scores per match in —
-            de winnaar schuift automatisch door langs de lijntjes.</>
+            <>sleep spelers uit de <b>dugout</b> (via het gekleurde blokje) naar een leeg slot en terug.
+            Vul de scores in — elke eindpositie schuift automatisch door langs zijn eigen lijn.</>
           )}
           {(game.type === "bracket" || !game.type) && (
-            <> Met <b>🔧 Bracket bewerken</b> voeg je zelf rondes en wedstrijden toe en bepaal je de
-            lijntjes: → voor de winnaar, ↘ voor de verliezer (rode lijn, double-elim). Het aantal teams
-            in de titel volgt automatisch de opbouw.</>
+            <> Met <b>🔧 Bracket bewerken</b> bepaal je alles zelf: rondes, wedstrijden, het aantal
+            speler-slots per wedstrijd (+ slot voor velden van 3, 4, …) en per positie het lijntje
+            (nr 1 groen, nr 2 rood). Het teamaantal in de titel volgt de opbouw automatisch.</>
           )}
           {game.type === "double" && (
             <> Wil je rondes of lijntjes aanpassen? Gebruik <b>🔧 Bracket bewerken</b> boven het bracket
@@ -387,7 +414,7 @@ export default function HomeView() {
                 </select>
               </span>
             )}
-            {game.type !== "race" && game.type !== "elim" && (
+            {game.type !== "race" && (
               <span className="flex items-center gap-2">
                 Snel opzetten (vervangt opbouw):
                 <select
@@ -411,6 +438,13 @@ export default function HomeView() {
               className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400"
             >
               ✏️ Eigen icoon
+            </button>
+            <button
+              onClick={() => void refreshStore()}
+              disabled={storeBusy}
+              className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400 disabled:opacity-50"
+            >
+              {storeBusy ? "Zoeken…" : "🛒 Store zoeken"}
             </button>
           </div>
         </div>
@@ -443,12 +477,11 @@ export default function HomeView() {
             />
             <select
               value={newType}
-              onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double" | "elim")}
+              onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
-              <option value="bracket">Bracket (knock-out, zelf in te delen rondes)</option>
+              <option value="bracket">Bracket (vrij in te delen: knock-out, velden van 3+, afvalrace)</option>
               <option value="double">Double elimination (winner + loser bracket)</option>
-              <option value="elim">Afvalrace (rondes met afvallers — bijv. Shootmania)</option>
               <option value="race">Vrij format / leaderboard (elk aantal spelers — bijv. Commander, race)</option>
             </select>
             {newType !== "race" && (

@@ -434,9 +434,86 @@
     {
       "id": "shootmania-storm",
       "name": "Shootmania Storm",
-      "format": "1v1 · Afvalrace · rondes met afvallers",
+      "format": "1v1 · Velden van 3 · winnaar door naar de finale",
       "bracket": {
         "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "Ronnie",
+                  "score": null
+                },
+                {
+                  "name": "Ennio",
+                  "score": null
+                },
+                {
+                  "name": "Xander",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Leon",
+                  "score": null
+                },
+                {
+                  "name": "Bo",
+                  "score": null
+                },
+                {
+                  "name": "Indy",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 1
+                },
+                null,
+                null
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "Sjoerd",
+                  "score": null
+                },
+                {
+                  "name": "Jean",
+                  "score": null
+                },
+                {
+                  "name": "Laszlo",
+                  "score": null
+                }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 2
+                },
+                null,
+                null
+              ]
+            }
+          ],
           [
             {
               "teams": [
@@ -447,7 +524,16 @@
                 {
                   "name": "",
                   "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
                 }
+              ],
+              "outs": [
+                null,
+                null,
+                null
               ]
             }
           ]
@@ -462,25 +548,7 @@
         "price": "€ 19,99"
       },
       "entryType": "user",
-      "type": "elim",
-      "elim": {
-        "rounds": [
-          [
-            "Ronnie",
-            "Ennio",
-            "Xander",
-            "Leon",
-            "Bo",
-            "Indy",
-            "Sjoerd",
-            "Jean",
-            "Laszlo"
-          ],
-          [],
-          [],
-          []
-        ]
-      }
+      "type": "bracket"
     },
     {
       "id": "lotro",

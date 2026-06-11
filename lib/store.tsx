@@ -18,6 +18,7 @@ type TournamentContext = {
   updateSponsors: (sponsors: Sponsor[]) => void;
   updateEetmomenten: (eetmomenten: EetMoment[]) => void;
   fetchImage: (gameId: string, query: string) => Promise<string | null>;
+  fetchStore: (query: string) => Promise<Game["store"] | null>;
   reload: () => Promise<void>;
   claimSeat: (seatId: string, name: string) => Promise<string | null>; // null = ok, anders foutmelding
 };
@@ -249,6 +250,24 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
       return smallIcon;
     };
 
+    // niet op Steam? CheapShark (CORS-open) kent ook Epic/GOG-titels en geeft
+    // hun winkel-art terug — bijv. Epic-CDN-plaatjes voor Fall Guys
+    const searchCheapShark = async (q: string): Promise<string | null> => {
+      try {
+        const res = await fetch(`https://www.cheapshark.com/api/1.0/games?title=${encodeURIComponent(q)}&limit=10`);
+        if (!res.ok) return null;
+        const games = (await res.json()) as { external: string; thumb?: string }[];
+        const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        const target = clean(q);
+        const best =
+          games.find((g) => clean(g.external) === target) ??
+          games.filter((g) => clean(g.external).includes(target)).sort((a, b) => a.external.length - b.external.length)[0];
+        return best?.thumb ?? null;
+      } catch {
+        return null;
+      }
+    };
+
     const search = async (q: string): Promise<string | null> => {
       const params = new URLSearchParams({
         action: "query", format: "json", origin: "*",
@@ -264,6 +283,8 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     };
     const steam = await searchSteam(query).catch(() => null);
     if (steam) return steam;
+    const shark = await searchCheapShark(query);
+    if (shark) return shark;
     try {
       return (await search(query)) ?? (await search(`${query} video game`));
     } catch {
@@ -271,8 +292,35 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
+  // store-/downloadlink zoeken: Steam-zoekresultaat + prijs via appdetails.
+  // Niet gevonden (bijv. Epic-exclusives)? Dan vult de admin zelf een URL in.
+  const fetchStore = useCallback(async (query: string): Promise<Game["store"] | null> => {
+    try {
+      const target = `https://steamcommunity.com/actions/SearchApps/${encodeURIComponent(query)}`;
+      const res = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
+      if (!res.ok) return null;
+      const apps = (await res.json()) as { appid: string; name: string }[];
+      const appid = apps[0]?.appid;
+      if (!appid) return null;
+      let price: string | undefined;
+      try {
+        const pd = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(
+          `https://store.steampowered.com/api/appdetails?appids=${appid}&cc=nl&filters=price_overview,basic`
+        )}`);
+        const data = (await pd.json())?.[appid]?.data as
+          { is_free?: boolean; price_overview?: { final_formatted?: string } } | undefined;
+        if (data && !data.is_free && data.price_overview?.final_formatted) {
+          price = data.price_overview.final_formatted;
+        }
+      } catch { /* prijs is een nice-to-have */ }
+      return { name: "Steam", url: `https://store.steampowered.com/app/${appid}`, ...(price ? { price } : {}) };
+    } catch {
+      return null;
+    }
+  }, []);
+
   return (
-    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateState, updateEventStart, updateSponsors, updateEetmomenten, fetchImage, reload: load, claimSeat }}>
+    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateState, updateEventStart, updateSponsors, updateEetmomenten, fetchImage, fetchStore, reload: load, claimSeat }}>
       {children}
     </Ctx.Provider>
   );
