@@ -108,7 +108,7 @@ export default function TeamSpeakWidget() {
                 className="nas-glow h-28 w-auto"
               />
               {/* knipperende schijf-LED'jes op de echte LED-strip — wit, zoals officieel */}
-              <span className="absolute bottom-[33.5%] left-[19%] flex items-center gap-[2px]">
+              <span className="absolute bottom-[36%] left-[19%] flex items-center gap-[2px]">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <span
                     key={i}
