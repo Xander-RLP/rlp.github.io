@@ -534,7 +534,8 @@
               "outs": [
                 null,
                 null
-              ]
+              ],
+              "label": "Loser"
             }
           ],
           [
