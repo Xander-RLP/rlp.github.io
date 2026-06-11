@@ -827,7 +827,7 @@
     {
       "id": "R3",
       "side": "right",
-      "name": ""
+      "name": "Indy"
     },
     {
       "id": "O1",
@@ -835,9 +835,7 @@
       "name": "Bo"
     }
   ],
-  "unseated": [
-    "Indy"
-  ],
+  "unseated": [],
   "eventStart": "2026-06-12T15:00",
   "eetmomenten": [
     {
