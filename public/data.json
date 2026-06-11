@@ -397,7 +397,7 @@
                   "score": null
                 },
                 {
-                  "name": "Bo",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -471,7 +471,8 @@
         "Ennio",
         "Ronnie",
         "Xander",
-        "Leon"
+        "Leon",
+        "Bo"
       ],
       "entryType": "user"
     },
