@@ -47,7 +47,8 @@ export type Game = {
   description?: string; // bijv. uitleg van het quest/level-event
   start?: string; // agenda: datum/tijd (datetime-local), via admin in te stellen
   durationMin?: number; // geschatte duur in minuten (kalenderblok), default 120
-  image?: string; // pad naar automatisch gezocht spel-plaatje (public/images/...)
+  image?: string; // pad/URL naar spel-plaatje (automatisch gezocht of zelf ingevoerd)
+  emoji?: string; // gekozen emoji als icoon wanneer er geen plaatje (gevonden) is
   store?: {
     name: string;  // launcher/winkel, bijv. "Steam" of "Battle.net"
     url: string;

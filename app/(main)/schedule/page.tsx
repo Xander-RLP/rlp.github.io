@@ -354,6 +354,8 @@ export default function SchedulePage() {
           {g.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={g.image} alt="" className="h-5 w-5 rounded object-cover" />
+          ) : g.emoji ? (
+            <span className="flex h-5 w-5 items-center justify-center text-sm leading-none">{g.emoji}</span>
           ) : (
             <span className="flex h-5 w-5 items-center justify-center rounded text-[8px] font-extrabold text-slate-950" style={{ background: logoColor(g.name) }}>
               {gameInitials(g.name)}

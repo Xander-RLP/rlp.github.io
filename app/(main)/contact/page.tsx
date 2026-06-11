@@ -17,8 +17,31 @@ export default function ContactPage() {
         </div>
         <div className="rounded-md border border-slate-700 bg-slate-800 p-4 text-[13px] leading-relaxed">
           <div className="mb-1.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-400">Locatie</div>
-          RLP26 main stage — tijden volgen via het schedule.
+          RLP26 main stage: Roswinkelerstraat 136, 7895 AS Roswinkel — tijden volgen via het schedule.
         </div>
+      </div>
+
+      {/* routekaart naar de main stage */}
+      <div className="mt-6 max-w-3xl">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-sm font-extrabold uppercase tracking-wide">📍 Zo vind je ons</h3>
+          <a
+            href="https://maps.app.goo.gl/dFgZ4gpszbvKTTsn9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded border border-lime-400/60 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-lime-400 hover:bg-lime-400/10"
+          >
+            Open in Google Maps ↗
+          </a>
+        </div>
+        <iframe
+          title="Kaart: Roswinkelerstraat 136, Roswinkel"
+          src="https://www.google.com/maps?q=Roswinkelerstraat+136,+7895+AS+Roswinkel&output=embed&hl=nl&z=14"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+          className="h-80 w-full rounded-md border border-slate-700"
+        />
       </div>
     </div>
   );

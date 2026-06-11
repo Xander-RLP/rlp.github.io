@@ -142,6 +142,10 @@ export default function HomePage() {
                   {g.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={g.image} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover" />
+                  ) : g.emoji ? (
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-slate-900 text-2xl">
+                      {g.emoji}
+                    </div>
                   ) : (
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xs font-extrabold text-slate-950" style={{ background: logoColor(g.name) }}>
                       {gameInitials(g.name)}

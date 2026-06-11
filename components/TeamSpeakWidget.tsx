@@ -57,7 +57,7 @@ export default function TeamSpeakWidget() {
               <ol className="list-decimal space-y-1 pl-4 text-[11px] leading-relaxed text-slate-400">
                 <li>Open <b className="text-slate-200">⚙️ Settings</b></li>
                 <li>Kies <b className="text-slate-200">Audio</b></li>
-                <li>Zet bij <b className="text-slate-200">Voice Activity Detection (VAD)</b> de Mode op <b className="text-lime-400">Hybrid</b></li>
+                <li>Zet bij <b className="text-slate-200">Voice Activity Detection (VAD)</b> de Mode op <b className="text-lime-400">Hybrid</b> of <b className="text-lime-400">Gate</b> — beide kunnen werken, afhankelijk van je mic en omgeving. Probeer wat het best klinkt</li>
                 <li>Schuif de gevoeligheid bij tot je ruis wegvalt</li>
               </ol>
             </div>

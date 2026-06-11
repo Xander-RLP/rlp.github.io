@@ -73,9 +73,27 @@ export default function HomeView() {
     const image = await fetchImage(game.id, game.name).catch(() => null);
     setImageBusy(false);
     if (image) {
-      updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, image } : g)));
+      patchGame({ image, emoji: undefined });
     } else {
-      alert(`Geen afbeelding gevonden voor "${game.name}".`);
+      alert(`Geen afbeelding gevonden voor "${game.name}". Kies via ✏️ Eigen icoon zelf een emoji of afbeelding-URL.`);
+    }
+  }
+
+  // zelf een icoon kiezen: een emoji, of een URL/pad naar een afbeelding
+  function setCustomIcon() {
+    const v = prompt(
+      "Typ een emoji (bijv. 🏴‍☠️) of plak een afbeelding-URL.\nLeeg laten = terug naar de standaard initialen.",
+      game.emoji ?? game.image ?? "",
+    )?.trim();
+    if (v == null) return;
+    if (!v) {
+      patchGame({ image: undefined, emoji: undefined });
+    } else if (/^(https?:\/\/|\/)/i.test(v)) {
+      patchGame({ image: v, emoji: undefined });
+    } else if (v.length <= 10 && !/\s/.test(v)) {
+      patchGame({ emoji: v, image: undefined });
+    } else {
+      alert("Dat lijkt geen emoji of afbeelding-URL.");
     }
   }
 
@@ -194,6 +212,8 @@ export default function HomeView() {
             {g.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={g.image} alt="" className="h-4 w-4 rounded-sm object-cover" />
+            ) : g.emoji ? (
+              <span className="text-sm leading-none">{g.emoji}</span>
             ) : (
               <span className="h-2 w-2 rounded-sm" style={{ background: logoColor(g.name) }} />
             )}
@@ -225,6 +245,10 @@ export default function HomeView() {
           {game.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={game.image} alt={game.name} className="h-10 w-10 shrink-0 rounded-md object-cover" />
+          ) : game.emoji ? (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-800 text-2xl">
+              {game.emoji}
+            </div>
           ) : (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-sm font-extrabold text-slate-950" style={{ background: icon.bg }}>
               {icon.txt}
@@ -303,33 +327,46 @@ export default function HomeView() {
         <BracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       )}
 
-      {isAdmin && game.type !== "race" && (
+      {isAdmin && (
         <div className="mt-4 max-w-2xl rounded border border-dashed border-slate-700 px-3 py-2 text-[11px] text-slate-400">
-          <b className="text-lime-400">Admin mode:</b> nieuwe aanmeldingen komen in de <b>dugout</b>;
-          sleep ze via het gekleurde blokje naar een leeg slot en terug. Vul de scores per match in —
-          de winnaar schuift automatisch door langs de lijntjes.
+          <b className="text-lime-400">Admin mode:</b>{" "}
+          {game.type === "race" ? (
+            <>zet de voortgang per deelnemer; wie het doel haalt wint.</>
+          ) : (
+            <>nieuwe aanmeldingen komen in de <b>dugout</b>;
+            sleep ze via het gekleurde blokje naar een leeg slot en terug. Vul de scores per match in —
+            de winnaar schuift automatisch door langs de lijntjes.</>
+          )}
           {(game.type === "bracket" || !game.type) && (
             <> Met <b>🔧 Bracket bewerken</b> voeg je zelf rondes en wedstrijden toe en bepaal je de
             lijntjes (klik de →-knop op een wedstrijd en daarna het doel-slot).</>
           )}
           {" "}Wijzigingen worden automatisch opgeslagen.
-          <div className="mt-2 flex items-center gap-3">
-            <span className="flex items-center gap-2">
-              Standaard-opzet:
-              <select
-                value={game.type === "double" ? normalizeDouble(game.double).w[0].length * 2 : teamCount(game.bracket)}
-                onChange={(e) => (game.type === "double" ? resizeDouble : resize)(parseInt(e.target.value, 10))}
-                className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
-              >
-                {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} {game.type === "double" ? "teams" : "deelnemers"}</option>)}
-              </select>
-            </span>
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            {game.type !== "race" && (
+              <span className="flex items-center gap-2">
+                Standaard-opzet:
+                <select
+                  value={game.type === "double" ? normalizeDouble(game.double).w[0].length * 2 : teamCount(game.bracket)}
+                  onChange={(e) => (game.type === "double" ? resizeDouble : resize)(parseInt(e.target.value, 10))}
+                  className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
+                >
+                  {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} {game.type === "double" ? "teams" : "deelnemers"}</option>)}
+                </select>
+              </span>
+            )}
             <button
               onClick={() => void refreshImage()}
               disabled={imageBusy}
               className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400 disabled:opacity-50"
             >
               {imageBusy ? "Zoeken…" : "🔍 Plaatje zoeken"}
+            </button>
+            <button
+              onClick={setCustomIcon}
+              className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-lime-400 hover:text-lime-400"
+            >
+              ✏️ Eigen icoon
             </button>
           </div>
         </div>
