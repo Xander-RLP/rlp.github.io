@@ -113,5 +113,6 @@ export type TournamentState = {
 export type BeamerSlide = {
   emoji?: string;
   title: string;
-  text?: string; // regels gescheiden met \n
+  text?: string;      // regels gescheiden met \n
+  images?: string[];  // foto's onder de tekst (paden of URL's)
 };
