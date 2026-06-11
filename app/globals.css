@@ -17,6 +17,20 @@ body {
 /* (de Buy me a Coffee!-tab animeert volledig via inline transitions in
    components/CoffeeTab.tsx — één bron van waarheid, altijd vloeiend) */
 
+/* de NAS in het TeamSpeak-paneel "verbruikt stroom": zachte pulserende
+   gloed + knipperende activity-LED'jes met elk hun eigen ritme */
+.nas-glow {
+  animation: nas-glow 3.2s ease-in-out infinite;
+}
+@keyframes nas-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(132, 204, 22, 0.12)); }
+  50% { filter: drop-shadow(0 0 16px rgba(132, 204, 22, 0.35)); }
+}
+@keyframes led-blink {
+  0%, 54% { opacity: 1; }
+  55%, 100% { opacity: 0.1; }
+}
+
 /* sidebar-secties en nieuwsitems schuiven gestaffeld binnen */
 .news-in {
   animation: news-in 0.5s ease-out both;

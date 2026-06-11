@@ -100,12 +100,24 @@ export default function TeamSpeakWidget() {
             className="group mt-2.5 block rounded-md border border-slate-800 px-2 pb-2.5 pt-2 text-center transition-colors hover:border-amber-400/50 hover:bg-amber-400/5"
           >
             <p className="text-[10px] uppercase tracking-wide text-slate-500">Draait op</p>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/ugreen-nas.webp"
-              alt="UGREEN DXP8800 Plus"
-              className="mx-auto h-28 w-auto transition-transform duration-300 group-hover:scale-[1.04]"
-            />
+            <span className="relative mx-auto block w-fit transition-transform duration-300 group-hover:scale-[1.04]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/ugreen-nas.webp"
+                alt="UGREEN DXP8800 Plus"
+                className="nas-glow h-28 w-auto"
+              />
+              {/* knipperende schijf-LED'jes, elk met een eigen ritme */}
+              <span className="absolute bottom-[30%] left-[21%] flex gap-[3px]">
+                {[0, 1, 2, 3].map((i) => (
+                  <span
+                    key={i}
+                    className="h-[3px] w-[3px] rounded-full bg-lime-400 shadow-[0_0_4px_rgba(132,204,22,0.9)]"
+                    style={{ animation: `led-blink ${(0.7 + i * 0.41).toFixed(2)}s steps(1) infinite`, animationDelay: `${i * 0.23}s` }}
+                  />
+                ))}
+              </span>
+            </span>
             <p className="text-[11px] font-bold tracking-wide text-slate-300">UGREEN DXP8800 Plus</p>
             <p className="mt-1 text-[10px] text-slate-400">
               hosting, stroom & onderhoud —{" "}
