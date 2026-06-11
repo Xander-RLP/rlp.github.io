@@ -721,12 +721,12 @@
     {
       "id": "R2",
       "side": "right",
-      "name": "Indy"
+      "name": ""
     },
     {
       "id": "R3",
       "side": "right",
-      "name": "Jean"
+      "name": ""
     },
     {
       "id": "O1",
@@ -735,7 +735,9 @@
     }
   ],
   "unseated": [
-    "Bo"
+    "Bo",
+    "Indy",
+    "Jean"
   ],
   "eventStart": "2026-06-12T10:00"
 }
