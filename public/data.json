@@ -491,6 +491,10 @@
                 {
                   "name": "",
                   "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
                 }
               ],
               "outs": [
@@ -499,6 +503,7 @@
                   "m": 0,
                   "s": 0
                 },
+                null,
                 null,
                 null,
                 null,
