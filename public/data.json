@@ -785,7 +785,24 @@
               "label": "💀 LB Ronde 1"
             }
           ],
-          [],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "outs": [
+                null,
+                null
+              ]
+            }
+          ],
           []
         ]
       },
