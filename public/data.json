@@ -1397,7 +1397,7 @@
     }
   ],
   "rotatie": {
-    "teamSize": 4,
+    "teamSize": 2,
     "spelers": [
       "Laszlo",
       "Ronnie",
@@ -1413,13 +1413,17 @@
       [
         [
           "Laszlo",
-          "Ronnie",
+          "Ronnie"
+        ],
+        [
           "Ennio",
           "Sjoerd"
         ],
         [
           "Jean",
-          "Xander",
+          "Xander"
+        ],
+        [
           "Leon",
           "Indy"
         ],
@@ -1429,15 +1433,40 @@
       ],
       [
         [
-          "Jean",
-          "Bo",
-          "Laszlo",
+          "Ennio",
+          "Jean"
+        ],
+        [
+          "Sjoerd",
           "Xander"
         ],
         [
           "Leon",
-          "Ronnie",
+          "Bo"
+        ],
+        [
           "Indy",
+          "Laszlo"
+        ],
+        [
+          "Ronnie"
+        ]
+      ],
+      [
+        [
+          "Jean",
+          "Leon"
+        ],
+        [
+          "Xander",
+          "Indy"
+        ],
+        [
+          "Bo",
+          "Laszlo"
+        ],
+        [
+          "Ronnie",
           "Ennio"
         ],
         [
@@ -1446,36 +1475,23 @@
       ],
       [
         [
-          "Bo",
-          "Ronnie",
-          "Sjoerd",
-          "Jean"
-        ],
-        [
-          "Laszlo",
           "Leon",
-          "Ennio",
-          "Xander"
+          "Laszlo"
         ],
         [
-          "Indy"
-        ]
-      ],
-      [
-        [
-          "Jean",
-          "Ennio",
           "Indy",
           "Bo"
         ],
         [
-          "Xander",
           "Ronnie",
-          "Sjoerd",
-          "Leon"
+          "Sjoerd"
         ],
         [
-          "Laszlo"
+          "Ennio",
+          "Xander"
+        ],
+        [
+          "Jean"
         ]
       ]
     ]
