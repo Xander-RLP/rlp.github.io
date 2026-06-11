@@ -9,11 +9,7 @@ const NEWS = [
   { accent: "border-amber-400", html: <><b className="text-slate-100">🏴‍☠️ The Treasure Hunt be back!</b> And mark me words… the hunt has already begun. Only the keenest traveler shall spot the first signs. <Link href="/tournaments#treasure-hunt" className="font-bold text-amber-400 hover:text-amber-300">Lees meer →</Link></> },
   { accent: "border-teal-500", html: <><b className="text-slate-100">Brackets live:</b> alle RLP26 toernooien staan online — indeling is nog een placeholder.</> },
   { accent: "border-lime-500", html: <><b className="text-slate-100">Line-up:</b> CS2 Wingman, League of Legends (ARAM), Rocket League, WC3 Reforged en Shootmania Storm.</> },
-  { accent: "border-amber-400", html: <>
-    <b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.
-    <span className="my-2 block h-px bg-gradient-to-r from-transparent via-slate-500/60 to-transparent" aria-hidden />
-    ☕ Of steun de developer van deze site: <a href={COFFEE_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-amber-400 hover:text-amber-300">Buy me a Coffee!</a>
-  </> },
+  { accent: "border-amber-400", html: <><b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.</> },
   { accent: "border-red-500", html: <><b className="text-slate-100">Schedule:</b> definitieve tijden volgen zodra de aanmeldingen rond zijn.</> },
 ];
 
@@ -88,9 +84,14 @@ export default function Sidebar() {
       </section>
 
       <footer className="mt-auto border-t border-slate-700 pt-4">
-        <p className="mb-3 text-center text-[11px] text-slate-400">
+        <p className="mb-2 text-center text-[11px] text-slate-400">
           RLP26 zoekt nog sponsors —{" "}
           <Link href="/sponsors" className="text-lime-400 hover:underline">sponsor worden?</Link>
+        </p>
+        <span className="mx-auto mb-2 block h-px w-3/4 bg-gradient-to-r from-transparent via-slate-500/60 to-transparent" aria-hidden />
+        <p className="mb-3 text-center text-[11px] text-slate-400">
+          ☕ Of steun de developer van deze site —{" "}
+          <a href={COFFEE_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-amber-400 hover:text-amber-300">Buy me a Coffee!</a>
         </p>
         <div className="flex justify-between text-[9px] text-slate-400">
           <div className="flex gap-2.5">

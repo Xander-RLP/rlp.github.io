@@ -24,9 +24,28 @@ function Chevron({ className }: { className?: string }) {
 
 export default function SidebarShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [panelTop, setPanelTop] = useState(64);
 
   useEffect(() => {
     if (localStorage.getItem(KEY) === "0") setOpen(true);
+  }, []);
+
+  // het paneel valt precies onder de navbar, ook als die over twee regels
+  // loopt of (deels) uit beeld is gescrold
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+    const update = () => setPanelTop(Math.max(0, header.getBoundingClientRect().bottom));
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(header);
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update);
+    };
   }, []);
 
   function toggle() {
@@ -56,39 +75,30 @@ export default function SidebarShell({ children }: { children: React.ReactNode }
         {open && <Sidebar />}
       </div>
 
-      {/* desktop: zwevend paneel rechts dat de content nooit verschuift */}
+      {/* desktop: zwevend paneel rechts dat de content nooit verschuift; de
+          verticale tab is de enige knop en schuift met het paneel mee —
+          pijl naar rechts = paneel open (dichtklappen), naar links = gesloten */}
       <aside
-        className={`fixed bottom-0 right-0 top-16 z-30 hidden w-80 border-l border-slate-700 bg-slate-900 shadow-2xl shadow-black/40 transition-transform duration-300 ease-in-out lg:block ${
+        style={{ top: panelTop }}
+        className={`fixed bottom-0 right-0 z-30 hidden w-80 border-l border-slate-700 bg-slate-900 shadow-2xl shadow-black/40 transition-transform duration-300 ease-in-out lg:block ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
-        aria-hidden={!open}
       >
         <button
           onClick={toggle}
-          aria-label="Zijpaneel inklappen"
-          title="Inklappen"
-          className="absolute -left-3.5 top-7 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-slate-300 shadow-md transition-colors hover:border-teal-400 hover:text-teal-300"
+          aria-label={open ? "Tournament News inklappen" : "Tournament News openen"}
+          aria-expanded={open}
+          className="absolute right-full top-1/3 z-10 flex cursor-pointer flex-col items-center gap-2 rounded-l-md border border-r-0 border-slate-700 bg-slate-800 px-1.5 py-3.5 text-slate-400 shadow-lg transition-colors hover:border-teal-400 hover:text-teal-300"
         >
-          <Chevron className="h-4 w-4" />
+          <Chevron className={`h-3.5 w-3.5 transition-transform duration-300 ${open ? "" : "rotate-180"}`} />
+          <span className="text-[10px] font-extrabold uppercase tracking-widest [writing-mode:vertical-rl]">
+            Tournament News
+          </span>
         </button>
         <div className="h-full overflow-y-auto">
           <Sidebar />
         </div>
       </aside>
-
-      {/* desktop dichtgeklapt: tab aan de schermrand om het paneel te openen */}
-      {!open && (
-        <button
-          onClick={toggle}
-          aria-label="Tournament News openen"
-          className="fixed right-0 top-1/3 z-30 hidden cursor-pointer flex-col items-center gap-2 rounded-l-md border border-r-0 border-slate-700 bg-slate-800 px-1.5 py-3.5 text-slate-400 shadow-lg transition-colors hover:border-teal-400 hover:text-teal-300 lg:flex"
-        >
-          <Chevron className="h-3.5 w-3.5 rotate-180" />
-          <span className="text-[10px] font-extrabold uppercase tracking-widest [writing-mode:vertical-rl]">
-            Tournament News
-          </span>
-        </button>
-      )}
     </div>
   );
 }
