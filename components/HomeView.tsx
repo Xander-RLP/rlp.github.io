@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
 import { removePlayer as elimRemovePlayer } from "@/lib/elim";
-import { allUsers } from "@/lib/users";
+import { dugoutNames } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
@@ -107,66 +107,39 @@ export default function HomeView() {
     }
   }
 
-  // nieuwe speler/team op de actieve tab — komt in de dugout (het bracket
-  // verandert pas als de admin de speler er zelf in sleept)
+  // nieuwe deelnemer op een race-tab; toernooien vullen zichzelf via users/teams
   function addPlayer() {
     const name = newPlayer.trim();
-    if (!name) return;
-    if (game.type === "race") {
-      const race = game.race ?? { goalLabel: "Doel", target: 20, participants: [] };
-      if (race.participants.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
-        alert(`"${name}" doet al mee.`);
-        return;
-      }
-      setRace({ ...race, participants: [...race.participants, { name, progress: 0 }] });
-    } else {
-      if (gameNames(game).some((n) => n.toLowerCase() === name.toLowerCase())) {
-        alert(`"${name}" doet al mee.`);
-        return;
-      }
-      patchGame({ dugout: [...(game.dugout ?? []), name] });
+    if (!name || game.type !== "race") return;
+    const race = game.race ?? { goalLabel: "Doel", target: 20, participants: [] };
+    if (race.participants.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
+      alert(`"${name}" doet al mee.`);
+      return;
     }
+    setRace({ ...race, participants: [...race.participants, { name, progress: 0 }] });
     setNewPlayer("");
   }
 
-  // speler uit een bracket-slot terug op de bank slepen
+  // slot leegmaken = de speler verschijnt vanzelf weer in de afgeleide dugout
   function returnToDugout(p: DragPayload) {
     if (p.from !== "slot") return;
-    const dugoutNext = [...(game.dugout ?? []), p.name];
     if (game.type === "elim") {
-      if (!(game.elim?.rounds[0] ?? []).some((n) => n.toLowerCase() === p.name.toLowerCase())) return;
-      patchGame({ elim: elimRemovePlayer(game.elim, 0, p.name), dugout: dugoutNext });
+      patchGame({ elim: elimRemovePlayer(game.elim, 0, p.name) });
     } else if (game.type === "double") {
       const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
       const slot = d.w[0][p.m]?.teams[p.s];
       if (!slot || slot.name !== p.name) return;
       slot.name = "";
       slot.score = null;
-      patchGame({ double: d, dugout: dugoutNext });
+      patchGame({ double: d });
     } else {
       const b: Bracket = JSON.parse(JSON.stringify(game.bracket));
       const slot = b.rounds[p.r]?.[p.m]?.teams[p.s];
       if (!slot || slot.name !== p.name) return;
       slot.name = "";
       slot.score = null;
-      patchGame({ bracket: b, dugout: dugoutNext });
+      patchGame({ bracket: b });
     }
-  }
-
-  function removeFromDugout(name: string) {
-    if (!confirm(`"${name}" uitschrijven?`)) return;
-    patchGame({ dugout: (game.dugout ?? []).filter((n) => n !== name) });
-  }
-
-  // dugout snel vullen met centrale users of teams (alleen wie nog niet meedoet)
-  function fillDugout(names: string[]) {
-    const have = gameNames(game).map((n) => n.toLowerCase());
-    const add = names.filter((n) => !have.includes(n.toLowerCase()));
-    if (!add.length) {
-      alert("Niets toe te voegen — iedereen doet al mee.");
-      return;
-    }
-    patchGame({ dugout: [...(game.dugout ?? []), ...add] });
   }
 
   // double elimination → vrij bewerkbaar bracket: indeling, scores en alle
@@ -202,7 +175,7 @@ export default function HomeView() {
     names.slice(0, newSizeValue).forEach((name, i) => {
       bracket.rounds[0][Math.floor(i / 2)].teams[i % 2].name = name;
     });
-    patchGame({ bracket, ...(overflow.length ? { dugout: [...(game.dugout ?? []), ...overflow] } : {}) });
+    patchGame({ bracket }); // wie niet past komt vanzelf terug in de afgeleide dugout
   }
 
   function resizeDouble(newSizeValue: number) {
@@ -221,7 +194,7 @@ export default function HomeView() {
     names.slice(0, newSizeValue).forEach((name, i) => {
       double.w[0][Math.floor(i / 2)].teams[i % 2].name = name;
     });
-    patchGame({ double, ...(overflow.length ? { dugout: [...(game.dugout ?? []), ...overflow] } : {}) });
+    patchGame({ double }); // wie niet past komt vanzelf terug in de afgeleide dugout
   }
 
   const icon = game.id.startsWith("cs2")
@@ -322,7 +295,7 @@ export default function HomeView() {
 
       <GameStoreBanner game={game} />
 
-      {isAdmin && (
+      {isAdmin && game.type === "race" && (
         <form
           onSubmit={(e) => { e.preventDefault(); addPlayer(); }}
           className="mb-4 flex max-w-md items-center gap-2 rounded-md border border-dashed border-lime-400/40 bg-lime-400/5 px-3 py-2.5"
@@ -331,7 +304,7 @@ export default function HomeView() {
           <input
             value={newPlayer}
             onChange={(e) => setNewPlayer(e.target.value)}
-            placeholder={game.type === "race" ? "Nieuwe speler of team aanmelden…" : "Nieuwe speler of team aanmelden… (komt in de dugout)"}
+            placeholder="Nieuwe speler of team aanmelden…"
             maxLength={24}
             className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-2.5 py-1.5 text-xs font-semibold focus:border-lime-400 focus:outline-none"
           />
@@ -347,16 +320,10 @@ export default function HomeView() {
 
       {game.type !== "race" && (
         <Dugout
-          names={game.dugout ?? []}
+          names={dugoutNames(game, state)}
           isAdmin={isAdmin}
+          entryType={game.entryType === "team" ? "team" : "user"}
           onReturn={returnToDugout}
-          onRemove={removeFromDugout}
-          quickFill={
-            // het een of het ander: team-toernooien vullen met teams, per-user met users
-            game.entryType === "team"
-              ? [{ label: "➕ alle teams", onClick: () => fillDugout((state!.teams ?? []).map((t) => t.name)) }]
-              : [{ label: "➕ alle users", onClick: () => fillDugout(allUsers(state!)) }]
-          }
         />
       )}
 

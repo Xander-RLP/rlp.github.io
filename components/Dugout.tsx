@@ -1,22 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { logoColor } from "@/lib/bracket";
 import { getDragPayload, setDragPayload, type DragPayload } from "@/lib/dnd";
 
 type Props = {
-  names: string[];
+  names: string[];   // afgeleid: iedereen die nog niet in het toernooi is ingedeeld
   isAdmin: boolean;
-  onReturn: (payload: DragPayload) => void; // speler uit het bracket terug op de bank
-  onRemove: (name: string) => void;         // speler helemaal uitschrijven
-  quickFill?: { label: string; onClick: () => void }[]; // bijv. "alle users" / "alle teams"
+  entryType: "user" | "team";
+  onReturn: (payload: DragPayload) => void; // speler uit het bracket hierheen slepen = slot leegmaken
 };
 
-// de wachtbank: nieuwe aanmeldingen komen hier, de admin sleept ze het bracket in en terug
-export default function Dugout({ names, isAdmin, onReturn, onRemove, quickFill = [] }: Props) {
+// de wachtbank is volledig afgeleid van de centrale users/teams: wie nog niet
+// is ingedeeld staat hier vanzelf, en verdwijnt zodra hij in het bracket staat
+export default function Dugout({ names, isAdmin, entryType, onReturn }: Props) {
   const [over, setOver] = useState(false);
-
-  if (!isAdmin && names.length === 0) return null;
 
   return (
     <div
@@ -35,20 +34,20 @@ export default function Dugout({ names, isAdmin, onReturn, onRemove, quickFill =
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">
         🪑 Dugout
         <span className="font-semibold normal-case tracking-normal text-slate-500">
-          {isAdmin ? "— sleep spelers het bracket in, of een bracket-slot hierheen" : "— wachten op een plek in het bracket"}
+          {entryType === "team" ? "— teams" : "— spelers"} die nog niet zijn ingedeeld
+          {isAdmin ? "; sleep ze het bracket in (en terug)" : ""}
         </span>
-        {isAdmin && quickFill.map((a) => (
-          <button
-            key={a.label}
-            onClick={a.onClick}
-            className="cursor-pointer rounded border border-slate-600 px-2 py-0.5 font-bold normal-case tracking-normal text-slate-400 hover:border-lime-400 hover:text-lime-400"
-          >
-            {a.label}
-          </button>
-        ))}
       </div>
       {names.length === 0 ? (
-        <p className="text-xs italic text-slate-500">Leeg — nieuwe aanmeldingen komen eerst hier.</p>
+        <p className="text-xs italic text-slate-500">
+          Iedereen is ingedeeld!{" "}
+          {isAdmin && (
+            <>Beheer {entryType === "team"
+              ? <Link href="/teams" className="font-bold text-lime-400 hover:text-lime-300">teams</Link>
+              : <Link href="/users" className="font-bold text-lime-400 hover:text-lime-300">users</Link>}{" "}
+            centraal — de dugout past zich automatisch aan.</>
+          )}
+        </p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {names.map((name) => (
@@ -67,15 +66,6 @@ export default function Dugout({ names, isAdmin, onReturn, onRemove, quickFill =
                 {name.slice(0, 2).toUpperCase()}
               </span>
               {name}
-              {isAdmin && (
-                <button
-                  onClick={() => onRemove(name)}
-                  title="Uitschrijven"
-                  className="cursor-pointer pl-0.5 text-slate-400 hover:text-red-500"
-                >
-                  ×
-                </button>
-              )}
             </span>
           ))}
         </div>

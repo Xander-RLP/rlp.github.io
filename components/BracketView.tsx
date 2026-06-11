@@ -23,7 +23,6 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
   const teams = teamCount(bracket);
   const pairs = seedPairs(teams);
   const fed = fedSlots(bracket);
-  const dugout = game.dugout ?? [];
 
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
@@ -110,16 +109,14 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
     if (!slot || slot.name) return;
     slot.name = p.name;
     slot.score = null;
-    if (p.from === "dugout") {
-      onUpdate({ bracket: b, dugout: dugout.filter((n) => n !== p.name) });
-    } else {
+    if (p.from === "slot") {
       const src = b.rounds[p.r]?.[p.m]?.teams[p.s];
       if (src && src.name === p.name) {
         src.name = "";
         src.score = null;
       }
-      onUpdate({ bracket: b });
     }
+    onUpdate({ bracket: b }); // de dugout is afgeleid en past zichzelf aan
   }
 
   function structAddRound() {
@@ -145,41 +142,34 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
     onUpdate({ bracket: addMatch(game.bracket, r) });
   }
 
-  // vrije (niet door een lijn gevulde) namen gaan terug naar de dugout
+  // verwijderde spelers verschijnen vanzelf weer in de afgeleide dugout
   function structRemoveMatch(r: number, m: number) {
     const match = bracket.rounds[r][m];
     const hasData = match.teams.some((t) => t.name || t.score != null);
-    if (hasData && !confirm("Deze wedstrijd bevat namen of scores. Verwijderen? Handmatig geplaatste spelers gaan terug naar de dugout.")) return;
-    const back = match.teams.filter((t, s) => t.name && !fed.has(`${r}-${m}-${s}`)).map((t) => t.name);
+    if (hasData && !confirm("Deze wedstrijd bevat namen of scores. Verwijderen? Geplaatste spelers komen terug in de dugout.")) return;
     setLinkFrom(null);
-    onUpdate({ bracket: removeMatch(game.bracket, r, m), ...(back.length ? { dugout: [...dugout, ...back] } : {}) });
+    onUpdate({ bracket: removeMatch(game.bracket, r, m) });
   }
 
   function structRemoveRound(r: number) {
     const round = bracket.rounds[r];
     const hasData = round.some((mm) => mm.teams.some((t) => t.name || t.score != null));
-    if (hasData && !confirm(`Ronde ${r + 1} bevat namen of scores. Hele ronde verwijderen? Handmatig geplaatste spelers gaan terug naar de dugout.`)) return;
-    const back: string[] = [];
-    round.forEach((match, m) =>
-      match.teams.forEach((t, s) => { if (t.name && !fed.has(`${r}-${m}-${s}`)) back.push(t.name); })
-    );
+    if (hasData && !confirm(`Ronde ${r + 1} bevat namen of scores. Hele ronde verwijderen? Geplaatste spelers komen terug in de dugout.`)) return;
     setLinkFrom(null);
-    onUpdate({ bracket: removeRound(game.bracket, r), ...(back.length ? { dugout: [...dugout, ...back] } : {}) });
+    onUpdate({ bracket: removeRound(game.bracket, r) });
   }
 
   // lijntje leggen: bron is gekozen, klik op een slot in een latere ronde.
-  // stond er al een handmatige naam in het doelslot, dan gaat die naar de dugout
+  // een handmatige naam in het doelslot wijkt (en komt vanzelf terug in de dugout)
   function clickSlotForLink(r: number, m: number, s: 0 | 1) {
     if (!linkFrom || r <= linkFrom.r) return;
     const b = setLink(game.bracket, linkFrom, { r, m, s }, linkFrom.kind);
     const slot = b.rounds[r][m].teams[s];
-    const patch: Partial<Game> = { bracket: b };
     if (slot.name && !fed.has(`${r}-${m}-${s}`)) {
-      patch.dugout = [...dugout, slot.name];
       slot.name = "";
       slot.score = null;
     }
-    onUpdate(patch);
+    onUpdate({ bracket: b });
     setLinkFrom(null);
   }
 

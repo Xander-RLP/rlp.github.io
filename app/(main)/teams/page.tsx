@@ -17,12 +17,12 @@ export default function TeamsPage() {
   const users = allUsers(state);
   const norm = (n: string) => n.trim().toLowerCase();
 
-  // puur informatief: wie zit nog nergens in, en wie zit in meerdere teams?
-  const teamCountOf = (u: string) => teams.filter((t) => t.members.some((m) => norm(m) === norm(u))).length;
-  const zonderTeam = users.filter((u) => teamCountOf(u) === 0);
+  // puur informatief: wie zit nog nergens in, en wie zit in meerdere teams (en welke)?
+  const teamsOf = (u: string) => teams.filter((t) => t.members.some((m) => norm(m) === norm(u)));
+  const zonderTeam = users.filter((u) => teamsOf(u).length === 0);
   const inMeerdere = users
-    .map((u) => ({ name: u, count: teamCountOf(u) }))
-    .filter((x) => x.count > 1);
+    .map((u) => ({ name: u, in: teamsOf(u).map((t) => t.name) }))
+    .filter((x) => x.in.length > 1);
 
   function saveTeams(next: TeamDef[]) {
     updateState({ teams: next });
@@ -92,7 +92,7 @@ export default function TeamsPage() {
               <span className="font-bold text-sky-400">ℹ In meerdere teams:</span>
               {inMeerdere.map((x) => (
                 <span key={x.name} className="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 font-semibold text-slate-300">
-                  {x.name} <span className="text-slate-500">({x.count}×)</span>
+                  {x.name} <span className="text-slate-500">({x.in.join(" + ")})</span>
                 </span>
               ))}
             </div>
@@ -150,14 +150,13 @@ export default function TeamsPage() {
                     <span className="text-[11px] italic text-slate-500">nog geen leden</span>
                   )}
                   {team.members.map((m) => {
-                    const dubbel = teamCountOf(m) > 1;
+                    const ook = teamsOf(m).filter((t) => t.name !== team.name).map((t) => t.name);
                     return (
-                      <span key={m} className="flex items-center gap-1.5 rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-semibold" title={dubbel ? `${m} zit in ${teamCountOf(m)} teams` : undefined}>
+                      <span key={m} className="flex items-center gap-1.5 rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs font-semibold" title={ook.length ? `${m} zit ook in: ${ook.join(", ")}` : undefined}>
                         <span className="flex h-4 w-4 items-center justify-center rounded text-[8px] font-extrabold text-white" style={{ background: logoColor(m) }}>
                           {m.slice(0, 2).toUpperCase()}
                         </span>
                         {m}
-                        {dubbel && <span className="text-[9px] font-bold text-sky-400">{teamCountOf(m)}×</span>}
                         {isAdmin && (
                           <button onClick={() => removeMember(team, m)} title="Uit team halen" className="cursor-pointer text-slate-500 hover:text-red-500">×</button>
                         )}
@@ -174,7 +173,7 @@ export default function TeamsPage() {
                     <option value="">+ user toevoegen…</option>
                     {beschikbaar.map((u) => (
                       <option key={u} value={u}>
-                        {u}{teamCountOf(u) === 0 ? " (nog geen team)" : ` (al in ${teamCountOf(u)} team${teamCountOf(u) > 1 ? "s" : ""})`}
+                        {u}{teamsOf(u).length === 0 ? " (nog geen team)" : ` (al in ${teamsOf(u).map((t) => t.name).join(", ")})`}
                       </option>
                     ))}
                   </select>

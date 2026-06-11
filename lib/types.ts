@@ -69,7 +69,7 @@ export type Game = {
   race?: Race;
   double?: DoubleBracket;
   elim?: Elim;
-  dugout?: string[]; // aangemelde spelers/teams die (nog) niet in het bracket staan
+  dugout?: string[]; // legacy: de dugout is nu afgeleid van users/teams (lib/users.ts dugoutNames)
 };
 
 export type Seat = {

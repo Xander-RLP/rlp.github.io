@@ -171,21 +171,6 @@ export function setLink(
   return b;
 }
 
-// alle namen die al meedoen aan een game (dugout + bracket/double/race),
-// voor de dubbele-aanmelding-check
-export function gameNames(game: Game): string[] {
-  const out: string[] = [...(game.dugout ?? [])];
-  if (game.type === "double" && game.double) {
-    normalizeDouble(game.double).w[0].forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); }));
-  } else if (game.type === "race" && game.race) {
-    game.race.participants.forEach((p) => out.push(p.name));
-  } else if (game.type === "elim") {
-    (game.elim?.rounds[0] ?? []).forEach((n) => out.push(n));
-  } else {
-    game.bracket.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); })));
-  }
-  return out;
-}
 
 export function winnerIdx(match: Match, firstRound = false): number {
   const [a, b] = match.teams;

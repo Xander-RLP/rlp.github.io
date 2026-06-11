@@ -89,9 +89,9 @@ export function pairsPlayed(state: TournamentState): Map<string, string[]> {
       const d = propagateDouble(g.double);
       [...d.w.flat(), ...d.l.flat(), d.gf].forEach((m) => m.teams.forEach((t) => add(t.name)));
     }
+    // alleen wie echt is ingedeeld telt — de dugout is afgeleid en doet niet mee
     g.race?.participants.forEach((p) => add(p.name));
     (g.elim?.rounds[0] ?? []).forEach(add);
-    (g.dugout ?? []).forEach(add);
 
     for (const name of names.values()) {
       const members = splitMembers(name, state.teams ?? []);

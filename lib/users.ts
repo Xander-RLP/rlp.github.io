@@ -78,6 +78,35 @@ export function removeUserEverywhere(state: TournamentState, name: string): Part
   };
 }
 
+// namen die al écht in het toernooi staan (bracket-slots, double, afvalrace, race)
+export function placedNames(game: Game): string[] {
+  const out: string[] = [];
+  const add = (n: string) => { if (n) out.push(n); };
+  if (game.type === "double" && game.double) {
+    const d = game.double as DoubleBracket | LegacyDoubleBracket;
+    const matches: Match[] = "w" in d
+      ? [...d.w.flat(), ...d.l.flat(), d.gf]
+      : [d.w1[0], d.w1[1], d.wf, d.l1, d.lf, d.gf];
+    matches.forEach((m) => m.teams.forEach((t) => add(t.name)));
+  } else if (game.type === "race" && game.race) {
+    game.race.participants.forEach((p) => add(p.name));
+  } else if (game.type === "elim") {
+    (game.elim?.rounds[0] ?? []).forEach(add);
+  } else {
+    game.bracket.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => add(t.name))));
+  }
+  return out;
+}
+
+// de dugout is afgeleid, geen opslag: alle users (of teams, afhankelijk van de
+// deelname-instelling) die nog niet in het toernooi zijn ingedeeld. Verandert
+// er iets bij users of teams, dan beweegt elke dugout automatisch mee.
+export function dugoutNames(game: Game, state: TournamentState): string[] {
+  const pool = game.entryType === "team" ? (state.teams ?? []).map((t) => t.name) : allUsers(state);
+  const placed = placedNames(game).map(norm);
+  return pool.filter((n) => !placed.includes(norm(n)));
+}
+
 // op welke stoel zit deze user (of null)?
 export function seatOf(state: TournamentState, name: string): string | null {
   return (state.seats ?? []).find((s) => s.name && norm(s.name) === norm(name))?.id ?? null;

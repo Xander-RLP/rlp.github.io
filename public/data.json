@@ -106,16 +106,6 @@
         "name": "Steam",
         "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
       },
-      "dugout": [
-        "Ronnie Rifles",
-        "Rush B",
-        "Smoke Bros",
-        "Rolator Jeans",
-        "Boost Boys",
-        "Aerial Aces",
-        "Demo Kings",
-        "Whiff Squad"
-      ],
       "entryType": "team"
     },
     {
@@ -223,17 +213,6 @@
         "name": "Riot Games",
         "url": "https://www.leagueoflegends.com/en-us/download/"
       },
-      "dugout": [
-        "Ennio",
-        "Xander",
-        "Leon",
-        "Bo",
-        "Jean",
-        "Indy",
-        "Sjoerd",
-        "Laszlo",
-        "Ronnie"
-      ],
       "entryType": "user"
     },
     {
@@ -246,11 +225,11 @@
             {
               "teams": [
                 {
-                  "name": "Boost Boys",
+                  "name": "Ronnie Rifles",
                   "score": null
                 },
                 {
-                  "name": "Aerial Aces",
+                  "name": "Rush B",
                   "score": null
                 }
               ]
@@ -258,11 +237,11 @@
             {
               "teams": [
                 {
-                  "name": "Demo Kings",
+                  "name": "Smoke Bros",
                   "score": null
                 },
                 {
-                  "name": "Whiff Squad",
+                  "name": "Rolator Jeans",
                   "score": null
                 }
               ]
@@ -342,21 +321,6 @@
         "name": "Epic Games",
         "url": "https://store.epicgames.com/nl/p/rocket-league"
       },
-      "dugout": [
-        "Ronnie Rifles",
-        "Rush B",
-        "Smoke Bros",
-        "Rolator Jeans",
-        "Laszlo",
-        "Ronnie",
-        "Ennio",
-        "Sjoerd",
-        "Jean",
-        "Xander",
-        "Leon",
-        "Indy",
-        "Bo"
-      ],
       "entryType": "team"
     },
     {
@@ -465,17 +429,6 @@
         "url": "https://warcraft3.blizzard.com/",
         "price": "€ 29,99"
       },
-      "dugout": [
-        "Sjoerd",
-        "Laszlo",
-        "Ennio",
-        "Ronnie",
-        "Xander",
-        "Leon",
-        "Bo",
-        "Indy",
-        "Jean"
-      ],
       "entryType": "user"
     },
     {
@@ -508,7 +461,6 @@
         "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
         "price": "€ 19,99"
       },
-      "dugout": [],
       "entryType": "user",
       "type": "elim",
       "elim": {
@@ -732,17 +684,6 @@
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2732960/b1e3243662a5911fadc0924feb4b7e6e9e278403.jpg",
       "start": "2026-06-11T23:45",
       "durationMin": 225,
-      "dugout": [
-        "Ennio",
-        "Laszlo",
-        "Ronnie",
-        "Sjoerd",
-        "Jean",
-        "Xander",
-        "Leon",
-        "Indy",
-        "Bo"
-      ],
       "entryType": "user"
     },
     {
@@ -1040,17 +981,6 @@
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1003400/0d5efab904702c16d2b926860f9f12faba7a2404.jpg",
       "start": "2026-06-14T10:05",
       "durationMin": 115,
-      "dugout": [
-        "Laszlo",
-        "Ronnie",
-        "Ennio",
-        "Sjoerd",
-        "Jean",
-        "Xander",
-        "Leon",
-        "Indy",
-        "Bo"
-      ],
       "entryType": "user"
     },
     {
@@ -1369,34 +1299,6 @@
       "members": [
         "Jean",
         "Bo"
-      ]
-    },
-    {
-      "name": "Boost Boys",
-      "members": [
-        "Ronnie",
-        "Bo"
-      ]
-    },
-    {
-      "name": "Aerial Aces",
-      "members": [
-        "Xander",
-        "Indy"
-      ]
-    },
-    {
-      "name": "Demo Kings",
-      "members": [
-        "Jean",
-        "Laszlo"
-      ]
-    },
-    {
-      "name": "Whiff Squad",
-      "members": [
-        "Leon",
-        "Sjoerd"
       ]
     }
   ]

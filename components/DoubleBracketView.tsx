@@ -17,7 +17,6 @@ export default function DoubleBracketView({ game, isAdmin, onUpdate }: Props) {
   const d = propagateDouble(game.double);
   const teams = doubleTeamCount(d);
   const pairs = seedPairs(teams);
-  const dugout = game.dugout ?? [];
 
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
@@ -101,16 +100,14 @@ export default function DoubleBracketView({ game, isAdmin, onUpdate }: Props) {
     if (!slot || slot.name) return;
     slot.name = p.name;
     slot.score = null;
-    if (p.from === "dugout") {
-      onUpdate({ double: next, dugout: dugout.filter((n) => n !== p.name) });
-    } else {
+    if (p.from === "slot") {
       const src = next.w[0][p.m]?.teams[p.s];
       if (src && src.name === p.name) {
         src.name = "";
         src.score = null;
       }
-      onUpdate({ double: next });
     }
+    onUpdate({ double: next }); // de dugout is afgeleid en past zichzelf aan
   }
 
   function MatchCard({ match, refKey, label, accent, w0Index }: {
