@@ -779,19 +779,19 @@
             {
               "teams": [
                 {
-                  "name": "",
+                  "name": "Ronnie",
+                  "score": 1
+                },
+                {
+                  "name": "Laszlo",
                   "score": null
                 },
                 {
-                  "name": "",
+                  "name": "Ennio",
                   "score": null
                 },
                 {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
+                  "name": "Sjoerd",
                   "score": null
                 },
                 {
