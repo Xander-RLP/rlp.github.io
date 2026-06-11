@@ -109,11 +109,27 @@ export type TournamentState = {
   beamer?: BeamerSlide[]; // eigen info-slides in de beamer-rotatie (beheer op /beamer)
 };
 
-// info-slide voor de beamerpagina (douchetijden, zelfservice, huisregels, …)
+// blok op een beamer-slide: vrij te plaatsen op een raster van 24×14
+export type BeamerBlock = {
+  id: string;
+  type: "text" | "image" | "widget";
+  // tekst, afbeeldings-pad/URL, of widget-naam: vandaag | matches | leaderboard
+  content: string;
+  x: number; // gridkolom 0-23 (ankerpunt = boven-midden van het blok)
+  y: number; // gridrij 0-13
+  size?: number; // tekst: fontgrootte px; afbeelding: hoogte px
+  align?: "left" | "center" | "right"; // tekstuitlijning (default center)
+  weight?: number;                      // fontgewicht: 400/600/700/800 (default 700)
+  font?: "sans" | "serif" | "mono";    // lettertype (default sans)
+};
+
+// beamer-slide: een verzameling vrij geplaatste blokken. Oudere slides met
+// de eenvoudige velden (emoji/title/…) worden bij het lezen omgezet
 export type BeamerSlide = {
+  blocks?: BeamerBlock[];
   emoji?: string;
-  title: string;
-  text?: string;      // regels gescheiden met \n
-  images?: string[];  // foto's onder de tekst (paden of URL's)
-  imageSize?: number; // hoogte van de foto's in px (admin stelt bij; default 208)
+  title?: string;
+  text?: string;
+  images?: string[];
+  imageSize?: number;
 };

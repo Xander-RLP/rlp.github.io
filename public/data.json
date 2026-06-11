@@ -1620,24 +1620,29 @@
   ],
   "beamer": [
     {
-      "emoji": "🚿",
-      "title": "Douchen",
-      "text": "Ochtend: 10:00 – 11:30\nAvond: 20:00 – 21:30",
-      "images": [
-        "/images/beamer/douchen.jpg"
-      ],
-      "imageSize": 464
-    },
-    {
-      "emoji": "🥪",
-      "title": "Zelf service",
-      "text": "Pak het lekker zelf — bestellen kan bij de bar.",
-      "images": [
-        "/images/beamer/zelfservice.jpg",
-        "/images/beamer/bestel.png"
+      "blocks": [
+        {
+          "id": "w-vandaag",
+          "type": "widget",
+          "content": "vandaag",
+          "x": 12,
+          "y": 3
+        }
       ]
     },
     {
+      "blocks": [
+        {
+          "id": "w-matches",
+          "type": "widget",
+          "content": "matches",
+          "x": 12,
+          "y": 3
+        }
+      ]
+    },
+    {
+<<<<<<< Updated upstream
       "emoji": "🍳",
       "title": "Vers van de bar",
       "text": "Broodje spek & ei · Broodje knakworst\nKoffie · Thee · Verse jus d'orange",
@@ -1647,16 +1652,203 @@
         "/images/beamer/thee.jpg"
       ],
       "imageSize": 224
+=======
+      "blocks": [
+        {
+          "id": "w-leaderboard",
+          "type": "widget",
+          "content": "leaderboard",
+          "x": 12,
+          "y": 3
+        }
+      ]
     },
     {
-      "emoji": "😴",
-      "title": "Rustruimte",
-      "text": "Even bijkomen mag altijd — slaap zacht, game hard!"
+      "blocks": [
+        {
+          "id": "m0-e",
+          "type": "text",
+          "content": "🚿",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "m0-t",
+          "type": "text",
+          "content": "Douchen",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "m0-x",
+          "type": "text",
+          "content": "Ochtend: 10:00 – 11:30\nAvond: 20:00 – 21:30",
+          "x": 12,
+          "y": 7,
+          "size": 36
+        },
+        {
+          "id": "m0-i0",
+          "type": "image",
+          "content": "/images/beamer/douchen.jpg",
+          "x": 12,
+          "y": 9,
+          "size": 464
+        }
+      ]
+>>>>>>> Stashed changes
     },
     {
+      "blocks": [
+        {
+          "id": "m1-e",
+          "type": "text",
+          "content": "🥪",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "m1-t",
+          "type": "text",
+          "content": "Zelf service",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "m1-x",
+          "type": "text",
+          "content": "Pak het lekker zelf — bestellen kan bij de bar.",
+          "x": 12,
+          "y": 7,
+          "size": 36
+        },
+        {
+          "id": "m1-i0",
+          "type": "image",
+          "content": "/images/beamer/zelfservice.jpg",
+          "x": 9.5,
+          "y": 9,
+          "size": 200
+        },
+        {
+          "id": "m1-i1",
+          "type": "image",
+          "content": "/images/beamer/bestel.png",
+          "x": 14.5,
+          "y": 9,
+          "size": 200
+        }
+      ]
+    },
+    {
+      "blocks": [
+        {
+          "id": "m2-e",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "m2-t",
+          "type": "text",
+          "content": "Vers van de bar",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "m2-x",
+          "type": "text",
+          "content": "Broodje spek & ei · Broodje knakworst\nKoffie · Thee · Verse jus d'orange",
+          "x": 12,
+          "y": 7,
+          "size": 36
+        },
+        {
+          "id": "m2-i0",
+          "type": "image",
+          "content": "/images/beamer/broodje.jpg",
+          "x": 7,
+          "y": 9,
+          "size": 192
+        },
+        {
+          "id": "m2-i1",
+          "type": "image",
+          "content": "/images/beamer/koffie.webp",
+          "x": 12,
+          "y": 9,
+          "size": 192
+        },
+        {
+          "id": "m2-i2",
+          "type": "image",
+          "content": "/images/beamer/thee.jpg",
+          "x": 17,
+          "y": 9,
+          "size": 192
+        }
+      ]
+    },
+    {
+<<<<<<< Updated upstream
       "emoji": "💀",
       "title": "Nieuwe slide",
       "text": ""
+=======
+      "blocks": [
+        {
+          "id": "m3-e",
+          "type": "text",
+          "content": "😴",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "m3-t",
+          "type": "text",
+          "content": "Rustruimte",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "m3-x",
+          "type": "text",
+          "content": "Even bijkomen mag altijd — slaap zacht, game hard!",
+          "x": 12,
+          "y": 7,
+          "size": 36
+        }
+      ]
+    },
+    {
+      "blocks": [
+        {
+          "id": "m4-e",
+          "type": "text",
+          "content": "📢",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "m4-t",
+          "type": "text",
+          "content": "Nieuwe slide",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        }
+      ]
+>>>>>>> Stashed changes
     }
   ]
 }
