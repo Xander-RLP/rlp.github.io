@@ -30,6 +30,11 @@ export type Game = {
   start?: string; // agenda: datum/tijd (datetime-local), via admin in te stellen
   durationMin?: number; // geschatte duur in minuten (kalenderblok), default 120
   image?: string; // pad naar automatisch gezocht spel-plaatje (public/images/...)
+  store?: {
+    name: string;  // launcher/winkel, bijv. "Steam" of "Battle.net"
+    url: string;
+    price?: string; // weggelaten = gratis te spelen
+  };
   bracket: Bracket;
   race?: Race;
   double?: DoubleBracket;

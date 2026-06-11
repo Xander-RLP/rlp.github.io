@@ -147,10 +147,21 @@ export default function HomePage() {
                       {gameInitials(g.name)}
                     </div>
                   )}
-                  <div>
-                    <div className="text-sm font-extrabold">{g.name}</div>
-                    <div className="text-[11px] text-slate-400">{g.format ?? ""}</div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-extrabold">{g.name}</div>
+                    <div className="truncate text-[11px] text-slate-400">{g.format ?? ""}</div>
                   </div>
+                  {g.store && (
+                    <span
+                      className={`ml-auto shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${
+                        g.store.price
+                          ? "border-amber-400/40 bg-amber-400/10 text-amber-300"
+                          : "border-lime-400/40 bg-lime-400/10 text-lime-300"
+                      }`}
+                    >
+                      {g.store.price ?? "Gratis"}
+                    </span>
+                  )}
                 </div>
                 <div className="flex justify-between text-xs text-slate-400">
                   <span>📅 {formatStart(g.start)}</span>

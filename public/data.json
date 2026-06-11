@@ -3,7 +3,7 @@
     {
       "id": "cs2-wingman",
       "name": "CS2 Wingman",
-      "format": "Counter-Strike 2 \u00b7 2v2 Wingman \u00b7 Double Elimination",
+      "format": "Counter-Strike 2 · 2v2 Wingman · Double Elimination",
       "bracket": {
         "rounds": [
           [
@@ -127,12 +127,16 @@
             }
           ]
         }
+      },
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
       }
     },
     {
       "id": "league-of-legends",
       "name": "League of Legends",
-      "format": "1v1 \u00b7 ARAM \u00b7 7 spelers",
+      "format": "1v1 · ARAM · 7 spelers",
       "bracket": {
         "rounds": [
           [
@@ -229,12 +233,16 @@
       },
       "image": "/images/league-of-legends.png",
       "start": "2026-06-13T11:00",
-      "durationMin": 120
+      "durationMin": 120,
+      "store": {
+        "name": "Riot Games",
+        "url": "https://www.leagueoflegends.com/en-us/download/"
+      }
     },
     {
       "id": "rocket-league",
       "name": "Rocket League",
-      "format": "2v2 \u00b7 Double Elimination",
+      "format": "2v2 · Double Elimination",
       "bracket": {
         "rounds": [
           [
@@ -358,12 +366,16 @@
             }
           ]
         }
+      },
+      "store": {
+        "name": "Epic Games",
+        "url": "https://store.epicgames.com/nl/p/rocket-league"
       }
     },
     {
       "id": "wc3-reforged",
       "name": "WC3 Reforged",
-      "format": "1v1 \u00b7 Solo \u00b7 Single Elimination",
+      "format": "1v1 · Solo · Single Elimination",
       "bracket": {
         "rounds": [
           [
@@ -460,12 +472,17 @@
       },
       "image": "/images/wc3-reforged.png",
       "start": "2026-06-13T20:00",
-      "durationMin": 180
+      "durationMin": 180,
+      "store": {
+        "name": "Battle.net",
+        "url": "https://warcraft3.blizzard.com/",
+        "price": "€ 29,99"
+      }
     },
     {
       "id": "shootmania-storm",
       "name": "Shootmania Storm",
-      "format": "1v1 \u00b7 Solo \u00b7 Single Elimination",
+      "format": "1v1 · Solo · Single Elimination",
       "bracket": {
         "rounds": [
           [
@@ -562,14 +579,19 @@
       },
       "image": "/images/shootmania-storm.png",
       "start": "2026-06-14T11:00",
-      "durationMin": 120
+      "durationMin": 120,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
+        "price": "€ 19,99"
+      }
     },
     {
       "id": "lotro",
       "name": "LOTRO",
       "type": "race",
-      "format": "MMO \u00b7 Race naar level 20",
-      "description": "Samen met je squad questen in Midden-aarde \u2014 wie als eerste level 20 haalt wint. Onderweg helpen mag (en moet).",
+      "format": "MMO · Race naar level 20",
+      "description": "Samen met je squad questen in Midden-aarde — wie als eerste level 20 haalt wint. Onderweg helpen mag (en moet).",
       "race": {
         "goalLabel": "Eerste op level 20",
         "target": 20,
@@ -658,7 +680,11 @@
       },
       "image": "/images/lotro.png",
       "start": "2026-06-14T14:00",
-      "durationMin": 240
+      "durationMin": 240,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/212500/"
+      }
     }
   ],
   "seats": [

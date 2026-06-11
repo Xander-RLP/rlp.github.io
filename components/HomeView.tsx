@@ -7,6 +7,7 @@ import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
 import DoubleBracketView from "./DoubleBracketView";
+import GameStoreBanner from "./GameStoreBanner";
 import RaceView from "./RaceView";
 
 export default function HomeView() {
@@ -175,6 +176,8 @@ export default function HomeView() {
           <div className="text-[9px] font-semibold uppercase tracking-wide">Prize Pool</div>
         </div>
       </div>
+
+      <GameStoreBanner game={game} />
 
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
