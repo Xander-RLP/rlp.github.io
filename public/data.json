@@ -1759,7 +1759,7 @@
           "type": "text",
           "content": "Vers van de bar",
           "x": 12,
-          "y": 4,
+          "y": 3,
           "size": 64,
           "font": "sans"
         },
