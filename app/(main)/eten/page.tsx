@@ -1,5 +1,6 @@
 "use client";
 
+import CoffeeHint from "@/components/CoffeeHint";
 import { useTournament } from "@/lib/store";
 
 // vangnet zolang de BBQ-Tikkie nog niet via de admin aan het eetmoment hangt
@@ -103,6 +104,14 @@ export default function EtenPage() {
             De link is geldig t/m 24 juni — daarna even aankloppen bij de organisatie.
           </p>
         </div>
+      </div>
+
+      {/* knipoog onderaan: de developer heeft ook een maag */}
+      <div className="mt-6 max-w-3xl">
+        <CoffeeHint>
+          🍞 Psst… nu we het toch over eten hebben: de developer van deze site leeft al weken
+          op koffie en code. Help &apos;m aan een broodje —
+        </CoffeeHint>
       </div>
     </div>
   );

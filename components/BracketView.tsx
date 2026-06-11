@@ -6,6 +6,7 @@ import {
   rankingOf, removeMatch, removeRound, removeSlot, roundTitle, seedOf, seedPairs, setLink, teamCount,
 } from "@/lib/bracket";
 import { getDragPayload, setDragPayload } from "@/lib/dnd";
+import CoffeeHint from "./CoffeeHint";
 import type { Bracket, Game, SlotRef } from "@/lib/types";
 
 type Line = { left: number; top: number; width: number; height: number; rank: number };
@@ -419,9 +420,12 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
       </div>
 
       {champRanking.length > 0 && gf && (
-        <div className="mt-3 text-center text-xs font-extrabold uppercase tracking-wide text-amber-400">
-          🏆 Champion: {gf.teams[champRanking[0]].name}
-        </div>
+        <>
+          <div className="mt-3 text-center text-xs font-extrabold uppercase tracking-wide text-amber-400">
+            🏆 Champion: {gf.teams[champRanking[0]].name}
+          </div>
+          <CoffeeHint>Mooi toernooi gehad? Deze site draait op koffie —</CoffeeHint>
+        </>
       )}
     </div>
   );

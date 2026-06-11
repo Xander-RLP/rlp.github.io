@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { doubleTeamCount, logoColor, normalizeDouble, propagateDouble, seedPairs, winnerIdx } from "@/lib/bracket";
 import { getDragPayload, setDragPayload } from "@/lib/dnd";
+import CoffeeHint from "./CoffeeHint";
 import type { DoubleBracket, Game, Match } from "@/lib/types";
 
 type Line = { left: number; top: number; width: number; height: number };
@@ -236,9 +237,12 @@ export default function DoubleBracketView({ game, isAdmin, onUpdate }: Props) {
           <div className="flex min-w-[200px] flex-1 flex-col justify-center">
             <MatchCard match={d.gf} refKey="gf" label="Grand Finals" accent="final" />
             {champ >= 0 && (
-              <div className="mt-3 text-center text-xs font-extrabold uppercase tracking-wide text-amber-400">
-                🏆 {d.gf.teams[champ].name}
-              </div>
+              <>
+                <div className="mt-3 text-center text-xs font-extrabold uppercase tracking-wide text-amber-400">
+                  🏆 {d.gf.teams[champ].name}
+                </div>
+                <CoffeeHint>Mooi toernooi gehad? Deze site draait op koffie —</CoffeeHint>
+              </>
             )}
           </div>
         </div>
