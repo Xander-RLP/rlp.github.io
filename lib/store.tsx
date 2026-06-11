@@ -12,6 +12,7 @@ type TournamentContext = {
   login: (token: string) => Promise<boolean>;
   logout: () => void;
   updateGames: (games: Game[]) => void;
+  updateState: (patch: Partial<TournamentState>) => void; // bijv. teams/rotatie
   updateEventStart: (value: string) => void;
   updateSponsors: (sponsors: Sponsor[]) => void;
   updateEetmomenten: (eetmomenten: EetMoment[]) => void;
@@ -160,6 +161,12 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     persist({ ...cur, games });
   }, [persist]);
 
+  const updateState = useCallback((patch: Partial<TournamentState>) => {
+    const cur = stateRef.current;
+    if (!cur) return;
+    persist({ ...cur, ...patch });
+  }, [persist]);
+
   const updateEventStart = useCallback((value: string) => {
     const cur = stateRef.current;
     if (!cur) return;
@@ -266,7 +273,7 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateEventStart, updateSponsors, updateEetmomenten, fetchImage, reload: load, claimSeat }}>
+    <Ctx.Provider value={{ state, isAdmin, saveStatus, login, logout, updateGames, updateState, updateEventStart, updateSponsors, updateEetmomenten, fetchImage, reload: load, claimSeat }}>
       {children}
     </Ctx.Provider>
   );

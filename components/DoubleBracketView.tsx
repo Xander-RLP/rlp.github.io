@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { doubleTeamCount, logoColor, normalizeDouble, propagateDouble, seedPairs, winnerIdx } from "@/lib/bracket";
+import { getDragPayload, setDragPayload } from "@/lib/dnd";
 import type { DoubleBracket, Game, Match } from "@/lib/types";
 
 type Line = { left: number; top: number; width: number; height: number };
@@ -9,17 +10,19 @@ type Line = { left: number; top: number; width: number; height: number };
 type Props = {
   game: Game;
   isAdmin: boolean;
-  onDoubleChange: (double: DoubleBracket) => void;
+  onUpdate: (patch: Partial<Game>) => void;
 };
 
-export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Props) {
+export default function DoubleBracketView({ game, isAdmin, onUpdate }: Props) {
   const d = propagateDouble(game.double);
   const teams = doubleTeamCount(d);
   const pairs = seedPairs(teams);
+  const dugout = game.dugout ?? [];
 
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
   const [lines, setLines] = useState<Line[]>([]);
+  const [dropOver, setDropOver] = useState<string | null>(null);
 
   const recompute = useCallback(() => {
     const container = containerRef.current;
@@ -71,14 +74,43 @@ export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Pro
   function setName(m: number, s: number, name: string) {
     const next: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
     next.w[0][m].teams[s].name = name.trim();
-    onDoubleChange(next);
+    onUpdate({ double: next });
+  }
+
+  function renameSlot(m: number, s: number, current: string) {
+    const name = prompt("Naam aanpassen:", current)?.trim();
+    if (!name || name === current) return;
+    setName(m, s, name);
   }
 
   function setScore(section: "w" | "l" | "gf", r: number, m: number, s: number, value: string) {
     const next: DoubleBracket = JSON.parse(JSON.stringify(propagateDouble(game.double)));
     const match = section === "gf" ? next.gf : next[section][r][m];
     match.teams[s].score = value === "" ? null : Math.max(0, parseInt(value, 10) || 0);
-    onDoubleChange(next);
+    onUpdate({ double: next });
+  }
+
+  // dugout of ander ronde-1-slot → leeg slot in winners ronde 1
+  function handleSlotDrop(e: React.DragEvent, m: number, s: number) {
+    e.preventDefault();
+    setDropOver(null);
+    const p = getDragPayload(e);
+    if (!p) return;
+    const next: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
+    const slot = next.w[0][m]?.teams[s];
+    if (!slot || slot.name) return;
+    slot.name = p.name;
+    slot.score = null;
+    if (p.from === "dugout") {
+      onUpdate({ double: next, dugout: dugout.filter((n) => n !== p.name) });
+    } else {
+      const src = next.w[0][p.m]?.teams[p.s];
+      if (src && src.name === p.name) {
+        src.name = "";
+        src.score = null;
+      }
+      onUpdate({ double: next });
+    }
   }
 
   function MatchCard({ match, refKey, label, accent, w0Index }: {
@@ -110,28 +142,49 @@ export default function DoubleBracketView({ game, isAdmin, onDoubleChange }: Pro
           const won = w === s;
           const lost = w >= 0 && w !== s;
           const isBye = w0Index != null && !team.name && !!match.teams[1 - s].name;
+          const slotKey = `w0-${w0Index}-${s}`;
+          const droppable = editable && !team.name;
+          const draggable = editable && !!team.name;
           return (
-            <div key={s} className={`flex min-h-9 items-center gap-2 px-2.5 py-1.5 ${s === 1 ? "border-t border-slate-700" : ""} ${won ? "bg-slate-700/60" : ""}`}>
+            <div
+              key={s}
+              onDragOver={droppable ? (e) => { e.preventDefault(); setDropOver(slotKey); } : undefined}
+              onDragLeave={droppable ? () => setDropOver(null) : undefined}
+              onDrop={droppable ? (e) => handleSlotDrop(e, w0Index!, s) : undefined}
+              className={`flex min-h-9 items-center gap-2 px-2.5 py-1.5 ${s === 1 ? "border-t border-slate-700" : ""} ${won ? "bg-slate-700/60" : ""} ${
+                dropOver === slotKey ? "bg-lime-400/20 outline outline-1 outline-lime-400" : ""
+              }`}
+            >
               {w0Index != null && (
                 <span className="w-4 shrink-0 text-right text-[10px] text-slate-400">{pairs[w0Index][s]}</span>
               )}
               {team.name ? (
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-extrabold text-white" style={{ background: logoColor(team.name) }}>
+                <span
+                  draggable={draggable}
+                  onDragStart={draggable ? (e) => setDragPayload(e, { name: team.name, from: "slot", r: 0, m: w0Index!, s }) : undefined}
+                  title={draggable ? "Sleep naar de dugout of een ander leeg slot" : undefined}
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-extrabold text-white ${draggable ? "cursor-grab active:cursor-grabbing" : ""}`}
+                  style={{ background: logoColor(team.name) }}
+                >
                   {team.name.slice(0, 2).toUpperCase()}
                 </span>
               ) : (
                 <span className="h-5 w-5 shrink-0 rounded bg-slate-700" />
               )}
-              {editable ? (
+              {editable && !team.name ? (
                 <input
                   value={team.name}
                   maxLength={24}
-                  placeholder="Naam"
+                  placeholder="Naam of sleep…"
                   onChange={(e) => setName(w0Index!, s, e.target.value)}
                   className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-1.5 py-0.5 text-xs font-semibold focus:border-lime-400 focus:outline-none"
                 />
               ) : (
-                <span className={`min-w-0 flex-1 truncate text-xs ${team.name ? (won ? "font-bold text-slate-100" : lost ? "font-semibold text-slate-400" : "font-semibold") : "italic text-slate-400"}`}>
+                <span
+                  onDoubleClick={editable && team.name ? () => renameSlot(w0Index!, s, team.name) : undefined}
+                  title={editable && team.name ? "Dubbelklik om de naam aan te passen" : undefined}
+                  className={`min-w-0 flex-1 truncate text-xs ${team.name ? (won ? "font-bold text-slate-100" : lost ? "font-semibold text-slate-400" : "font-semibold") : "italic text-slate-400"}`}
+                >
                   {team.name || (isBye ? "BYE" : "TBD")}
                 </span>
               )}

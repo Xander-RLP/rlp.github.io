@@ -1,6 +1,15 @@
 export type Team = { name: string; score: number | null };
 
-export type Match = { teams: [Team, Team] };
+// verwijzing naar een team-slot: ronde r, match m, slot s (0 = boven, 1 = onder)
+export type SlotRef = { r: number; m: number; s: 0 | 1 };
+
+export type Match = {
+  teams: [Team, Team];
+  // waar de winnaar naartoe stroomt (het "lijntje"):
+  // undefined = klassiek (volgende ronde, match m/2, slot m%2),
+  // null = geen lijn, anders een expliciet door de admin gekozen slot
+  next?: SlotRef | null;
+};
 
 export type Bracket = { rounds: Match[][] };
 
@@ -47,6 +56,7 @@ export type Game = {
   bracket: Bracket;
   race?: Race;
   double?: DoubleBracket;
+  dugout?: string[]; // aangemelde spelers/teams die (nog) niet in het bracket staan
 };
 
 export type Seat = {
@@ -72,6 +82,17 @@ export type EetMoment = {
   tikkie?: string; // betaallink — toont een betaalknop op /eten en in de kalender
 };
 
+// vast team met leden — winst van dit team telt persoonlijk mee voor de leden
+export type TeamDef = { name: string; members: string[] };
+
+// rouleerschema: per ronde een teamindeling, zodat iedereen (zo snel mogelijk)
+// één keer met iedereen heeft samengespeeld; punten blijven persoonlijk
+export type Rotatie = {
+  teamSize: number;
+  spelers: string[];
+  rondes: string[][][]; // rondes → teams → namen
+};
+
 export type TournamentState = {
   games: Game[];
   seats?: Seat[];
@@ -79,4 +100,6 @@ export type TournamentState = {
   eventStart?: string; // startmoment van de LAN zelf (countdown op home)
   sponsors?: Sponsor[];
   eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
+  teams?: TeamDef[];   // teamregister voor het leaderboard
+  rotatie?: Rotatie;   // gegenereerd rouleerschema
 };

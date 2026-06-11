@@ -1176,6 +1176,101 @@
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1003400/0d5efab904702c16d2b926860f9f12faba7a2404.jpg",
       "start": "2026-06-14T10:05",
       "durationMin": 205
+    },
+    {
+      "id": "treasure-hunt",
+      "name": "Treasure Hunt",
+      "type": "race",
+      "format": "⚓ Pirate Event · heel het weekend",
+      "description": "Ahoy, brave adventurers of RLP 2026! This year, fate once again calls fer those bold enough to seek the unknown. The Treasure Hunt be back — not fer the faint-hearted, but fer those with sharp eyes and a thirst fer adventure upon the high seas. And mark me words… the hunt has already begun. Only the keenest traveler shall spot the first signs and set foot upon the path to hidden riches and forgotten treasures.",
+      "start": "2026-06-11T14:00",
+      "durationMin": 4290,
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      "race": {
+        "goalLabel": "Wie vindt de verborgen schat het eerst?",
+        "target": 1,
+        "participants": [
+          {
+            "name": "Laszlo",
+            "progress": 0
+          },
+          {
+            "name": "Ronnie",
+            "progress": 0
+          },
+          {
+            "name": "Ennio",
+            "progress": 0
+          },
+          {
+            "name": "Sjoerd",
+            "progress": 0
+          },
+          {
+            "name": "Jean",
+            "progress": 0
+          },
+          {
+            "name": "Xander",
+            "progress": 0
+          },
+          {
+            "name": "Leon",
+            "progress": 0
+          },
+          {
+            "name": "Indy",
+            "progress": 0
+          },
+          {
+            "name": "Bo",
+            "progress": 0
+          }
+        ]
+      }
     }
   ],
   "seats": [

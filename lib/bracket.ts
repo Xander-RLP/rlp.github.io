@@ -1,4 +1,4 @@
-import type { Bracket, DoubleBracket, Game, LegacyDoubleBracket, Match } from "./types";
+import type { Bracket, DoubleBracket, Game, LegacyDoubleBracket, Match, SlotRef } from "./types";
 
 export const BRACKET_SIZES = [4, 8, 16, 32];
 
@@ -46,38 +46,113 @@ export function teamCount(bracket: Bracket): number {
   return bracket.rounds[0].length * 2;
 }
 
-// nieuwe deelnemer in ronde 1: eerst halve matches afmaken (echte wedstrijd),
-// dan lege matches (bye). Ronde 1 vol? Dan groeit het bracket naar de volgende
-// grootte; de bestaande indeling en scores schuiven mee naar de eerste helft.
-export function addParticipant(
-  bracket: Bracket,
-  name: string,
-): { bracket: Bracket; grownTo?: number } | { error: string } {
-  const clean = name.trim();
-  if (!clean) return { error: "Vul een naam in." };
+// het effectieve "lijntje" van een match: expliciet gezet (match.next),
+// anders de klassieke koppeling (volgende ronde, match m/2, slot m%2).
+// null = de winnaar stroomt nergens naartoe.
+export function nextOf(b: Bracket, r: number, m: number): SlotRef | null {
+  const nxt = b.rounds[r][m].next;
+  if (nxt !== undefined) {
+    if (!nxt) return null;
+    if (nxt.r > r && b.rounds[nxt.r]?.[nxt.m]) return { r: nxt.r, m: nxt.m, s: nxt.s ? 1 : 0 };
+    return null;
+  }
+  if (r + 1 >= b.rounds.length) return null;
+  const tm = Math.floor(m / 2);
+  if (!b.rounds[r + 1][tm]) return null;
+  return { r: r + 1, m: tm, s: (m % 2) as 0 | 1 };
+}
+
+// slots waar een lijn naartoe loopt; die worden door propagate gevuld en zijn
+// dus niet handmatig in te vullen of te beslepen
+export function fedSlots(b: Bracket): Set<string> {
+  const fed = new Set<string>();
+  b.rounds.forEach((round, r) =>
+    round.forEach((_, m) => {
+      const t = nextOf(b, r, m);
+      if (t) fed.add(`${t.r}-${t.m}-${t.s}`);
+    })
+  );
+  return fed;
+}
+
+// impliciete (klassieke) lijntjes expliciet maken, zodat structuurwijzigingen
+// (match/ronde toevoegen of weghalen) bestaande lijnen nooit stilletjes verleggen
+export function materializeLinks(bracket: Bracket): Bracket {
   const b: Bracket = JSON.parse(JSON.stringify(bracket));
-  const r1 = b.rounds[0];
-  if (r1.some((m) => m.teams.some((t) => t.name.toLowerCase() === clean.toLowerCase()))) {
-    return { error: `"${clean}" staat al in het bracket.` };
+  b.rounds.forEach((round, r) => round.forEach((match, m) => { match.next = nextOf(bracket, r, m); }));
+  return b;
+}
+
+export function addRound(bracket: Bracket): Bracket {
+  const b = materializeLinks(bracket);
+  b.rounds.push([emptyMatch()]);
+  return b;
+}
+
+// nieuwe match begint zonder lijn; de admin legt zelf de doorstroom
+export function addMatch(bracket: Bracket, r: number): Bracket {
+  const b = materializeLinks(bracket);
+  b.rounds[r].push({ ...emptyMatch(), next: null });
+  return b;
+}
+
+export function removeMatch(bracket: Bracket, r: number, m: number): Bracket {
+  const b = materializeLinks(bracket);
+  b.rounds[r].splice(m, 1);
+  b.rounds.forEach((round) =>
+    round.forEach((match) => {
+      const t = match.next;
+      if (!t || t.r !== r) return;
+      if (t.m === m) match.next = null;
+      else if (t.m > m) t.m -= 1;
+    })
+  );
+  return b;
+}
+
+export function removeRound(bracket: Bracket, r: number): Bracket {
+  const b = materializeLinks(bracket);
+  b.rounds.splice(r, 1);
+  b.rounds.forEach((round) =>
+    round.forEach((match) => {
+      const t = match.next;
+      if (!t) return;
+      if (t.r === r) match.next = null;
+      else if (t.r > r) t.r -= 1;
+    })
+  );
+  return b;
+}
+
+// een slot heeft hooguit één inkomende lijn: een andere match die al naar
+// hetzelfde slot wees, raakt zijn lijn kwijt
+export function setLink(bracket: Bracket, from: { r: number; m: number }, to: SlotRef | null): Bracket {
+  const b = materializeLinks(bracket);
+  b.rounds[from.r][from.m].next = to;
+  if (to) {
+    b.rounds.forEach((round, r) =>
+      round.forEach((match, m) => {
+        if (r === from.r && m === from.m) return;
+        const t = match.next;
+        if (t && t.r === to.r && t.m === to.m && t.s === to.s) match.next = null;
+      })
+    );
   }
-  for (const m of r1) {
-    if (m.teams.filter((t) => t.name).length === 1) {
-      m.teams.find((t) => !t.name)!.name = clean;
-      return { bracket: b };
-    }
+  return b;
+}
+
+// alle namen die al meedoen aan een game (dugout + bracket/double/race),
+// voor de dubbele-aanmelding-check
+export function gameNames(game: Game): string[] {
+  const out: string[] = [...(game.dugout ?? [])];
+  if (game.type === "double" && game.double) {
+    normalizeDouble(game.double).w[0].forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); }));
+  } else if (game.type === "race" && game.race) {
+    game.race.participants.forEach((p) => out.push(p.name));
+  } else {
+    game.bracket.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => { if (t.name) out.push(t.name); })));
   }
-  for (const m of r1) {
-    if (m.teams.every((t) => !t.name)) {
-      m.teams[0].name = clean;
-      return { bracket: b };
-    }
-  }
-  const size = teamCount(b) * 2;
-  if (size > Math.max(...BRACKET_SIZES)) return { error: `Het bracket zit vol (max ${Math.max(...BRACKET_SIZES)} deelnemers).` };
-  const big = emptyBracket(size);
-  b.rounds.forEach((matches, r) => matches.forEach((m, i) => { big.rounds[r][i] = m; }));
-  big.rounds[0][r1.length].teams[0].name = clean;
-  return { bracket: big, grownTo: size };
+  return out;
 }
 
 export function winnerIdx(match: Match, firstRound = false): number {
@@ -91,13 +166,15 @@ export function winnerIdx(match: Match, firstRound = false): number {
   return a.score > b.score ? 0 : 1;
 }
 
-// winnaars stromen door naar de volgende ronde; onbesliste feeds maken het slot leeg
+// winnaars stromen door langs hun lijntje; onbesliste feeds maken het slot leeg
 export function propagate(bracket: Bracket): Bracket {
   const b: Bracket = JSON.parse(JSON.stringify(bracket));
-  for (let r = 0; r < b.rounds.length - 1; r++) {
+  for (let r = 0; r < b.rounds.length; r++) {
     b.rounds[r].forEach((match, m) => {
+      const t = nextOf(b, r, m);
+      if (!t) return;
       const w = winnerIdx(match, r === 0);
-      const slot = b.rounds[r + 1][Math.floor(m / 2)].teams[m % 2];
+      const slot = b.rounds[t.r][t.m].teams[t.s];
       const newName = w < 0 ? "" : match.teams[w].name;
       if (slot.name !== newName) {
         slot.name = newName;
@@ -208,50 +285,21 @@ export function propagateDouble(double: DoubleBracket | LegacyDoubleBracket | un
   return d;
 }
 
-// nieuwe deelnemer in het double bracket; vol? dan verdubbelt het bracket
-// (bestaande ronde-1-indeling blijft, latere rondes worden opnieuw afgeleid)
-export function addParticipantDouble(
-  double: DoubleBracket | LegacyDoubleBracket | undefined,
-  name: string,
-): { double: DoubleBracket; grownTo?: number } | { error: string } {
-  const clean = name.trim();
-  if (!clean) return { error: "Vul een naam in." };
-  const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(double)));
-  const r1 = d.w[0];
-  if (r1.some((m) => m.teams.some((t) => t.name.toLowerCase() === clean.toLowerCase()))) {
-    return { error: `"${clean}" staat al in het bracket.` };
-  }
-  for (const m of r1) {
-    if (m.teams.filter((t) => t.name).length === 1) {
-      m.teams.find((t) => !t.name)!.name = clean;
-      return { double: d };
-    }
-  }
-  for (const m of r1) {
-    if (m.teams.every((t) => !t.name)) {
-      m.teams[0].name = clean;
-      return { double: d };
-    }
-  }
-  const size = doubleTeamCount(d) * 2;
-  if (size > Math.max(...BRACKET_SIZES)) return { error: `Het bracket zit vol (max ${Math.max(...BRACKET_SIZES)} teams).` };
-  const big = emptyDouble(size);
-  r1.forEach((m, i) => { big.w[0][i] = m; });
-  big.w[0][r1.length].teams[0].name = clean;
-  return { double: big, grownTo: size };
-}
-
 export function roundTitle(r: number, totalRounds: number, teams: number): string {
   const fromEnd = totalRounds - r;
+  const ro = teams / 2 ** r;
   const label = fromEnd === 2 ? "Semifinals"
     : fromEnd === 3 ? "Quarterfinals"
-    : `Ro${teams / 2 ** r}`;
-  return `Round ${r + 1} (${label})`;
+    : Number.isInteger(ro) && ro >= 2 ? `Ro${ro}`
+    : "";
+  return label ? `Round ${r + 1} (${label})` : `Round ${r + 1}`;
 }
 
 export function roundShort(r: number, totalRounds: number, teams: number): string {
   const fromEnd = totalRounds - r;
-  return fromEnd === 1 ? "GF" : fromEnd === 2 ? "SF" : fromEnd === 3 ? "QF" : `RO${teams / 2 ** r}`;
+  const ro = teams / 2 ** r;
+  return fromEnd === 1 ? "GF" : fromEnd === 2 ? "SF" : fromEnd === 3 ? "QF"
+    : Number.isInteger(ro) && ro >= 2 ? `RO${ro}` : `R${r + 1}`;
 }
 
 export function seedOf(bracket: Bracket, name: string): number | "" {
@@ -291,8 +339,8 @@ export function gameStatus(game: Game): { text: string; champ: boolean } {
     return { text: game.race.participants.length ? "Start binnenkort" : "Aanmeldingen open", champ: false };
   }
   const rs = game.bracket.rounds;
-  const gf = rs[rs.length - 1][0];
-  const w = winnerIdx(gf);
+  const gf = rs[rs.length - 1]?.[0];
+  const w = gf ? winnerIdx(gf) : -1;
   if (w >= 0) return { text: `\u{1F3C6} ${gf.teams[w].name}`, champ: true };
   const anyScore = rs.some((rnd) => rnd.some((m) => m.teams.some((t) => t.score != null)));
   if (anyScore) return { text: "Bezig", champ: false };

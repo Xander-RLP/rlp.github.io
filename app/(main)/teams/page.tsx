@@ -29,10 +29,12 @@ export default function TeamsPage() {
           const pairs = seedPairs(g.bracket.rounds[0].length * 2);
           g.bracket.rounds[0].forEach((m, mi) =>
             m.teams.forEach((t, si) => {
-              if (t.name) entries.push({ seed: pairs[mi][si], name: t.name });
+              if (t.name) entries.push({ seed: pairs[mi]?.[si] ?? "–", name: t.name });
             })
           );
         }
+        // aangemeld maar nog niet ingedeeld: de dugout
+        (g.dugout ?? []).forEach((name) => entries.push({ seed: "🪑", name }));
         return (
           <section key={g.id} className="mb-7">
             <GameHeading game={g} />

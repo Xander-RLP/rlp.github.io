@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, addParticipant, addParticipantDouble, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, emptyBracket, emptyDouble, gameInitials, gameNames, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
 import DoubleBracketView from "./DoubleBracketView";
+import Dugout from "./Dugout";
 import GameStoreBanner from "./GameStoreBanner";
 import RaceView from "./RaceView";
 
@@ -34,16 +36,14 @@ export default function HomeView() {
 
   const game = state.games.find((g) => g.id === activeId) ?? state.games[0];
 
-  function setBracket(bracket: Bracket) {
-    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, bracket } : g)));
+  // één gecombineerde update voor de actieve game (bracket + dugout in één keer,
+  // anders overschrijven losse updates elkaar)
+  function patchGame(patch: Partial<Game>) {
+    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, ...patch } : g)));
   }
 
   function setRace(race: Race) {
-    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, race } : g)));
-  }
-
-  function setDouble(double: DoubleBracket) {
-    updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, double } : g)));
+    patchGame({ race });
   }
 
   async function addGame() {
@@ -79,7 +79,8 @@ export default function HomeView() {
     }
   }
 
-  // nieuwe speler/team op de actieve tab — werkt op elk speltype
+  // nieuwe speler/team op de actieve tab — komt in de dugout (het bracket
+  // verandert pas als de admin de speler er zelf in sleept)
   function addPlayer() {
     const name = newPlayer.trim();
     if (!name) return;
@@ -90,28 +91,40 @@ export default function HomeView() {
         return;
       }
       setRace({ ...race, participants: [...race.participants, { name, progress: 0 }] });
-    } else if (game.type === "double") {
-      const result = addParticipantDouble(game.double, name);
-      if ("error" in result) {
-        alert(result.error);
-        return;
-      }
-      if (result.grownTo && !confirm(`Ronde 1 zit vol — het double bracket groeit naar ${result.grownTo} teams. De ronde-1-indeling blijft staan. Doorgaan?`)) {
-        return;
-      }
-      setDouble(result.double);
     } else {
-      const result = addParticipant(game.bracket, name);
-      if ("error" in result) {
-        alert(result.error);
+      if (gameNames(game).some((n) => n.toLowerCase() === name.toLowerCase())) {
+        alert(`"${name}" doet al mee.`);
         return;
       }
-      if (result.grownTo && !confirm(`Ronde 1 zit vol — het bracket groeit naar ${result.grownTo} deelnemers. De huidige indeling en scores blijven staan. Doorgaan?`)) {
-        return;
-      }
-      setBracket(result.bracket);
+      patchGame({ dugout: [...(game.dugout ?? []), name] });
     }
     setNewPlayer("");
+  }
+
+  // speler uit een bracket-slot terug op de bank slepen
+  function returnToDugout(p: DragPayload) {
+    if (p.from !== "slot") return;
+    const dugoutNext = [...(game.dugout ?? []), p.name];
+    if (game.type === "double") {
+      const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(game.double)));
+      const slot = d.w[0][p.m]?.teams[p.s];
+      if (!slot || slot.name !== p.name) return;
+      slot.name = "";
+      slot.score = null;
+      patchGame({ double: d, dugout: dugoutNext });
+    } else {
+      const b: Bracket = JSON.parse(JSON.stringify(game.bracket));
+      const slot = b.rounds[p.r]?.[p.m]?.teams[p.s];
+      if (!slot || slot.name !== p.name) return;
+      slot.name = "";
+      slot.score = null;
+      patchGame({ bracket: b, dugout: dugoutNext });
+    }
+  }
+
+  function removeFromDugout(name: string) {
+    if (!confirm(`"${name}" uitschrijven?`)) return;
+    patchGame({ dugout: (game.dugout ?? []).filter((n) => n !== name) });
   }
 
   function removeGame(g: Game) {
@@ -120,22 +133,43 @@ export default function HomeView() {
     if (game.id === g.id) window.location.hash = state!.games.find((x) => x.id !== g.id)?.id ?? "";
   }
 
+  // preset: vervangt de hele opbouw (incl. eigen rondes/lijnen) door een
+  // standaard knock-out; deelnemers die niet passen gaan naar de dugout
   function resize(newSizeValue: number) {
     const names = game.bracket.rounds[0].flatMap((m) => m.teams.map((t) => t.name)).filter(Boolean);
     const hasScores = game.bracket.rounds.some((rnd) => rnd.some((m) => m.teams.some((t) => t.score != null)));
-    const dropped = Math.max(0, names.length - newSizeValue);
-    if (hasScores || dropped > 0) {
+    const overflow = names.slice(newSizeValue);
+    if (hasScores || overflow.length > 0) {
       const warn = [
         hasScores ? "alle scores worden gewist" : "",
-        dropped > 0 ? `${dropped} deelnemer(s) vervallen` : "",
+        overflow.length > 0 ? `${overflow.length} deelnemer(s) gaan terug naar de dugout` : "",
       ].filter(Boolean).join(" en ");
-      if (!confirm(`Bracket naar ${newSizeValue} deelnemers: ${warn}. Doorgaan?`)) return;
+      if (!confirm(`Standaard bracket met ${newSizeValue} deelnemers: ${warn}. Eigen rondes en lijntjes vervallen. Doorgaan?`)) return;
     }
     const bracket = emptyBracket(newSizeValue);
     names.slice(0, newSizeValue).forEach((name, i) => {
       bracket.rounds[0][Math.floor(i / 2)].teams[i % 2].name = name;
     });
-    setBracket(bracket);
+    patchGame({ bracket, ...(overflow.length ? { dugout: [...(game.dugout ?? []), ...overflow] } : {}) });
+  }
+
+  function resizeDouble(newSizeValue: number) {
+    const d = normalizeDouble(game.double);
+    const names = d.w[0].flatMap((m) => m.teams.map((t) => t.name)).filter(Boolean);
+    const hasScores = [...d.w.flat(), ...d.l.flat(), d.gf].some((m) => m.teams.some((t) => t.score != null));
+    const overflow = names.slice(newSizeValue);
+    if (hasScores || overflow.length > 0) {
+      const warn = [
+        hasScores ? "alle scores worden gewist" : "",
+        overflow.length > 0 ? `${overflow.length} team(s) gaan terug naar de dugout` : "",
+      ].filter(Boolean).join(" en ");
+      if (!confirm(`Double bracket naar ${newSizeValue} teams: ${warn}. Doorgaan?`)) return;
+    }
+    const double = emptyDouble(newSizeValue);
+    names.slice(0, newSizeValue).forEach((name, i) => {
+      double.w[0][Math.floor(i / 2)].teams[i % 2].name = name;
+    });
+    patchGame({ double, ...(overflow.length ? { dugout: [...(game.dugout ?? []), ...overflow] } : {}) });
   }
 
   const icon = game.id.startsWith("cs2")
@@ -238,7 +272,7 @@ export default function HomeView() {
           <input
             value={newPlayer}
             onChange={(e) => setNewPlayer(e.target.value)}
-            placeholder="Nieuwe speler of team aanmelden…"
+            placeholder={game.type === "race" ? "Nieuwe speler of team aanmelden…" : "Nieuwe speler of team aanmelden… (komt in de dugout)"}
             maxLength={24}
             className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-2.5 py-1.5 text-xs font-semibold focus:border-lime-400 focus:outline-none"
           />
@@ -252,28 +286,42 @@ export default function HomeView() {
         </form>
       )}
 
+      {game.type !== "race" && (
+        <Dugout
+          names={game.dugout ?? []}
+          isAdmin={isAdmin}
+          onReturn={returnToDugout}
+          onRemove={removeFromDugout}
+        />
+      )}
+
       {game.type === "race" ? (
         <RaceView game={game} isAdmin={isAdmin} onRaceChange={setRace} />
       ) : game.type === "double" ? (
-        <DoubleBracketView game={game} isAdmin={isAdmin} onDoubleChange={setDouble} />
+        <DoubleBracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       ) : (
-        <BracketView game={game} isAdmin={isAdmin} onBracketChange={setBracket} />
+        <BracketView game={game} isAdmin={isAdmin} onUpdate={patchGame} />
       )}
 
-      {isAdmin && (game.type === "bracket" || !game.type) && (
+      {isAdmin && game.type !== "race" && (
         <div className="mt-4 max-w-2xl rounded border border-dashed border-slate-700 px-3 py-2 text-[11px] text-slate-400">
-          <b className="text-lime-400">Admin mode:</b> vul de namen in bij de eerste ronde en zet de scores per match.
-          De winnaar (hoogste score) schuift automatisch door; een lege plek in ronde 1 is een bye.
-          Wijzigingen worden automatisch opgeslagen.
+          <b className="text-lime-400">Admin mode:</b> nieuwe aanmeldingen komen in de <b>dugout</b>;
+          sleep ze via het gekleurde blokje naar een leeg slot en terug. Vul de scores per match in —
+          de winnaar schuift automatisch door langs de lijntjes.
+          {(game.type === "bracket" || !game.type) && (
+            <> Met <b>🔧 Bracket bewerken</b> voeg je zelf rondes en wedstrijden toe en bepaal je de
+            lijntjes (klik de →-knop op een wedstrijd en daarna het doel-slot).</>
+          )}
+          {" "}Wijzigingen worden automatisch opgeslagen.
           <div className="mt-2 flex items-center gap-3">
             <span className="flex items-center gap-2">
-              Bracket-grootte:
+              Standaard-opzet:
               <select
-                value={teamCount(game.bracket)}
-                onChange={(e) => resize(parseInt(e.target.value, 10))}
+                value={game.type === "double" ? normalizeDouble(game.double).w[0].length * 2 : teamCount(game.bracket)}
+                onChange={(e) => (game.type === "double" ? resizeDouble : resize)(parseInt(e.target.value, 10))}
                 className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
               >
-                {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} deelnemers</option>)}
+                {BRACKET_SIZES.map((n) => <option key={n} value={n}>{n} {game.type === "double" ? "teams" : "deelnemers"}</option>)}
               </select>
             </span>
             <button
@@ -317,8 +365,8 @@ export default function HomeView() {
               onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
-              <option value="bracket">Bracket (knock-out, groeit automatisch mee)</option>
-              <option value="double">Double elimination (winner + loser bracket, groeit mee)</option>
+              <option value="bracket">Bracket (knock-out, zelf in te delen rondes)</option>
+              <option value="double">Double elimination (winner + loser bracket)</option>
               <option value="race">Vrij format / leaderboard (elk aantal spelers — bijv. Commander, race)</option>
             </select>
             {newType === "bracket" && (

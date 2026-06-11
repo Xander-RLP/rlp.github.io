@@ -5,6 +5,7 @@ import { allMatches } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
 
 const NEWS = [
+  { accent: "border-amber-400", html: <><b className="text-slate-100">🏴‍☠️ The Treasure Hunt be back!</b> And mark me words… the hunt has already begun. Only the keenest traveler shall spot the first signs. <Link href="/tournaments#treasure-hunt" className="font-bold text-amber-400 hover:text-amber-300">Lees meer →</Link></> },
   { accent: "border-teal-500", html: <><b className="text-slate-100">Brackets live:</b> alle RLP26 toernooien staan online — indeling is nog een placeholder.</> },
   { accent: "border-lime-500", html: <><b className="text-slate-100">Line-up:</b> CS2 Wingman, League of Legends (ARAM), Rocket League, WC3 Reforged en Shootmania Storm.</> },
   { accent: "border-amber-400", html: <><b className="text-slate-100">Sponsors gezocht!</b> Wil je RLP26 sponsoren? Meld je bij de organisatie.</> },
