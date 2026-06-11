@@ -70,7 +70,7 @@
             {
               "teams": [
                 {
-                  "name": "Smoke Bros",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -247,7 +247,8 @@
       "dugout": [
         "Ronnie Rifles",
         "Rush B",
-        "Team klaas"
+        "Team klaas",
+        "Smoke Bros"
       ]
     },
     {
