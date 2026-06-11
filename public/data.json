@@ -805,7 +805,11 @@
               ],
               "outs": [
                 null,
-                null,
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
                 null,
                 null,
                 null,
