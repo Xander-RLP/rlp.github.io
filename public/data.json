@@ -716,7 +716,7 @@
     {
       "id": "R1",
       "side": "right",
-      "name": ""
+      "name": "Indy"
     },
     {
       "id": "R2",
@@ -735,7 +735,6 @@
     }
   ],
   "unseated": [
-    "Indy",
     "Bo",
     "Jean"
   ],
