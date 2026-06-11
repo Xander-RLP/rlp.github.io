@@ -733,8 +733,8 @@
         ]
       },
       "image": "/images/shootmania-storm.png",
-      "start": "2026-06-14T11:30",
-      "durationMin": 150,
+      "start": "2026-06-14T14:30",
+      "durationMin": 75,
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/229870/ShootMania_Storm/",
