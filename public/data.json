@@ -700,7 +700,7 @@
                   "score": null
                 },
                 {
-                  "name": "Sjoerd",
+                  "name": "",
                   "score": null
                 }
               ],
@@ -776,7 +776,8 @@
       },
       "dugout": [
         "Bo",
-        "Indy"
+        "Indy",
+        "Sjoerd"
       ]
     },
     {
