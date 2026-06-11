@@ -115,4 +115,5 @@ export type BeamerSlide = {
   title: string;
   text?: string;      // regels gescheiden met \n
   images?: string[];  // foto's onder de tekst (paden of URL's)
+  imageSize?: number; // hoogte van de foto's in px (admin stelt bij; default 208)
 };

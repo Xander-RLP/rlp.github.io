@@ -99,6 +99,24 @@ export default function BeamerPage() {
     return () => clearInterval(t);
   }, [totaal, bezig, pickerOpen]);
 
+  // presenteren zoals in Keynote/PowerPoint: pijltjes, spatie en PageUp/Down
+  // bladeren altijd (behalve tijdens het typen)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName ?? "").toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+      if (["ArrowRight", "PageDown", " "].includes(e.key)) {
+        e.preventDefault();
+        setIdx((i) => (i + 1) % totaal);
+      } else if (["ArrowLeft", "PageUp"].includes(e.key)) {
+        e.preventDefault();
+        setIdx((i) => (i - 1 + totaal) % totaal);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [totaal]);
+
   if (!state) return null;
 
   // ---- inline bewerken ----
@@ -270,13 +288,18 @@ export default function BeamerPage() {
           s.text && <p className="mt-8 whitespace-pre-line text-4xl leading-relaxed text-slate-200">{s.text}</p>
         )}
 
-        {/* foto's uit de presentatie (of eigen) */}
+        {/* foto's uit de presentatie (of eigen); de admin bepaalt de grootte */}
         {(s.images?.length || isAdmin) && (
           <div className="mt-10 flex items-center justify-center gap-6">
             {(s.images ?? []).map((src, fi) => (
               <span key={fi} className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" className="h-52 w-auto rounded-xl border border-slate-700 object-cover shadow-xl shadow-black/40" />
+                <img
+                  src={src}
+                  alt=""
+                  style={{ height: s.imageSize ?? 208 }}
+                  className="w-auto rounded-xl border border-slate-700 object-cover shadow-xl shadow-black/40"
+                />
                 {isAdmin && (
                   <button
                     onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, images: x.images?.filter((_, k) => k !== fi) } : x))); }}
@@ -292,10 +315,29 @@ export default function BeamerPage() {
               <button
                 onClick={() => fotoToevoegen(i)}
                 title="Foto toevoegen"
-                className="flex h-52 w-36 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 text-3xl text-slate-600 transition-colors hover:border-lime-400/60 hover:text-lime-400"
+                style={{ height: s.imageSize ?? 208 }}
+                className="flex w-36 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 text-3xl text-slate-600 transition-colors hover:border-lime-400/60 hover:text-lime-400"
               >
                 📷+
               </button>
+            )}
+            {isAdmin && !!s.images?.length && (
+              <span className="flex flex-col gap-1.5">
+                <button
+                  onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, imageSize: Math.min(480, (x.imageSize ?? 208) + 32) } : x))); }}
+                  title="Foto's groter"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-slate-700 text-sm text-slate-400 hover:border-lime-400 hover:text-lime-400"
+                >
+                  🔍+
+                </button>
+                <button
+                  onClick={() => { const d = startEdit(); bewaar(d.map((x, j) => (j === i ? { ...x, imageSize: Math.max(96, (x.imageSize ?? 208) - 32) } : x))); }}
+                  title="Foto's kleiner"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-slate-700 text-sm text-slate-400 hover:border-lime-400 hover:text-lime-400"
+                >
+                  🔍−
+                </button>
+              </span>
             )}
           </div>
         )}
@@ -313,7 +355,15 @@ export default function BeamerPage() {
   })();
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-hidden bg-slate-950 text-slate-100">
+    <div
+      className="fixed inset-0 z-[100] overflow-hidden bg-slate-950 text-slate-100"
+      onClick={(e) => {
+        // in fullscreen werkt een klik als "volgende slide", zoals bij een presentatie
+        if (!isFull) return;
+        if ((e.target as HTMLElement).closest("button, input, textarea, a")) return;
+        setIdx((i) => (i + 1) % totaal);
+      }}
+    >
       {/* sfeer-achtergrond */}
       <div className="absolute -left-32 top-16 h-96 w-96 animate-pulse rounded-full bg-teal-500/10 blur-3xl" />
       <div className="absolute -right-32 bottom-16 h-96 w-96 animate-pulse rounded-full bg-lime-500/10 blur-3xl" />
@@ -325,7 +375,8 @@ export default function BeamerPage() {
       </div>
       <Klok />
 
-      <div className="flex h-full items-center justify-center overflow-y-auto px-24 py-28">{slide}</div>
+      {/* scrollen kan (voor lange slides) maar zonder zichtbare balk — dit is een presentatie */}
+      <div className="flex h-full items-center justify-center overflow-y-auto px-24 py-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{slide}</div>
 
       {/* voortgangsbolletjes + admin-acties */}
       <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2.5">
