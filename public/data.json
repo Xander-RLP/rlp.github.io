@@ -405,7 +405,7 @@
             {
               "teams": [
                 {
-                  "name": "Indy",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -472,7 +472,8 @@
         "Ronnie",
         "Xander",
         "Leon",
-        "Bo"
+        "Bo",
+        "Indy"
       ],
       "entryType": "user"
     },
