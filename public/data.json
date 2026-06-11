@@ -58,11 +58,7 @@
                   "score": null
                 }
               ],
-              "next": {
-                "r": 5,
-                "m": 0,
-                "s": 0
-              },
+              "next": null,
               "loserNext": {
                 "r": 4,
                 "m": 0,
@@ -101,28 +97,10 @@
                   "score": null
                 }
               ],
-              "next": {
-                "r": 5,
-                "m": 0,
-                "s": 1
-              }
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
               "next": null
             }
-          ]
+          ],
+          []
         ]
       },
       "image": "/images/cs2-wingman.png",
