@@ -2340,18 +2340,6 @@
     {
       "blocks": [
         {
-          "id": "r53",
-          "type": "image",
-          "content": "/images/beamer/pptx/image2.webp",
-          "x": 12,
-          "y": 2,
-          "size": 600
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
           "id": "r54",
           "type": "text",
           "content": "⚠️",
