@@ -17,12 +17,7 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 1,
-                "m": 0,
-                "s": 0
-              }
+              ]
             },
             {
               "teams": [
@@ -34,12 +29,7 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 1,
-                "m": 0,
-                "s": 1
-              }
+              ]
             },
             {
               "teams": [
@@ -51,8 +41,19 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": null
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
             }
           ],
           [
@@ -66,8 +67,7 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": null
+              ]
             },
             {
               "teams": [
@@ -79,12 +79,7 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": {
-                "r": 2,
-                "m": 0,
-                "s": 1
-              }
+              ]
             }
           ],
           [
@@ -98,12 +93,9 @@
                   "name": "",
                   "score": null
                 }
-              ],
-              "next": null
+              ]
             }
-          ],
-          [],
-          []
+          ]
         ]
       },
       "image": "/images/cs2-wingman.png",
