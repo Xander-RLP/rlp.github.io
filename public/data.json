@@ -741,24 +741,7 @@
             }
           ],
           [],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                null,
-                null
-              ]
-            }
-          ]
+          []
         ]
       },
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2732960/b1e3243662a5911fadc0924feb4b7e6e9e278403.jpg",
