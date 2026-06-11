@@ -107,12 +107,12 @@ export default function TeamSpeakWidget() {
                 alt="UGREEN DXP8800 Plus"
                 className="nas-glow h-28 w-auto"
               />
-              {/* knipperende schijf-LED'jes, elk met een eigen ritme */}
-              <span className="absolute bottom-[30%] left-[21%] flex gap-[3px]">
-                {[0, 1, 2, 3].map((i) => (
+              {/* knipperende schijf-LED'jes op de echte LED-strip — wit, zoals officieel */}
+              <span className="absolute bottom-[33.5%] left-[19%] flex items-center gap-[2px]">
+                {[0, 1, 2, 3, 4].map((i) => (
                   <span
                     key={i}
-                    className="h-[3px] w-[3px] rounded-full bg-lime-400 shadow-[0_0_4px_rgba(132,204,22,0.9)]"
+                    className="h-[2px] w-[2px] rounded-full bg-white shadow-[0_0_3px_rgba(255,255,255,0.95)]"
                     style={{ animation: `led-blink ${(0.7 + i * 0.41).toFixed(2)}s steps(1) infinite`, animationDelay: `${i * 0.23}s` }}
                   />
                 ))}
