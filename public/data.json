@@ -471,31 +471,6 @@
             {
               "teams": [
                 {
-                  "name": "Leon",
-                  "score": null
-                },
-                {
-                  "name": "Bo",
-                  "score": null
-                },
-                {
-                  "name": "Indy",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 1,
-                  "m": 0,
-                  "s": 1
-                },
-                null,
-                null
-              ]
-            },
-            {
-              "teams": [
-                {
                   "name": "Sjoerd",
                   "score": null
                 },
