@@ -67,11 +67,7 @@
                   "score": null
                 }
               ],
-              "next": {
-                "r": 2,
-                "m": 0,
-                "s": 0
-              }
+              "next": null
             },
             {
               "teams": [
@@ -86,46 +82,12 @@
               ],
               "next": {
                 "r": 2,
-                "m": 3,
+                "m": 1,
                 "s": 1
               }
             }
           ],
           [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 3,
-                "m": 0,
-                "s": 0
-              }
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 3,
-                "m": 0,
-                "s": 1
-              }
-            },
             {
               "teams": [
                 {
