@@ -779,39 +779,13 @@
                 }
               ],
               "outs": [
-                {
-                  "r": 2,
-                  "m": 0,
-                  "s": 0
-                },
+                null,
                 null
               ],
               "label": "💀 LB Ronde 1"
             }
           ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                {
-                  "r": 3,
-                  "m": 0,
-                  "s": 1
-                },
-                null
-              ],
-              "label": "💀 LB Finale"
-            }
-          ],
+          [],
           [
             {
               "teams": [
