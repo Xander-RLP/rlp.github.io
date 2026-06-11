@@ -74,6 +74,19 @@
                 "s": 0
               },
               "loserNext": null
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": null
             }
           ],
           [
