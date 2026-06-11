@@ -38,9 +38,23 @@ export default function TeamSpeakWidget() {
             href={TS_DOWNLOAD}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 block rounded border border-lime-400/60 px-3 py-2 text-center text-xs font-bold uppercase tracking-wide text-lime-400 hover:bg-lime-400/10"
+            className="group mt-2 flex items-center gap-2.5 rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 transition-colors hover:border-lime-400/60 hover:bg-slate-800"
           >
-            ⬇ Nog geen TeamSpeak? Download
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-lime-400/10 text-lime-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-3.5 w-3.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <path d="m7 10 5 5 5-5" />
+                <path d="M12 15V3" />
+              </svg>
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-bold text-slate-100">Nog geen TeamSpeak?</span>
+              <span className="block text-[10px] text-slate-400">Gratis downloaden — klaar vóór de LAN</span>
+            </span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-3 w-3 shrink-0 text-lime-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+              <path d="M7 17 17 7" />
+              <path d="M7 7h10v10" />
+            </svg>
           </a>
 
           {/* uitklapbare hulp: ruisonderdrukking aanzetten */}
