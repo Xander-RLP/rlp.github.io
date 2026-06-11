@@ -4,11 +4,12 @@
 // de /fotos-pagina ontsleutelt ze in de browser met hetzelfde wachtwoord.
 //
 // Gebruik:  node scripts/encrypt-photos.mjs <fotomap> <wachtwoord>
-// Vereist ImageMagick (convert) voor web-formaat + thumbnails.
+// Submappen worden groepen in de galerij (mapnaam = kopje, bijv. "RLP 2024");
+// losse foto's in de hoofdmap komen onder "Overig". Vereist ImageMagick.
 
 import { createCipheriv, pbkdf2Sync, randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const [srcDir, password] = process.argv.slice(2);
@@ -37,10 +38,20 @@ function resized(file, maxPx, quality) {
   ], { maxBuffer: 64 * 1024 * 1024 });
 }
 
-const files = readdirSync(srcDir)
-  .filter((f) => /\.(jpe?g|png|webp|heic)$/i.test(f))
-  .sort();
-if (!files.length) {
+const isFoto = (f) => /\.(jpe?g|png|webp|heic)$/i.test(f);
+const entries = readdirSync(srcDir).sort();
+const subdirs = entries.filter((e) => statSync(join(srcDir, e)).isDirectory());
+const loose = entries.filter((e) => !statSync(join(srcDir, e)).isDirectory() && isFoto(e));
+
+// elke submap is een groep; losse foto's in de hoofdmap vallen onder "Overig"
+const groupDefs = subdirs.map((d) => ({
+  title: d,
+  files: readdirSync(join(srcDir, d)).filter(isFoto).sort().map((f) => join(srcDir, d, f)),
+}));
+if (loose.length) {
+  groupDefs.push({ title: subdirs.length ? "Overig" : "Foto's", files: loose.map((f) => join(srcDir, f)) });
+}
+if (!groupDefs.some((g) => g.files.length)) {
   console.error(`geen foto's gevonden in ${srcDir}`);
   process.exit(1);
 }
@@ -48,19 +59,21 @@ if (!files.length) {
 rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 
-const photos = [];
-files.forEach((f, i) => {
-  const src = join(srcDir, f);
-  const id = `foto-${String(i + 1).padStart(2, "0")}`;
-  writeFileSync(join(outDir, `${id}.thumb.enc`), encrypt(resized(src, 480, 72)));
-  writeFileSync(join(outDir, `${id}.full.enc`), encrypt(resized(src, 1600, 84)));
-  photos.push(id);
-  console.log(`${id}  ←  ${f}`);
+let n = 0;
+const groups = groupDefs.filter((g) => g.files.length).map((g) => {
+  const photos = g.files.map((src) => {
+    const id = `foto-${String(++n).padStart(2, "0")}`;
+    writeFileSync(join(outDir, `${id}.thumb.enc`), encrypt(resized(src, 480, 72)));
+    writeFileSync(join(outDir, `${id}.full.enc`), encrypt(resized(src, 1600, 84)));
+    console.log(`${id}  ←  ${src}`);
+    return id;
+  });
+  return { title: g.title, photos };
 });
 
-writeFileSync(join(outDir, "manifest.enc"), encrypt(Buffer.from(JSON.stringify({ photos }))));
+writeFileSync(join(outDir, "manifest.enc"), encrypt(Buffer.from(JSON.stringify({ groups }))));
 writeFileSync(join(outDir, "meta.json"), JSON.stringify({
   salt: salt.toString("base64"),
   iterations: ITERATIONS,
 }));
-console.log(`\n${photos.length} foto's versleuteld naar ${outDir}/`);
+console.log(`\n${n} foto's in ${groups.length} groep(en) versleuteld naar ${outDir}/`);

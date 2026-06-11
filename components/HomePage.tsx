@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { gameInitials, gameStatus, logoColor } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
+import HeroSlideshow from "./HeroSlideshow";
 
 function pad(n: number) { return String(n).padStart(2, "0"); }
 
@@ -69,6 +70,8 @@ export default function HomePage() {
         >
           <source src="/hero.mp4" type="video/mp4" />
         </video>
+        {/* diashow van LAN-foto's, alleen zichtbaar mét foto-wachtwoord */}
+        <HeroSlideshow />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
 
         <div className="relative flex flex-col items-center gap-5">
@@ -119,7 +122,7 @@ export default function HomePage() {
       </section>
 
       {/* TOERNOOIEN-TEASER */}
-      <section className="px-4 py-8 md:px-7">
+      <section className="mx-auto max-w-6xl px-4 py-8 md:px-7">
         <div className="mb-4 flex items-baseline justify-between">
           <h2 className="text-lg font-extrabold uppercase tracking-wide">Tournaments</h2>
           <Link href="/tournaments" className="text-xs font-bold uppercase tracking-wide text-lime-400 hover:underline">
@@ -160,7 +163,7 @@ export default function HomePage() {
       </section>
 
       {/* LAN PLAYLIST */}
-      <section className="px-4 pb-10 md:px-7">
+      <section className="mx-auto max-w-6xl px-4 pb-10 md:px-7">
         <div className="flex flex-col gap-5 rounded-xl border border-slate-700 bg-slate-900/60 p-6 md:flex-row md:items-center">
           <div className="md:w-1/2">
             <h2 className="mb-2 text-lg font-extrabold uppercase tracking-wide">🎵 LAN Playlist</h2>

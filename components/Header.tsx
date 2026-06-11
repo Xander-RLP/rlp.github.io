@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useTournament } from "@/lib/store";
 
 const NAV = [
@@ -19,10 +20,14 @@ const NAV = [
 export default function Header() {
   const pathname = usePathname();
   const { isAdmin, logout } = useTournament();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // menu dicht zodra er genavigeerd is
+  useEffect(() => setMenuOpen(false), [pathname]);
 
   return (
-    <header className="flex flex-col items-center gap-2 border-b-2 border-teal-500 bg-gradient-to-r from-teal-950 to-teal-900 px-4 py-2.5 md:flex-row md:justify-between md:gap-5 md:px-7">
-      <div className="flex w-full items-center justify-between md:w-auto">
+    <header className="border-b-2 border-teal-500 bg-gradient-to-r from-teal-950 to-teal-900 px-4 py-2.5 md:flex md:items-center md:justify-between md:gap-5 md:px-7">
+      <div className="flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="RLP26 logo" className="h-12 w-auto rounded" />
@@ -31,25 +36,40 @@ export default function Header() {
             <div className="text-[10px] uppercase tracking-[2px] text-teal-400">Ronnie LAN Party</div>
           </div>
         </Link>
-        {isAdmin && (
-          <Link
-            href="/admin"
-            className="rounded bg-amber-400 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber-950 md:hidden"
+
+        <div className="flex items-center gap-2 md:hidden">
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="rounded bg-amber-400 px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-amber-950"
+            >
+              Admin
+            </Link>
+          )}
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Menu sluiten" : "Menu openen"}
+            aria-expanded={menuOpen}
+            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded border border-teal-700"
           >
-            Admin
-          </Link>
-        )}
+            <span className={`h-0.5 w-5 bg-slate-100 transition ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+            <span className={`h-0.5 w-5 bg-slate-100 transition ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`h-0.5 w-5 bg-slate-100 transition ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+          </button>
+        </div>
       </div>
 
-      <nav className="flex w-full flex-1 flex-wrap justify-center gap-x-4 gap-y-1 md:w-auto md:gap-x-6">
+      <nav
+        className={`${menuOpen ? "flex" : "hidden"} mt-2 flex-col gap-0.5 border-t border-teal-800 pt-2 md:mt-0 md:flex md:flex-1 md:flex-row md:flex-wrap md:justify-center md:gap-x-6 md:gap-y-1 md:border-t-0 md:pt-0`}
+      >
         {NAV.map(({ href, label }) => (
           <Link
             key={href}
             href={href}
-            className={`border-b-2 px-0.5 py-1.5 text-xs font-bold uppercase tracking-widest ${
+            className={`rounded px-2 py-2.5 text-xs font-bold uppercase tracking-widest md:rounded-none md:border-b-2 md:px-0.5 md:py-1.5 ${
               pathname === href
-                ? "border-lime-400 text-lime-400"
-                : "border-transparent text-slate-100 hover:text-lime-300"
+                ? "bg-teal-900 text-lime-400 md:border-lime-400 md:bg-transparent"
+                : "text-slate-100 hover:text-lime-300 md:border-transparent"
             }`}
           >
             {label}

@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --animate-hero-zoom: hero-zoom 7s ease-out forwards;
+
+  @keyframes hero-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.12); }
+  }
+}
+
 body {
   background: var(--color-slate-950);
   color: var(--color-slate-100);

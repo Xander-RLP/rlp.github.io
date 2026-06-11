@@ -18,7 +18,7 @@ export default function Sidebar() {
   const pending = state ? allMatches(state.games).filter((m) => !m.decided).slice(0, 4) : [];
 
   return (
-    <aside className="flex flex-col gap-6 border-t border-slate-700 bg-slate-900 px-4.5 py-5 lg:border-l lg:border-t-0">
+    <aside className="flex h-full flex-col gap-6 px-4.5 py-5 lg:min-w-[280px]">
       <section>
         <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">Tournament News</h2>
         {NEWS.map((item, i) => (

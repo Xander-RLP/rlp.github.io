@@ -1,43 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { FOTOS_WACHTWOORD_KEY, decryptFotoUrl, unlockFotos, type FotoGroep } from "@/lib/fotos";
 
 // Foto's staan versleuteld (AES-256-GCM) in de publieke repo; alleen met het
 // wachtwoord van de LAN zijn ze te bekijken. Ontsleutelen gebeurt volledig
 // in de browser — het wachtwoord verlaat de pagina niet.
-
-const STORAGE_KEY = "rlp26-fotos-wachtwoord";
-
-async function deriveKey(password: string, saltB64: string, iterations: number) {
-  const enc = new TextEncoder();
-  const salt = Uint8Array.from(atob(saltB64), (c) => c.charCodeAt(0));
-  const base = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
-  return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
-    base,
-    { name: "AES-GCM", length: 256 },
-    false,
-    ["decrypt"],
-  );
-}
-
-async function decryptBlob(key: CryptoKey, buf: ArrayBuffer) {
-  const bytes = new Uint8Array(buf);
-  return crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes.slice(0, 12) }, key, bytes.slice(12));
-}
-
-async function fetchDecrypted(key: CryptoKey, path: string) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`${path}: ${res.status}`);
-  return decryptBlob(key, await res.arrayBuffer());
-}
 
 export default function FotosPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [unlocked, setUnlocked] = useState(false);
-  const [thumbs, setThumbs] = useState<{ id: string; url: string }[]>([]);
+  const [groups, setGroups] = useState<FotoGroep[]>([]);
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
   const [lightbox, setLightbox] = useState<{ id: string; url?: string } | null>(null);
   const keyRef = useRef<CryptoKey | null>(null);
   const fullCache = useRef(new Map<string, string>());
@@ -46,30 +22,25 @@ export default function FotosPage() {
     setBusy(true);
     setError(null);
     try {
-      const meta = await (await fetch("/fotos/meta.json")).json() as { salt: string; iterations: number };
-      const key = await deriveKey(pw, meta.salt, meta.iterations);
-      // verkeerd wachtwoord ⇒ GCM-verificatie van het manifest faalt
-      const manifest = JSON.parse(new TextDecoder().decode(
-        await fetchDecrypted(key, "/fotos/manifest.enc"),
-      )) as { photos: string[] };
+      const { key, groups: g, photos } = await unlockFotos(pw);
       keyRef.current = key;
-      localStorage.setItem(STORAGE_KEY, pw);
+      localStorage.setItem(FOTOS_WACHTWOORD_KEY, pw);
       setUnlocked(true);
-      for (const id of manifest.photos) {
-        const data = await fetchDecrypted(key, `/fotos/${id}.thumb.enc`);
-        const url = URL.createObjectURL(new Blob([data], { type: "image/jpeg" }));
-        setThumbs((cur) => [...cur, { id, url }]);
+      setGroups(g);
+      for (const id of photos) {
+        const url = await decryptFotoUrl(key, `/fotos/${id}.thumb.enc`);
+        setThumbs((cur) => ({ ...cur, [id]: url }));
       }
     } catch {
       setError("Wachtwoord klopt niet. Vraag het na bij de organisatie.");
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(FOTOS_WACHTWOORD_KEY);
     } finally {
       setBusy(false);
     }
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(FOTOS_WACHTWOORD_KEY);
     if (saved) void unlock(saved);
   }, [unlock]);
 
@@ -78,8 +49,7 @@ export default function FotosPage() {
     const cached = fullCache.current.get(id);
     if (cached) return setLightbox({ id, url: cached });
     try {
-      const data = await fetchDecrypted(keyRef.current!, `/fotos/${id}.full.enc`);
-      const url = URL.createObjectURL(new Blob([data], { type: "image/jpeg" }));
+      const url = await decryptFotoUrl(keyRef.current!, `/fotos/${id}.full.enc`);
       fullCache.current.set(id, url);
       setLightbox((cur) => (cur?.id === id ? { id, url } : cur));
     } catch {
@@ -117,18 +87,31 @@ export default function FotosPage() {
           {error && <div className="text-[13px] text-red-400">{error}</div>}
         </form>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2.5">
-          {thumbs.map((t) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={t.id}
-              src={t.url}
-              alt=""
-              onClick={() => void openFoto(t.id)}
-              className="aspect-square w-full cursor-pointer rounded-md border border-slate-700 object-cover transition hover:border-teal-500"
-            />
+        <div className="flex flex-col gap-7">
+          {groups.map((g) => (
+            <section key={g.title}>
+              <h3 className="mb-2.5 flex items-baseline gap-2 text-sm font-extrabold uppercase tracking-wide">
+                {g.title}
+                <span className="text-[11px] font-semibold normal-case text-slate-400">{g.photos.length} foto&apos;s</span>
+              </h3>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2.5">
+                {g.photos.map((id) =>
+                  thumbs[id] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={id}
+                      src={thumbs[id]}
+                      alt=""
+                      onClick={() => void openFoto(id)}
+                      className="aspect-square w-full cursor-pointer rounded-md border border-slate-700 object-cover transition hover:border-teal-500"
+                    />
+                  ) : (
+                    <div key={id} className="flex aspect-square items-center justify-center rounded-md border border-slate-800 text-[11px] text-slate-500">…</div>
+                  ),
+                )}
+              </div>
+            </section>
           ))}
-          {busy && <div className="flex aspect-square items-center justify-center rounded-md border border-slate-800 text-[11px] text-slate-500">Laden…</div>}
         </div>
       )}
 
