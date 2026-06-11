@@ -282,16 +282,19 @@ export default function BeamerPage() {
       const ruwX = ((me.clientX - offsetX - area.left) / area.width) * COLS;
       const ruwY = ((me.clientY - offsetY - area.top) / area.height) * ROWS;
       // magnetisch snappen: eerst het midden (gecentreerd is heilig op een
-      // beamer), daarna de posities van andere blokken op deze slide
-      let gx = Math.max(0, Math.min(COLS, Math.round(ruwX)));
+      // beamer), daarna de posities van andere blokken op deze slide.
+      // Standaard kwart-cel-stapjes voor fijn werk; Shift = volledig vrij
+      const stap = me.shiftKey ? 0.001 : 0.25;
+      const rond = (v: number) => Math.round(v / stap) * stap;
+      let gx = Math.max(0, Math.min(COLS, rond(ruwX)));
       let snapX: number | null = null;
       for (const doel of [COLS / 2, ...anderen.map((a) => a.x)]) {
-        if (Math.abs(ruwX - doel) < 0.65) { gx = doel; snapX = doel; break; }
+        if (Math.abs(ruwX - doel) < 0.5) { gx = doel; snapX = doel; break; }
       }
-      let gy = Math.max(0, Math.min(ROWS - 1, Math.round(ruwY)));
+      let gy = Math.max(0, Math.min(ROWS - 1, rond(ruwY)));
       let snapY: number | null = null;
       for (const doel of [ROWS / 2, ...anderen.map((a) => a.y)]) {
-        if (Math.abs(ruwY - doel) < 0.65) { gy = doel; snapY = doel; break; }
+        if (Math.abs(ruwY - doel) < 0.5) { gy = doel; snapY = doel; break; }
       }
       setHulplijn({ x: snapX, y: snapY });
       laatste = patchBlock(bi, { x: gx, y: gy });
@@ -645,7 +648,7 @@ export default function BeamerPage() {
 
       {isAdmin && (
         <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-20"} ${fade}`}>
-          ✏️ klik op tekst om te typen · sleep blokken via ⠿ (of de foto/widget zelf) · opslaan gaat vanzelf
+          ✏️ klik op tekst om te typen · sleep via ⠿ of de foto/widget zelf (Shift = vrij slepen) · opslaan gaat vanzelf
         </p>
       )}
 
