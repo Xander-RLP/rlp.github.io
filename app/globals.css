@@ -14,20 +14,9 @@ body {
   color: var(--color-slate-100);
 }
 
-/* Buy me a Coffee!-tab: half ingeklapt tegen de linker schermrand (alleen het
-   kopje steekt uit), piept periodiek even naar buiten en schuift bij hover
-   en focus helemaal uit */
-.coffee-tab {
-  animation: coffee-peek 8s ease-in-out infinite;
-  transition: transform 0.3s ease;
-  box-shadow: 0 0 18px rgba(251, 191, 36, 0.25), 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-}
-.coffee-tab:hover,
-.coffee-tab:focus-visible {
-  animation: none;
-  transform: translateX(0);
-  box-shadow: 0 0 26px rgba(251, 191, 36, 0.45), 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-}
+/* (de Buy me a Coffee!-tab animeert volledig via inline transitions in
+   components/CoffeeTab.tsx — één bron van waarheid, altijd vloeiend) */
+
 /* sidebar-secties en nieuwsitems schuiven gestaffeld binnen */
 .news-in {
   animation: news-in 0.5s ease-out both;
@@ -37,13 +26,3 @@ body {
   to { opacity: 1; transform: none; }
 }
 
-@keyframes coffee-peek {
-  0%, 70%, 100% { transform: translateX(calc(-100% + 3.4rem)); }
-  78%, 92% { transform: translateX(-0.25rem); }
-}
-/* tik ergens anders op een touchscreen → de tab duikt vrijwel helemaal weg */
-.coffee-tab.coffee-dodge {
-  animation: none;
-  transform: translateX(calc(-100% + 0.8rem));
-  opacity: 0.6;
-}
