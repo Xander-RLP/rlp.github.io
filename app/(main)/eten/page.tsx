@@ -109,8 +109,8 @@ export default function EtenPage() {
       {/* knipoog onderaan: de developer heeft ook een maag */}
       <div className="mt-6 max-w-3xl">
         <CoffeeHint dismissible={false}>
-          🍞 Psst… nu we het toch over eten hebben: de developer van deze site leeft al weken
-          op koffie en code. Help &apos;m aan een broodje —
+          ☕ Psst… nu we het toch over eten hebben: de developer van deze site leeft al weken
+          op koffie en code. Help &apos;m overleven —
         </CoffeeHint>
       </div>
     </div>
