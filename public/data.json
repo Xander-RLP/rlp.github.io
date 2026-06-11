@@ -1833,6 +1833,13 @@
           "x": 12,
           "y": 5,
           "size": 64
+        },
+        {
+          "id": "bmq9la3wpfpvy",
+          "x": 12,
+          "y": 6,
+          "type": "widget",
+          "content": "klok"
         }
       ]
     }
