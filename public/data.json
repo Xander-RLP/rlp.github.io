@@ -928,7 +928,11 @@
         ]
       },
       "start": "2026-06-11T20:00",
-      "durationMin": 225
+      "durationMin": 225,
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/2141910"
+      }
     },
     {
       "id": "the-lord-of-the-rings-the-battle-for-mi",
