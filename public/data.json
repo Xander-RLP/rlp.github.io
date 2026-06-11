@@ -1119,7 +1119,11 @@
         "Rush B",
         "Smoke Bros",
         "Rolator Jeans"
-      ]
+      ],
+      "store": {
+        "name": "Steam",
+        "url": "https://store.steampowered.com/app/1003400"
+      }
     },
     {
       "id": "treasure-hunt",
