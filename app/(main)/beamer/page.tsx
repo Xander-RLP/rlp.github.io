@@ -51,6 +51,14 @@ export default function BeamerPage() {
   const [idx, setIdx] = useState(0);
   const [bezig, setBezig] = useState(false); // admin is aan het typen → rotatie pauzeren
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [isFull, setIsFull] = useState(false);
+
+  // fullscreen-knop verdwijnt zodra we echt fullscreen staan
+  useEffect(() => {
+    const onFs = () => setIsFull(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
+  }, []);
   // lokale kladversie zodat typen niet bij elke toets een commit triggert
   const [draft, setDraft] = useState<BeamerSlide[] | null>(null);
   const draftRef = useRef(draft);
@@ -341,9 +349,20 @@ export default function BeamerPage() {
       </div>
 
       {isAdmin && idx >= 3 && (
-        <p className="absolute bottom-8 right-8 text-[11px] text-slate-600">
+        <p className={`absolute right-8 text-[11px] text-slate-600 ${isFull ? "bottom-8" : "bottom-20"}`}>
           ✏️ klik op de emoji, titel of tekst om direct te bewerken — opslaan gaat vanzelf
         </p>
+      )}
+
+      {/* fullscreen aanzetten; in fullscreen is de knop onzichtbaar */}
+      {!isFull && (
+        <button
+          onClick={() => void document.documentElement.requestFullscreen().catch(() => {})}
+          title="Fullscreen (zoals F11) — Esc om terug te keren"
+          className="absolute bottom-8 right-8 flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 transition-colors hover:border-lime-400 hover:text-lime-400"
+        >
+          ⛶ Fullscreen
+        </button>
       )}
     </div>
   );
