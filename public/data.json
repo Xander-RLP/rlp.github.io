@@ -1224,18 +1224,14 @@
                   "name": "",
                   "score": null
                 }
-              ]
-            },
-            {
-              "teams": [
+              ],
+              "outs": [
                 {
-                  "name": "",
-                  "score": null
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
                 },
-                {
-                  "name": "",
-                  "score": null
-                }
+                null
               ]
             }
           ],
@@ -1250,6 +1246,10 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                null,
+                null
               ]
             }
           ]
