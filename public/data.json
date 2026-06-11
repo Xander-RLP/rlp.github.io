@@ -538,7 +538,17 @@
                   "name": "Aerial Aces",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 1,
+                "s": 0
+              }
             },
             {
               "teams": [
@@ -550,7 +560,17 @@
                   "name": "Whiff Squad",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 1
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 1,
+                "s": 1
+              }
             }
           ],
           [
@@ -564,7 +584,68 @@
                   "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 3,
+                "m": 0,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 2,
+                "m": 0,
+                "s": 1
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 2,
+                "m": 0,
+                "s": 0
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 3,
+                "m": 0,
+                "s": 1
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": null
             }
           ]
         ]
@@ -572,83 +653,7 @@
       "image": "/images/rocket-league.png",
       "start": "2026-06-12T21:30",
       "durationMin": 270,
-      "type": "double",
-      "double": {
-        "w1": [
-          {
-            "teams": [
-              {
-                "name": "Boost Boys",
-                "score": null
-              },
-              {
-                "name": "Aerial Aces",
-                "score": null
-              }
-            ]
-          },
-          {
-            "teams": [
-              {
-                "name": "Demo Kings",
-                "score": null
-              },
-              {
-                "name": "Whiff Squad",
-                "score": null
-              }
-            ]
-          }
-        ],
-        "wf": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        },
-        "l1": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        },
-        "lf": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        },
-        "gf": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        }
-      },
+      "type": "bracket",
       "store": {
         "name": "Epic Games",
         "url": "https://store.epicgames.com/nl/p/rocket-league"
