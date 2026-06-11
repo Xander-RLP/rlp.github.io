@@ -721,7 +721,7 @@
               "teams": [
                 {
                   "name": "Ronnie",
-                  "score": 3
+                  "score": 4
                 },
                 {
                   "name": "Laszlo",
@@ -767,7 +767,7 @@
             {
               "teams": [
                 {
-                  "name": "Ronnie",
+                  "name": "",
                   "score": null
                 },
                 {
