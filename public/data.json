@@ -50,7 +50,7 @@
       },
       "image": "/images/cs2-wingman.png",
       "start": "2026-06-12T10:15",
-      "durationMin": 240,
+      "durationMin": 255,
       "type": "double",
       "double": {
         "w": [
@@ -1338,7 +1338,7 @@
     }
   ],
   "unseated": [],
-  "eventStart": "2026-06-12T15:00",
+  "eventStart": "2026-06-12T14:45",
   "eetmomenten": [
     {
       "id": "ontbijt-vr",
