@@ -1825,15 +1825,7 @@
       ]
     },
     {
-      "blocks": [
-        {
-          "id": "bmq9lac5b6wne",
-          "x": 12,
-          "y": 6,
-          "type": "widget",
-          "content": "countdown"
-        }
-      ]
+      "blocks": []
     }
   ]
 }
