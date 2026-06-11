@@ -1762,25 +1762,25 @@
           "id": "bar-i0",
           "type": "image",
           "content": "/images/beamer/broodje.jpg",
-          "x": 7,
+          "x": 6.75,
           "y": 9,
-          "size": 200
+          "size": 424
         },
         {
           "id": "bar-i1",
           "type": "image",
           "content": "/images/beamer/koffie.webp",
-          "x": 12,
+          "x": 17.75,
           "y": 9,
-          "size": 200
+          "size": 392
         },
         {
           "id": "bar-i2",
           "type": "image",
           "content": "/images/beamer/thee.jpg",
-          "x": 17,
+          "x": 12,
           "y": 9,
-          "size": 200
+          "size": 360
         }
       ]
     },
