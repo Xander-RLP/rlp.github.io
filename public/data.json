@@ -381,7 +381,7 @@
             {
               "teams": [
                 {
-                  "name": "Ennio",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -467,7 +467,8 @@
       },
       "dugout": [
         "Sjoerd",
-        "Laszlo"
+        "Laszlo",
+        "Ennio"
       ],
       "entryType": "user"
     },
