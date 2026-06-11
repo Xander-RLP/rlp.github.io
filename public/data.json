@@ -779,36 +779,14 @@
                 }
               ],
               "outs": [
-                {
-                  "r": 3,
-                  "m": 0,
-                  "s": 0
-                },
+                null,
                 null
               ],
               "label": "💀 LB Ronde 1"
             }
           ],
           [],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "outs": [
-                null,
-                null
-              ],
-              "label": "👑 Grand Finals"
-            }
-          ]
+          []
         ]
       },
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2732960/b1e3243662a5911fadc0924feb4b7e6e9e278403.jpg",
