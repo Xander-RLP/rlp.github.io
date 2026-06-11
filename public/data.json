@@ -58,7 +58,7 @@
             {
               "teams": [
                 {
-                  "name": "Ronnie Rifles",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -243,7 +243,10 @@
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
-      }
+      },
+      "dugout": [
+        "Ronnie Rifles"
+      ]
     },
     {
       "id": "league-of-legends",
