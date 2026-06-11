@@ -724,11 +724,19 @@
                 {
                   "name": "",
                   "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                },
                 {
                   "name": "",
                   "score": null
@@ -737,6 +745,19 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
               ]
             }
           ],
@@ -751,6 +772,10 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                null,
+                null
               ]
             }
           ]
