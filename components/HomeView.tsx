@@ -250,17 +250,18 @@ export default function HomeView() {
 
   return (
     <div>
-      {/* game tabs: op mobiel één scrollbare rij, op desktop wrappend */}
-      <div className="mb-5 flex items-center gap-2 overflow-x-auto border-b border-slate-700 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible">
+      {/* game tabs: op mobiel één scrollbare rij, op desktop wrappend —
+          uniforme chips zodat meerdere rijen strak uitlijnen */}
+      <div className="mb-5 flex items-center gap-2 overflow-x-auto border-b border-slate-700 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible">
         {state.games.map((g) => (
           <a
             key={g.id}
             href={`#${g.id}`}
             ref={(el) => { if (el && g.id === game.id) el.scrollIntoView({ inline: "center", block: "nearest" }); }}
-            className={`relative top-px flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-t-md border border-b-0 px-4 py-2 text-xs font-bold uppercase tracking-wide ${
+            className={`flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-md border px-4 py-2 text-xs font-bold uppercase tracking-wide transition-colors ${
               g.id === game.id
-                ? "border-lime-400 bg-slate-950 text-lime-400"
-                : "border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-100"
+                ? "border-lime-400 bg-lime-400/10 text-lime-400"
+                : "border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-500 hover:text-slate-100"
             }`}
           >
             {g.image ? (
@@ -286,7 +287,7 @@ export default function HomeView() {
         {isAdmin && (
           <button
             onClick={() => setAddOpen(true)}
-            className="relative top-px shrink-0 cursor-pointer whitespace-nowrap rounded-t-md border border-b-0 border-dashed border-slate-700 bg-slate-800 px-4 py-2 text-xs font-bold text-lime-400 hover:bg-lime-400/10"
+            className="shrink-0 cursor-pointer whitespace-nowrap rounded-md border border-dashed border-slate-700 bg-slate-800 px-4 py-2 text-xs font-bold text-lime-400 transition-colors hover:border-lime-400/60 hover:bg-lime-400/10"
           >
             + Spel toevoegen
           </button>

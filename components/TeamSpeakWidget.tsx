@@ -90,9 +90,17 @@ export default function TeamSpeakWidget() {
           <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
             De verbindknop opent de TeamSpeak-app. Lukt dat niet? Kopieer het adres hierboven.
           </p>
-          <p className="mt-1.5 border-t border-slate-800 pt-1.5 text-[10px] leading-relaxed text-slate-500">
-            🖥️ Draait op eigen ijzer: een <b className="text-slate-400">UGREEN DXP8800 Plus</b> NAS — 8 bays, dus ruimte zat voor jullie callouts.
-          </p>
+          <div className="mt-1.5 flex items-center gap-2.5 border-t border-slate-800 pt-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/ugreen-nas.webp"
+              alt="UGREEN DXP8800 Plus NAS"
+              className="h-12 w-12 shrink-0 rounded-md border border-slate-700 bg-white object-cover p-0.5"
+            />
+            <p className="text-[10px] leading-relaxed text-slate-500">
+              Draait op eigen ijzer: een <b className="text-slate-400">UGREEN DXP8800 Plus</b> NAS — 8 bays, dus ruimte zat voor jullie callouts.
+            </p>
+          </div>
         </div>
       )}
       {/* groepschat op de pc: WhatsApp opent in de browser of de app */}
