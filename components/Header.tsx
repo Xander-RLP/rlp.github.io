@@ -29,7 +29,7 @@ export default function Header() {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   return (
-    <header className="border-b-2 border-teal-500 bg-gradient-to-r from-teal-950 to-teal-900 px-4 py-2.5 md:flex md:items-center md:justify-between md:gap-5 md:px-7">
+    <header className="relative z-50 border-b-2 border-teal-500 bg-gradient-to-r from-teal-950 to-teal-900 px-4 py-2.5 md:flex md:items-center md:justify-between md:gap-5 md:px-7">
       <div className="flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

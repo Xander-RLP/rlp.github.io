@@ -55,6 +55,7 @@ export type Game = {
   durationMin?: number; // geschatte duur in minuten (kalenderblok), default 120
   image?: string; // pad/URL naar spel-plaatje (automatisch gezocht of zelf ingevoerd)
   emoji?: string; // gekozen emoji als icoon wanneer er geen plaatje (gevonden) is
+  video?: string; // YouTube-videoId met gameplay — voeding voor de Game TV in de sidebar
   store?: {
     name: string;  // launcher/winkel, bijv. "Steam" of "Battle.net"
     url: string;
@@ -102,4 +103,5 @@ export type TournamentState = {
   eetmomenten?: EetMoment[]; // eetmomenten in de schedule-kalender
   teams?: TeamDef[];   // teams met leden (beheer op /teams); leden zijn users
   whatsapp?: string;   // invite-link van de groepschat (chat.whatsapp.com/…)
+  liveStream?: string; // eigen livestream (YouTube/Twitch-URL) — krijgt voorrang in de Game TV
 };

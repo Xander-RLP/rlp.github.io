@@ -80,7 +80,7 @@ export default function SidebarShell({ children }: { children: React.ReactNode }
           pijl naar rechts = paneel open (dichtklappen), naar links = gesloten */}
       <aside
         style={{ top: panelTop }}
-        className={`fixed bottom-0 right-0 z-30 hidden w-80 border-l border-slate-700 bg-slate-900 shadow-2xl shadow-black/40 transition-transform duration-300 ease-in-out lg:block ${
+        className={`fixed bottom-0 right-0 z-30 hidden w-[380px] border-l border-slate-700 bg-slate-900 shadow-2xl shadow-black/40 transition-transform duration-300 ease-in-out lg:block ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

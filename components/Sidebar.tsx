@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { allMatches } from "@/lib/bracket";
+import { allMatches, logoColor } from "@/lib/bracket";
+import { computeLeaderboards } from "@/lib/leaderboard";
 import { COFFEE_URL } from "@/lib/links";
 import { useTournament } from "@/lib/store";
 
@@ -14,24 +15,108 @@ const NEWS = [
 ];
 
 const BAR_COLORS = ["bg-teal-500", "bg-lime-500", "bg-amber-400", "bg-red-500"];
+const MEDALS = ["🥇", "🥈", "🥉"];
 
 export default function Sidebar() {
-  const { state } = useTournament();
+  const { state, isAdmin, updateState } = useTournament();
   const pending = state ? allMatches(state.games).filter((m) => !m.decided).slice(0, 4) : [];
 
+  // Game TV: een eigen livestream wint; anders een nu-lopend toernooi
+  // (volgens het schema), anders gewoon gameplay van een van de games
+  const now = Date.now();
+  const liveGame = state?.games.find((g) => {
+    if (!g.start) return false;
+    const start = new Date(g.start).getTime();
+    return now >= start && now <= start + (g.durationMin ?? 120) * 60000;
+  });
+  const tvGame = liveGame?.video
+    ? liveGame
+    : state?.games
+        .filter((g) => g.video)
+        .sort((a, b) => new Date(a.start ?? 0).getTime() - new Date(b.start ?? 0).getTime())
+        .find((g) => !g.start || new Date(g.start).getTime() + (g.durationMin ?? 120) * 60000 > now)
+      ?? state?.games.find((g) => g.video);
+
+  function tvEmbed(): string | null {
+    const host = typeof window !== "undefined" ? window.location.hostname : "xrlp.github.io";
+    const ls = state?.liveStream;
+    if (ls) {
+      const yt = ls.match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/|youtube\.com\/live\/)([\w-]{11})/)?.[1];
+      if (yt) return `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&mute=1&rel=0`;
+      const tw = ls.match(/twitch\.tv\/(\w+)/)?.[1];
+      if (tw) return `https://player.twitch.tv/?channel=${tw}&parent=${host}&muted=true`;
+    }
+    if (tvGame?.video) {
+      return `https://www.youtube-nocookie.com/embed/${tvGame.video}?mute=1&loop=1&playlist=${tvGame.video}&rel=0`;
+    }
+    return null;
+  }
+
+  function setLiveStream() {
+    const url = prompt(
+      "Livestream-URL (YouTube of Twitch) — krijgt voorrang op de gameplay-video.\nLeeg laten = terug naar Game TV.",
+      state?.liveStream ?? "",
+    )?.trim();
+    if (url == null) return;
+    updateState({ liveStream: url || undefined });
+  }
+
+  const embed = tvEmbed();
+  const top = state
+    ? computeLeaderboards(state).personal.filter((e) => e.wins > 0).slice(0, 3)
+    : [];
+
   return (
-    <aside className="flex h-full flex-col gap-6 px-4.5 py-5 lg:min-w-[280px]">
+    <aside className="flex h-full flex-col gap-6 px-4.5 py-5">
+      {/* Game TV / live match */}
+      {embed && (
+        <section className="news-in">
+          <h2 className="mb-2 flex items-center gap-2 text-[13px] font-extrabold uppercase tracking-wide">
+            {state?.liveStream || liveGame ? (
+              <>
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                </span>
+                {state?.liveStream ? "Live" : `Live: ${liveGame!.name}`}
+              </>
+            ) : (
+              <>🎬 Game TV — {tvGame?.name}</>
+            )}
+            {isAdmin && (
+              <button onClick={setLiveStream} title="Livestream instellen" className="cursor-pointer text-[11px] text-slate-500 hover:text-lime-400">✏️</button>
+            )}
+          </h2>
+          <iframe
+            src={embed}
+            title="RLP26 Game TV"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            className="aspect-video w-full rounded-lg border border-slate-700"
+          />
+          {!state?.liveStream && !liveGame && tvGame?.start && (
+            <p className="mt-1 text-[10px] text-slate-500">
+              Nog geen eigen live match — alvast in de sfeer met {tvGame.name}.
+            </p>
+          )}
+        </section>
+      )}
+
       <section>
         {/* op mobiel is de kopbalk van SidebarShell al de titel */}
         <h2 className="mb-3 hidden text-[13px] font-extrabold uppercase tracking-wide lg:block">Tournament News</h2>
         {NEWS.map((item, i) => (
-          <div key={i} className={`mb-2 rounded-r border-l-[3px] ${item.accent} bg-slate-800 px-2.5 py-2 text-[11px] leading-relaxed text-slate-400`}>
+          <div
+            key={i}
+            style={{ animationDelay: `${i * 110}ms` }}
+            className={`news-in mb-2 rounded-r border-l-[3px] ${item.accent} bg-slate-800 px-2.5 py-2 text-[11px] leading-relaxed text-slate-400 transition-all duration-200 hover:translate-x-0.5 hover:bg-slate-700/70`}
+          >
             {item.html}
           </div>
         ))}
       </section>
 
-      <section>
+      <section className="news-in" style={{ animationDelay: "250ms" }}>
         <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">Upcoming Matches</h2>
         <div className="rounded-t border border-b-0 border-slate-700 bg-slate-800 py-1 text-center text-[10px] font-bold uppercase tracking-wide text-slate-400">
           Match
@@ -43,7 +128,12 @@ export default function Sidebar() {
             </div>
           ) : (
             pending.map((m, i) => (
-              <div key={i} className="grid grid-cols-[4px_1fr_auto_1fr] items-center gap-2 border-t border-slate-700 bg-slate-800 py-2 pr-2.5 first:border-t-0">
+              <Link
+                key={i}
+                href={`/tournaments#${m.game.id}`}
+                title={`Naar het ${m.game.name}-toernooi`}
+                className="grid grid-cols-[4px_1fr_auto_1fr] items-center gap-2 border-t border-slate-700 bg-slate-800 py-2 pr-2.5 transition-colors first:border-t-0 hover:bg-slate-700/70"
+              >
                 <div className={`h-full min-h-9 w-1 ${BAR_COLORS[i % BAR_COLORS.length]}`} />
                 <div className="min-w-0">
                   <div className="truncate text-xs font-bold">{m.a}</div>
@@ -56,20 +146,43 @@ export default function Sidebar() {
                 <div className="min-w-0 text-right">
                   <div className="truncate text-xs font-bold">{m.b}</div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </div>
       </section>
 
-      <section>
+      <section className="news-in" style={{ animationDelay: "350ms" }}>
         <h2 className="mb-3 text-[13px] font-extrabold uppercase tracking-wide">Top Players</h2>
-        <div className="rounded border border-dashed border-slate-700 bg-slate-800 p-3 text-center text-[11px] italic text-slate-400">
-          Nog geen inschrijvingen — de ranking verschijnt zodra het toernooi loopt.
-        </div>
+        {top.length === 0 ? (
+          <Link href="/leaderboard" className="block rounded border border-dashed border-slate-700 bg-slate-800 p-3 text-center text-[11px] italic text-slate-400 transition-colors hover:border-lime-400/60 hover:text-slate-300">
+            Nog geen compo&apos;s beslist — bekijk het leaderboard →
+          </Link>
+        ) : (
+          <div className="overflow-hidden rounded border border-slate-700">
+            {top.map((e, i) => (
+              <Link
+                key={e.name}
+                href="/leaderboard"
+                title="Naar het leaderboard"
+                className="flex items-center gap-2.5 border-t border-slate-700 bg-slate-800 px-2.5 py-2 transition-colors first:border-t-0 hover:bg-slate-700/70"
+              >
+                <span className="w-5 text-center text-sm">{MEDALS[i]}</span>
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-extrabold text-white" style={{ background: logoColor(e.name) }}>
+                  {e.name.slice(0, 2).toUpperCase()}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-xs font-bold">{e.name}</span>
+                <span className="text-xs font-extrabold text-lime-400">{e.wins}</span>
+              </Link>
+            ))}
+            <Link href="/leaderboard" className="block border-t border-slate-700 bg-slate-800/60 py-1.5 text-center text-[10px] font-bold uppercase tracking-wide text-slate-400 transition-colors hover:text-lime-400">
+              Volledig leaderboard →
+            </Link>
+          </div>
+        )}
       </section>
 
-      <section>
+      <section className="news-in" style={{ animationDelay: "450ms" }}>
         <h2 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide">🎵 LAN Playlist</h2>
         <iframe
           src="https://open.spotify.com/embed/playlist/4drxBWX7uZiXWBfuikt30S?theme=0"
