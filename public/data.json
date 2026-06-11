@@ -731,14 +731,13 @@
     {
       "id": "O1",
       "side": "bottom",
-      "name": ""
+      "name": "Leon"
     }
   ],
   "unseated": [
     "Bo",
     "Indy",
-    "Jean",
-    "Leon"
+    "Jean"
   ],
   "eventStart": "2026-06-12T10:00"
 }
