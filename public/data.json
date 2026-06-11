@@ -2967,6 +2967,14 @@
           "type": "text",
           "content": "💀",
           "size": 120
+        },
+        {
+          "id": "bmq9r2zna6a05",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "🍺",
+          "size": 96
         }
       ]
     },
