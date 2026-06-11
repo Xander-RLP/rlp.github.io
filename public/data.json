@@ -1813,7 +1813,16 @@
       ]
     },
     {
-      "blocks": []
+      "blocks": [
+        {
+          "id": "bmq9l8mmjtdf",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "Tekst…",
+          "size": 40
+        }
+      ]
     }
   ]
 }
