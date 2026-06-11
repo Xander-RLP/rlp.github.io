@@ -1617,5 +1617,44 @@
         "Bo"
       ]
     }
+  ],
+  "beamer": [
+    {
+      "emoji": "🚿",
+      "title": "Douchen",
+      "text": "Ochtend: 10:00 – 11:30\nAvond: 20:00 – 21:30",
+      "images": [
+        "/images/beamer/douchen.jpg"
+      ]
+    },
+    {
+      "emoji": "🥪",
+      "title": "Zelf service",
+      "text": "Pak het lekker zelf — bestellen kan bij de bar.",
+      "images": [
+        "/images/beamer/zelfservice.jpg",
+        "/images/beamer/bestel.png"
+      ]
+    },
+    {
+      "emoji": "🍳",
+      "title": "Vers van de bar",
+      "text": "Broodje spek & ei · Broodje knakworst\nKoffie · Thee · Verse jus d'orange",
+      "images": [
+        "/images/beamer/broodje.jpg",
+        "/images/beamer/koffie.webp",
+        "/images/beamer/thee.jpg"
+      ]
+    },
+    {
+      "emoji": "😴",
+      "title": "Rustruimte",
+      "text": "Even bijkomen mag altijd — slaap zacht, game hard."
+    },
+    {
+      "emoji": "📢",
+      "title": "Nieuwe slide",
+      "text": ""
+    }
   ]
 }
