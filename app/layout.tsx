@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import TeamSpeakWidget from "@/components/TeamSpeakWidget";
 
 export const metadata: Metadata = {
-  title: "RLP26 — Tournament Brackets",
+  title: "RLP26 — Ronnie LAN Party",
   description: "Brackets, schedule en teams van de Ronnie LAN Party 2026",
 };
 

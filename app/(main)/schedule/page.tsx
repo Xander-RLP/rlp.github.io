@@ -178,8 +178,10 @@ export default function SchedulePage() {
     return segs.map(([s, e]) => ({ from: new Date(s), to: new Date(e) }));
   }
 
-  // slepen (tijd verschuiven) en aan de onderrand trekken (duur aanpassen)
-  function beginDrag(e: React.PointerEvent, ev: CalEvent, mode: "move" | "resize") {
+  // slepen (tijd verschuiven) en aan de onderrand trekken (duur aanpassen).
+  // grabbedFrom = de dag van het vastgepakte deel-blok, zodat slepen aan een
+  // vervolgstuk (volgende dag) het toernooi niet een dag laat verspringen.
+  function beginDrag(e: React.PointerEvent, ev: CalEvent, mode: "move" | "resize", grabbedFrom: Date) {
     if (!isAdmin || e.button !== 0) return;
     e.preventDefault();
     e.stopPropagation();
@@ -187,38 +189,43 @@ export default function SchedulePage() {
     const startY = e.clientY;
     const origStart = ev.start;
     const origDur = (ev.end.getTime() - ev.start.getTime()) / 60000;
-    // binnen het getoonde uurbereik blijven
-    const dayBase = new Date(origStart);
-    dayBase.setHours(0, 0, 0, 0);
+    const origDayBase = new Date(origStart);
+    origDayBase.setHours(0, 0, 0, 0);
+    const grabbedBase = new Date(grabbedFrom);
+    grabbedBase.setHours(0, 0, 0, 0);
     let changed = false;
     let lastStart = origStart;
     let lastDur = origDur;
-    // dagkolommen vastleggen zodat horizontaal slepen het event naar een andere dag verplaatst
-    const cols = [...dayRefs.current.values()].map(({ el, base }) => {
-      const r = el.getBoundingClientRect();
-      return { left: r.left, right: r.right, base };
-    });
+    const snap = (min: number) => Math.round(min / SNAP_MIN) * SNAP_MIN;
+    // dagkolommen vastleggen: horizontaal slepen = naar een andere dag
+    const cols = [...dayRefs.current.values()]
+      .filter(({ el }) => el.isConnected)
+      .map(({ el, base }) => {
+        const r = el.getBoundingClientRect();
+        return { left: r.left, right: r.right, top: r.top, base };
+      });
 
     const onMove = (me: PointerEvent) => {
-      const rawMin = ((me.clientY - startY) / HOUR_PX) * 60;
-      const deltaMin = Math.round(rawMin / SNAP_MIN) * SNAP_MIN;
-      let base = dayBase.getTime();
+      const deltaMin = snap(((me.clientY - startY) / HOUR_PX) * 60);
+      const col = cols.find((c) => me.clientX >= c.left && me.clientX <= c.right);
       if (mode === "move") {
-        const col = cols.find((c) => me.clientX >= c.left && me.clientX <= c.right);
-        if (col) base = col.base;
-      }
-      const railStart = base + minHour * 3600000;
-      const railEnd = base + maxHour * 3600000;
-      if (mode === "move") {
-        const tijdInDag = origStart.getTime() - dayBase.getTime();
-        let ms = base + tijdInDag + deltaMin * 60000;
-        // start blijft binnen het zichtbare venster; lange events mogen doorlopen
-        ms = Math.max(railStart, Math.min(railEnd - Math.min(origDur, 60) * 60000, ms));
+        // dag-verschuiving t.o.v. de dag van het vastgepakte stuk
+        const shift = col ? col.base - grabbedBase.getTime() : 0;
+        const base = origDayBase.getTime() + shift;
+        let ms = origStart.getTime() + shift + deltaMin * 60000;
+        ms = Math.max(base + minHour * 3600000, Math.min(base + maxHour * 3600000 - Math.min(origDur, 60) * 60000, ms));
         lastStart = new Date(ms);
         lastDur = origDur;
       } else {
-        // tot 48 uur — een toernooi mag de nacht en de volgende dag in doorlopen
-        lastDur = Math.max(MIN_DURATION, Math.min(48 * 60, origDur + deltaMin));
+        let nieuweDur: number;
+        if (col) {
+          // eindtijd = de plek die je aanwijst (dag + tijd onder de muis)
+          const eindMin = snap(((me.clientY - col.top) / HOUR_PX) * 60) + minHour * 60;
+          nieuweDur = (col.base + eindMin * 60000 - origStart.getTime()) / 60000;
+        } else {
+          nieuweDur = origDur + deltaMin;
+        }
+        lastDur = Math.max(MIN_DURATION, Math.min(48 * 60, nieuweDur));
         lastStart = origStart;
       }
       changed = lastStart.getTime() !== origStart.getTime() || lastDur !== origDur;
@@ -265,12 +272,12 @@ export default function SchedulePage() {
     };
     const adminDrag = isAdmin
       ? {
-          onPointerDown: (e: React.PointerEvent) => beginDrag(e, ev, "move"),
+          onPointerDown: (e: React.PointerEvent) => beginDrag(e, ev, "move", from),
         }
       : {};
     const resizeHandle = isAdmin && !ev.special && isTail && (
       <div
-        onPointerDown={(e) => beginDrag(e, ev, "resize")}
+        onPointerDown={(e) => beginDrag(e, ev, "resize", from)}
         title="Trek om de duur aan te passen"
         className="absolute inset-x-0 bottom-0 flex h-3 cursor-ns-resize items-end justify-center"
       >
