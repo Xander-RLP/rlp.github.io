@@ -1903,18 +1903,6 @@
     {
       "blocks": [
         {
-          "id": "p11",
-          "type": "image",
-          "content": "/images/beamer/pptx/image5.webp",
-          "x": 12,
-          "y": 0,
-          "size": 888
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
           "id": "p12",
           "type": "image",
           "content": "/images/beamer/pptx/image9.webp",
