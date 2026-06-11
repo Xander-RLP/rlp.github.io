@@ -340,6 +340,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 1,
+                  "m": 0,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -352,30 +360,14 @@
                   "name": "",
                   "score": null
                 }
-              ]
-            },
-            {
-              "teams": [
+              ],
+              "outs": [
                 {
-                  "name": "",
-                  "score": null
+                  "r": 1,
+                  "m": 0,
+                  "s": 1
                 },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
+                null
               ]
             }
           ],
@@ -390,6 +382,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
+                null
               ]
             },
             {
@@ -402,6 +402,14 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 1
+                },
+                null
               ]
             }
           ],
@@ -416,6 +424,10 @@
                   "name": "",
                   "score": null
                 }
+              ],
+              "outs": [
+                null,
+                null
               ]
             }
           ]
