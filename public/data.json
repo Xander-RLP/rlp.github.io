@@ -1915,18 +1915,6 @@
     {
       "blocks": [
         {
-          "id": "p13",
-          "type": "image",
-          "content": "/images/beamer/pptx/image5.webp",
-          "x": 12,
-          "y": 0,
-          "size": 888
-        }
-      ]
-    },
-    {
-      "blocks": [
-        {
           "id": "p14",
           "type": "image",
           "content": "/images/beamer/pptx/image10.webp",
