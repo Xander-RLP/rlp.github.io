@@ -705,7 +705,11 @@
                 }
               ],
               "next": null,
-              "loserNext": null
+              "loserNext": {
+                "r": 1,
+                "m": 1,
+                "s": 1
+              }
             }
           ],
           [
