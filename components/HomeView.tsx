@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, logoColor, normalizeDouble, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, logoColor, normalizeDouble, slugify, teamCount, wipeBracket, wipeDouble } from "@/lib/bracket";
 import { dugoutNames } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
@@ -127,6 +127,15 @@ export default function HomeView() {
       : host.replace(/^www\./, "");
     const price = prompt("Prijs (leeg = gratis):", game.store?.price ?? "")?.trim() || undefined;
     patchGame({ store: { name: naam, url, ...(price ? { price } : {}) } });
+  }
+
+  // alles leeg, opbouw blijft: spelers komen vanzelf terug in de dugout
+  function wipe() {
+    if (!confirm(
+      `Bracket van "${game.name}" wipen?\n\nAlle namen en scores worden gewist; de opbouw (rondes, slots, lijnen en labels) blijft staan. De spelers komen terug in de dugout.`
+    )) return;
+    if (game.type === "double") patchGame({ double: wipeDouble(game.double) });
+    else patchGame({ bracket: wipeBracket(game.bracket) });
   }
 
   // zelf een icoon kiezen: een emoji, of een URL/pad naar een afbeelding
@@ -449,6 +458,15 @@ export default function HomeView() {
             >
               {storeBusy ? "Zoeken…" : "🛒 Store zoeken"}
             </button>
+            {game.type !== "race" && (
+              <button
+                onClick={wipe}
+                title="Alle namen en scores wissen; rondes, slots, lijnen en labels blijven staan"
+                className="cursor-pointer rounded border border-slate-700 px-2 py-1 text-xs text-slate-400 hover:border-red-500 hover:text-red-500"
+              >
+                🧹 Wipe bracket
+              </button>
+            )}
           </div>
         </div>
       )}

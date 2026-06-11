@@ -448,6 +448,20 @@ export function addLosersBracket(bracket: Bracket): Bracket | { error: string } 
   return doubleToBracket(d);
 }
 
+// bracket wipen: alle namen en scores leeg, maar de opbouw (rondes, slots,
+// lijnen en labels) blijft staan — de spelers komen vanzelf terug in de dugout
+export function wipeBracket(bracket: Bracket): Bracket {
+  const b: Bracket = JSON.parse(JSON.stringify(bracket));
+  b.rounds.forEach((round) => round.forEach((m) => m.teams.forEach((t) => { t.name = ""; t.score = null; })));
+  return b;
+}
+
+export function wipeDouble(double: DoubleBracket | LegacyDoubleBracket | undefined): DoubleBracket {
+  const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(double)));
+  [...d.w.flat(), ...d.l.flat(), d.gf].forEach((m) => m.teams.forEach((t) => { t.name = ""; t.score = null; }));
+  return d;
+}
+
 export function roundTitle(r: number, totalRounds: number, teams: number): string {
   const fromEnd = totalRounds - r;
   const ro = teams / 2 ** r;

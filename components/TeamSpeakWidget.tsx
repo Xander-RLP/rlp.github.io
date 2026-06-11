@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTournament } from "@/lib/store";
 
 const TS_HOST = "ts.impulzgaming.com";
@@ -13,9 +13,17 @@ export default function TeamSpeakWidget() {
   const [open, setOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [imgOk, setImgOk] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // schuif opzij (met animatie) wanneer het Tournament News-paneel uitstaat
+  useEffect(() => {
+    const onSidebar = (e: Event) => setSidebarOpen(!!(e as CustomEvent<{ open: boolean }>).detail?.open);
+    window.addEventListener("rlp-sidebar", onSidebar);
+    return () => window.removeEventListener("rlp-sidebar", onSidebar);
+  }, []);
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
+    <div className={`fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 transition-transform duration-300 ease-in-out ${sidebarOpen ? "lg:-translate-x-[380px]" : ""}`}>
       {open && (
         <div className="w-72 rounded-lg border border-slate-700 border-t-2 border-t-lime-400 bg-slate-900 p-4 shadow-xl shadow-black/40">
           <div className="mb-1 text-xs font-extrabold uppercase tracking-wide text-slate-100">RLP26 TeamSpeak</div>
@@ -85,10 +93,10 @@ export default function TeamSpeakWidget() {
       <button
         onClick={() => setOpen((v) => !v)}
         title="TeamSpeak"
-        className="flex cursor-pointer items-center gap-2 rounded-full border border-lime-400/60 bg-slate-900/95 px-4 py-2.5 text-xs font-extrabold uppercase tracking-wide text-lime-400 shadow-lg shadow-black/40 backdrop-blur hover:bg-lime-400/10"
+        className="flex cursor-pointer items-center gap-2.5 rounded-full border-2 border-lime-400/60 bg-slate-900/95 px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-lime-400 shadow-lg shadow-black/40 backdrop-blur hover:bg-lime-400/10"
       >
         {/* simpel headset-icoon */}
-        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-lime-400" strokeWidth="2.2" strokeLinecap="round">
+        <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-lime-400" strokeWidth="2.2" strokeLinecap="round">
           <path d="M4 13a8 8 0 1 1 16 0" />
           <rect x="3" y="13" width="4" height="6" rx="1.5" />
           <rect x="17" y="13" width="4" height="6" rx="1.5" />
