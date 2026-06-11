@@ -428,6 +428,10 @@ export function addLosersBracket(bracket: Bracket): Bracket | { error: string } 
   const b = materializeLinks(bracket);
   const rs = b.rounds;
 
+  // lege rondes aan het eind opruimen: de grand finals komt in een eigen
+  // kolom ná alles, en mag nooit vóór een lege restkolom belanden
+  while (rs.length > 1 && rs[rs.length - 1].length === 0) rs.pop();
+
   // de finale van de winners-kant: laatste wedstrijd zonder winnaar-lijn
   let finaleRef: { r: number; m: number } | null = null;
   for (let r = rs.length - 1; r >= 0 && !finaleRef; r--) {
@@ -475,13 +479,15 @@ export function addLosersBracket(bracket: Bracket): Bracket | { error: string } 
     ready = rest;
     if (pairs.length === 0) continue;
     lbRonde++;
-    ensureRound(c);
     for (const [a, z] of pairs) {
-      const m = rs[c].length;
-      rs[c].push({ ...emptyMatch(), outs: [null, null], label: `💀 LB Ronde ${lbRonde}` });
-      setOut(a, { r: c, m, s: 0 });
-      setOut(z, { r: c, m, s: 1 });
-      ready.push({ r: c, m, rank: 0, col: c, carrier: true });
+      // direct ná de latere van de twee bronnen: geen lege tussenkolommen
+      const col = Math.max(a.r, z.r) + 1;
+      ensureRound(col);
+      const m = rs[col].length;
+      rs[col].push({ ...emptyMatch(), outs: [null, null], label: `💀 LB Ronde ${lbRonde}` });
+      setOut(a, { r: col, m, s: 0 });
+      setOut(z, { r: col, m, s: 1 });
+      ready.push({ r: col, m, rank: 0, col, carrier: true });
     }
   }
   const survivor = ready[0];
