@@ -373,7 +373,7 @@
                   "score": null
                 },
                 {
-                  "name": "Ronnie",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -468,7 +468,8 @@
       "dugout": [
         "Sjoerd",
         "Laszlo",
-        "Ennio"
+        "Ennio",
+        "Ronnie"
       ],
       "entryType": "user"
     },
