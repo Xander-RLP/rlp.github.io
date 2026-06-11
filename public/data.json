@@ -266,7 +266,7 @@
                   "score": null
                 },
                 {
-                  "name": "Xander",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -358,7 +358,8 @@
         "url": "https://www.leagueoflegends.com/en-us/download/"
       },
       "dugout": [
-        "Ennio"
+        "Ennio",
+        "Xander"
       ]
     },
     {
