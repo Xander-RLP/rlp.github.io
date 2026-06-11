@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BEAMER_FOTOS } from "@/lib/beamer-fotos";
-import { allMatches, logoColor } from "@/lib/bracket";
+import { allMatches, gameStatus, logoColor } from "@/lib/bracket";
 import { computeLeaderboards } from "@/lib/leaderboard";
 import { useTournament } from "@/lib/store";
 import type { BeamerBlock, BeamerSlide } from "@/lib/types";
@@ -21,6 +21,12 @@ const WIDGETS: Record<string, string> = {
   vandaag: "📅 Programma van vandaag",
   matches: "🆚 Upcoming matches",
   leaderboard: "🏆 Leaderboard",
+  countdown: "⏳ Countdown naar het volgende",
+  klok: "🕐 Grote klok",
+  eten: "🍽️ Eetmomenten van vandaag",
+  kampioenen: "👑 Kampioenen",
+  teams: "👥 Teams & leden",
+  gametv: "🎬 Game TV (video)",
 };
 
 // vaste emoji-library: de admin kiest, niet zoeken
@@ -72,6 +78,45 @@ function naarBlokken(s: BeamerSlide, si: number): BeamerSlide {
 }
 
 const uid = () => `b${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
+
+function GroteKlok() {
+  const [nu, setNu] = useState(() => new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNu(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="text-center">
+      <div className="font-mono text-[10rem] font-bold leading-none tabular-nums">
+        {nu.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}
+      </div>
+      <div className="mt-2 text-2xl uppercase tracking-widest text-slate-400">
+        {nu.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })}
+      </div>
+    </div>
+  );
+}
+
+function CountdownWidget({ doel, label, emoji }: { doel: Date; label: string; emoji: string }) {
+  const [nu, setNu] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNu(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const rest = Math.max(0, doel.getTime() - nu);
+  const u = Math.floor(rest / 3600000);
+  const m = Math.floor((rest % 3600000) / 60000);
+  const sec = Math.floor((rest % 60000) / 1000);
+  return (
+    <div className="text-center">
+      <div className="mb-3 text-3xl uppercase tracking-widest text-slate-400">Straks</div>
+      <div className="mb-6 text-6xl font-extrabold">{emoji} {label}</div>
+      <div className="font-mono text-8xl font-bold tabular-nums text-lime-400">
+        {u > 0 ? `${u}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`}
+      </div>
+    </div>
+  );
+}
 
 function Klok() {
   const [nu, setNu] = useState(() => new Date());
@@ -371,6 +416,108 @@ export default function BeamerPage() {
             ))}
           </div>
         </div>
+      );
+    }
+    if (naam === "klok") return <GroteKlok />;
+    if (naam === "countdown") {
+      const nu = Date.now();
+      const items = [
+        ...state!.games.filter((g) => g.start && new Date(g.start).getTime() > nu)
+          .map((g) => ({ tijd: new Date(g.start!), label: g.name, emoji: g.emoji ?? "🎮" })),
+        ...(state!.eetmomenten ?? []).filter((e) => new Date(e.start).getTime() > nu)
+          .map((e) => ({ tijd: new Date(e.start), label: e.title, emoji: e.emoji ?? "🍽️" })),
+      ].sort((a, b) => +a.tijd - +b.tijd);
+      const eerst = items[0];
+      return eerst
+        ? <CountdownWidget doel={eerst.tijd} label={eerst.label} emoji={eerst.emoji} />
+        : <p className="text-4xl text-slate-300">Geen programma meer — vrij spelen! 🎉</p>;
+    }
+    if (naam === "eten") {
+      const vandaagEten = (state!.eetmomenten ?? [])
+        .filter((e) => new Date(e.start).toDateString() === new Date().toDateString())
+        .sort((a, b) => +new Date(a.start) - +new Date(b.start));
+      return (
+        <div>
+          <h2 className="mb-8 text-6xl font-extrabold uppercase tracking-wide">🍽️ Eten vandaag</h2>
+          {vandaagEten.length === 0 ? (
+            <p className="text-4xl text-slate-300">Geen eetmomenten gepland — snacks zat!</p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {vandaagEten.map((e, i) => (
+                <div key={i} className="flex items-center gap-6 text-4xl">
+                  <span className="w-32 font-mono font-bold tabular-nums text-lime-400">
+                    {new Date(e.start).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                  <span>{e.emoji ?? "🍽️"}</span>
+                  <span className="font-semibold">{e.title}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+    if (naam === "kampioenen") {
+      const winnaars = state!.games
+        .map((g) => ({ g, st: gameStatus(g) }))
+        .filter((x) => x.st.champ);
+      return (
+        <div>
+          <h2 className="mb-8 text-6xl font-extrabold uppercase tracking-wide">👑 Kampioenen</h2>
+          {winnaars.length === 0 ? (
+            <p className="text-4xl text-slate-300">Nog geen kampioenen — de strijd loopt!</p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {winnaars.map(({ g, st }, i) => (
+                <div key={i} className="flex items-center gap-6 text-4xl">
+                  <span className="w-72 truncate text-2xl text-slate-400">{g.name}</span>
+                  <span className="font-bold text-amber-300">{st.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+    if (naam === "teams") {
+      return (
+        <div>
+          <h2 className="mb-8 text-6xl font-extrabold uppercase tracking-wide">👥 Teams</h2>
+          <div className="flex max-w-4xl flex-wrap justify-center gap-5">
+            {(state!.teams ?? []).map((t) => (
+              <div key={t.name} className="rounded-xl border border-slate-700 bg-slate-900/70 px-6 py-4 text-center">
+                <div className="mb-1 text-3xl font-extrabold">{t.name}</div>
+                <div className="text-2xl text-slate-400">{t.members.join(" · ")}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    if (naam === "gametv") {
+      const nu = Date.now();
+      const ls = state!.liveStream;
+      const yt = ls?.match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/|youtube\.com\/live\/)([\w-]{11})/)?.[1];
+      const tvGame = state!.games
+        .filter((g) => g.video)
+        .sort((a, b) => new Date(a.start ?? 0).getTime() - new Date(b.start ?? 0).getTime())
+        .find((g) => !g.start || new Date(g.start).getTime() + (g.durationMin ?? 120) * 60000 > nu)
+        ?? state!.games.find((g) => g.video);
+      const src = yt
+        ? `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&mute=1&rel=0`
+        : tvGame?.video
+        ? `https://www.youtube-nocookie.com/embed/${tvGame.video}?mute=1&loop=1&playlist=${tvGame.video}&rel=0`
+        : null;
+      return src ? (
+        <iframe
+          src={src}
+          title="Game TV"
+          allow="autoplay; encrypted-media; fullscreen"
+          allowFullScreen
+          className="aspect-video w-[56rem] rounded-xl border border-slate-700"
+        />
+      ) : (
+        <p className="text-3xl text-slate-400">Geen video beschikbaar</p>
       );
     }
     return <p className="text-2xl text-red-400">onbekende widget: {naam}</p>;
