@@ -385,7 +385,7 @@
                   "score": null
                 },
                 {
-                  "name": "Xander",
+                  "name": "",
                   "score": null
                 }
               ]
@@ -469,7 +469,8 @@
         "Sjoerd",
         "Laszlo",
         "Ennio",
-        "Ronnie"
+        "Ronnie",
+        "Xander"
       ],
       "entryType": "user"
     },
