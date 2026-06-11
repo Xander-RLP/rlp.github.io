@@ -54,57 +54,6 @@
               ],
               "next": {
                 "r": 1,
-                "m": 1,
-                "s": 0
-              }
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 1,
-                "m": 1,
-                "s": 1
-              }
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 1,
-                "m": 2,
-                "s": 0
-              }
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 1,
                 "m": 2,
                 "s": 1
               }
