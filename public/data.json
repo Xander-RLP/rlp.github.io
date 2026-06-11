@@ -59,30 +59,7 @@
                 }
               ],
               "next": null,
-              "loserNext": {
-                "r": 4,
-                "m": 0,
-                "s": 1
-              }
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ],
-              "next": {
-                "r": 4,
-                "m": 0,
-                "s": 0
-              }
+              "loserNext": null
             }
           ],
           [
@@ -100,6 +77,7 @@
               "next": null
             }
           ],
+          [],
           []
         ]
       },
