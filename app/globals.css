@@ -66,6 +66,17 @@ body {
   100% { opacity: 0; transform: translateY(70vh) rotate(340deg); }
 }
 
+/* voortgang tot de volgende beamer-slide */
+.beamer-voortgang {
+  animation-name: beamer-voortgang;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes beamer-voortgang {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 /* sidebar-secties en nieuwsitems schuiven gestaffeld binnen */
 .news-in {
   animation: news-in 0.5s ease-out both;

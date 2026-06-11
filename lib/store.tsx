@@ -89,11 +89,17 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
     return JSON.parse(fromBase64(body.content)) as TournamentState;
   }, []);
 
+  // alleen een nieuwe state zetten als de data echt veranderd is — anders
+  // resetten timers (zoals de beamer-rotatie) bij elke poll voor niets
+  const zetAlsAnders = (data: TournamentState) => {
+    if (JSON.stringify(stateRef.current) !== JSON.stringify(data)) setState(data);
+  };
+
   const load = useCallback(async () => {
     const tok = ghTokenRef.current;
     if (tok) {
       try {
-        setState(await loadFromGitHub(tok));
+        zetAlsAnders(await loadFromGitHub(tok));
         return;
       } catch { /* val terug op het statische bestand */ }
     }
@@ -101,7 +107,7 @@ export function TournamentProvider({ children }: { children: React.ReactNode }) 
       const res = await fetch("/data.json", { cache: "no-store" });
       const data = (await res.json()) as TournamentState;
       if (!Array.isArray(data.games)) throw new Error("ongeldige data");
-      setState(data);
+      zetAlsAnders(data);
     } catch {
       // NOOIT terugvallen op een lege-maar-werkende staat: een mislukte load
       // mag niet via een latere save de echte data kunnen overschrijven.

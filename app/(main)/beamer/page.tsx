@@ -12,7 +12,7 @@ import type { BeamerBlock, BeamerSlide } from "@/lib/types";
 // (programma van vandaag, upcoming matches, leaderboard). De admin bewerkt
 // alles direct op de slide; opslaan gaat vanzelf.
 
-const SLIDE_MS = 12000;
+const STANDAARD_SECONDEN = 12;
 const POLL_MS = 15000;
 const COLS = 24;
 const ROWS = 14;
@@ -165,6 +165,9 @@ export default function BeamerPage() {
   );
   const totaal = Math.max(1, slides.length);
   const huidige = slides[idx % totaal];
+  const slidesRef = useRef(slides);
+  slidesRef.current = slides;
+  const slideMs = Math.max(3, state?.beamerInterval ?? STANDAARD_SECONDEN) * 1000;
 
   // na 5s stilte faden de bedien-elementen weg; beweging haalt ze terug
   useEffect(() => {
@@ -216,15 +219,18 @@ export default function BeamerPage() {
   useEffect(() => {
     if (bezig || bewerkModus || managerOpen || emojiMenu || widgetMenu || fotoMenu || emojiVoorBlok != null) return;
     const t = setInterval(() => setIdx((i) => {
-      // verborgen slides overslaan in de rotatie
-      for (let stap = 1; stap <= totaal; stap++) {
-        const kandidaat = (i + stap) % totaal;
-        if (!slides[kandidaat]?.hidden) return kandidaat;
+      // verborgen slides overslaan; via de ref zodat een data-poll de
+      // timer niet reset (daardoor bleef de beamer bij bezoekers hangen)
+      const sl = slidesRef.current;
+      const n = Math.max(1, sl.length);
+      for (let stap = 1; stap <= n; stap++) {
+        const kandidaat = (i + stap) % n;
+        if (!sl[kandidaat]?.hidden) return kandidaat;
       }
       return i;
-    }), SLIDE_MS);
+    }), slideMs);
     return () => clearInterval(t);
-  }, [totaal, slides, bezig, bewerkModus, managerOpen, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
+  }, [slideMs, bezig, bewerkModus, managerOpen, emojiMenu, widgetMenu, fotoMenu, emojiVoorBlok]);
 
   // presenteren zoals Keynote/PowerPoint: pijltjes, spatie, PageUp/Down
   useEffect(() => {
@@ -810,6 +816,11 @@ export default function BeamerPage() {
         )}
       </div>
 
+      {/* voortgang tot de volgende slide (reset per slide via de key) */}
+      {!bezig && !bewerkModus && !managerOpen && (
+        <div key={`vb-${idx}-${slideMs}`} className="beamer-voortgang absolute bottom-0 left-0 h-[3px] bg-lime-400/60" style={{ animationDuration: `${slideMs}ms` }} />
+      )}
+
       {/* beheerbalk: knoppen boven, slide-navigatie eronder */}
       <div className={`absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 ${fade}`}>
         {isAdmin && (
@@ -822,6 +833,19 @@ export default function BeamerPage() {
           >
             {bewerkModus ? "✏️ bewerkmodus aan" : "✏️ bewerken"}
           </button>
+        )}
+        {isAdmin && (
+          <label className="flex cursor-pointer items-center gap-1 rounded-full border border-slate-700 px-2 py-0.5 text-xs font-bold text-slate-500 hover:border-lime-400">
+            ⏱
+            <select
+              value={state?.beamerInterval ?? STANDAARD_SECONDEN}
+              onChange={(e) => updateState({ beamerInterval: parseInt(e.target.value, 10) })}
+              title="Hoe lang elke slide blijft staan"
+              className="cursor-pointer bg-transparent text-xs focus:outline-none"
+            >
+              {[5, 8, 10, 12, 15, 20, 30, 45, 60].map((n) => <option key={n} value={n} className="bg-slate-900">{n}s</option>)}
+            </select>
+          </label>
         )}
         {isAdmin && (
           <button
