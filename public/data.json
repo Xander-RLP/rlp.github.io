@@ -584,7 +584,7 @@
       },
       "image": "/images/wc3-reforged.png",
       "start": "2026-06-13T19:15",
-      "durationMin": 180,
+      "durationMin": 345,
       "store": {
         "name": "Battle.net",
         "url": "https://warcraft3.blizzard.com/",
