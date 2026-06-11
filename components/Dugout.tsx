@@ -7,14 +7,35 @@ import { getDragPayload, setDragPayload, type DragPayload } from "@/lib/dnd";
 
 type Props = {
   names: string[];   // afgeleid: iedereen die nog niet in het toernooi is ingedeeld
+  placed: string[];  // afgeleid: wie al wél is ingedeeld — admin kan ze nógmaals plaatsen
   isAdmin: boolean;
   entryType: "user" | "team";
   onReturn: (payload: DragPayload) => void; // speler uit het bracket hierheen slepen = slot leegmaken
 };
 
+function Chip({ name, isAdmin, dim }: { name: string; isAdmin: boolean; dim?: boolean }) {
+  return (
+    <span
+      draggable={isAdmin}
+      onDragStart={(e) => setDragPayload(e, { name, from: "dugout" })}
+      className={`flex items-center gap-2 rounded border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-semibold ${
+        isAdmin ? "cursor-grab active:cursor-grabbing" : ""
+      } ${dim ? "opacity-60" : ""}`}
+    >
+      <span
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-extrabold text-white"
+        style={{ background: logoColor(name) }}
+      >
+        {name.slice(0, 2).toUpperCase()}
+      </span>
+      {name}
+    </span>
+  );
+}
+
 // de wachtbank is volledig afgeleid van de centrale users/teams: wie nog niet
 // is ingedeeld staat hier vanzelf, en verdwijnt zodra hij in het bracket staat
-export default function Dugout({ names, isAdmin, entryType, onReturn }: Props) {
+export default function Dugout({ names, placed, isAdmin, entryType, onReturn }: Props) {
   const [over, setOver] = useState(false);
 
   return (
@@ -50,24 +71,17 @@ export default function Dugout({ names, isAdmin, entryType, onReturn }: Props) {
         </p>
       ) : (
         <div className="flex flex-wrap gap-2">
-          {names.map((name) => (
-            <span
-              key={name}
-              draggable={isAdmin}
-              onDragStart={(e) => setDragPayload(e, { name, from: "dugout" })}
-              className={`flex items-center gap-2 rounded border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-semibold ${
-                isAdmin ? "cursor-grab active:cursor-grabbing" : ""
-              }`}
-            >
-              <span
-                className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-extrabold text-white"
-                style={{ background: logoColor(name) }}
-              >
-                {name.slice(0, 2).toUpperCase()}
-              </span>
-              {name}
-            </span>
-          ))}
+          {names.map((name) => <Chip key={name} name={name} isAdmin={isAdmin} />)}
+        </div>
+      )}
+      {isAdmin && placed.length > 0 && (
+        <div className="mt-2.5 border-t border-dashed border-slate-700/60 pt-2">
+          <div className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+            ↩️ Al ingedeeld — sleep om iemand nógmaals te plaatsen (bijv. in een verliezersronde)
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {placed.map((name) => <Chip key={name} name={name} isAdmin dim />)}
+          </div>
         </div>
       )}
     </div>

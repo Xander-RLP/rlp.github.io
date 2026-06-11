@@ -105,6 +105,14 @@ export function dugoutNames(game: Game, state: TournamentState): string[] {
   return pool.filter((n) => !placed.includes(norm(n)));
 }
 
+// pool-leden die al wél in het toernooi staan — de tweede rij in de dugout,
+// waaruit de admin iemand nógmaals kan plaatsen (bijv. in een verliezersbracket)
+export function placedPoolNames(game: Game, state: TournamentState): string[] {
+  const pool = game.entryType === "team" ? (state.teams ?? []).map((t) => t.name) : allUsers(state);
+  const placed = placedNames(game).map(norm);
+  return pool.filter((n) => placed.includes(norm(n)));
+}
+
 // op welke stoel zit deze user (of null)?
 export function seatOf(state: TournamentState, name: string): string | null {
   return (state.seats ?? []).find((s) => s.name && norm(s.name) === norm(name))?.id ?? null;

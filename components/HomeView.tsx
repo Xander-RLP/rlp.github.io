@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BRACKET_SIZES, doubleToBracket, emptyBracket, emptyDouble, entryCount, gameInitials, logoColor, normalizeDouble, slugify, teamCount, wipeBracket, wipeDouble } from "@/lib/bracket";
-import { dugoutNames } from "@/lib/users";
+import { dugoutNames, placedPoolNames } from "@/lib/users";
 import type { DragPayload } from "@/lib/dnd";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
@@ -368,6 +368,7 @@ export default function HomeView() {
       {game.type !== "race" && (
         <Dugout
           names={dugoutNames(game, state)}
+          placed={placedPoolNames(game, state)}
           isAdmin={isAdmin}
           entryType={game.entryType === "team" ? "team" : "user"}
           onReturn={returnToDugout}

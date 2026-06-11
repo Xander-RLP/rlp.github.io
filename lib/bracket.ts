@@ -418,34 +418,82 @@ export function doubleToBracket(double: DoubleBracket | LegacyDoubleBracket | un
   return materializeLinks({ rounds });
 }
 
-// bouwt onder een klassiek knock-out bracket het volledige losers bracket +
-// grand finals (double elimination), met alle winnaar- en verliezer-lijnen.
-// Bestaande wedstrijden, namen en scores blijven staan (zij worden de winners-kant).
+// bouwt onder het huidige bracket een verliezersbracket + grand finals
+// (double elimination), ongeacht de opbouw: elke eindpositie zonder lijn
+// (nummer 2, 3, … van een wedstrijd) valt erin. Werkt dus ook met eigen
+// rondes, velden van 3+ spelers en aantallen die geen macht van 2 zijn.
+// Bestaande wedstrijden, namen, scores en lijnen blijven staan; op een
+// klassieke knock-out komt er exact het klassieke double elimination uit.
 export function addLosersBracket(bracket: Bracket): Bracket | { error: string } {
-  const rs = bracket.rounds;
-  const n = (rs[0]?.length ?? 0) * 2;
-  const isPow2 = n >= 4 && (n & (n - 1)) === 0;
-  const classic = isPow2 && rs.length === Math.log2(n)
-    && rs.every((round, i) => round.length === n / 2 ** (i + 1))
-    && rs.every((round) => round.every((m) => m.teams.length === 2));
-  if (!classic) {
-    return {
-      error:
-        "Verliezersbracket genereren werkt vanaf een standaard knock-out (4/8/16/32 deelnemers, halverende rondes). " +
-        "Zet eerst de winners-kant op via 'Snel opzetten' of bouw hem klassiek op.",
-    };
+  const b = materializeLinks(bracket);
+  const rs = b.rounds;
+
+  // de finale van de winners-kant: laatste wedstrijd zonder winnaar-lijn
+  let finaleRef: { r: number; m: number } | null = null;
+  for (let r = rs.length - 1; r >= 0 && !finaleRef; r--) {
+    for (let m = 0; m < rs[r].length; m++) {
+      if (!outsOf(b, r, m)[0]) { finaleRef = { r, m }; break; }
+    }
   }
-  const d = emptyDouble(n);
-  rs.forEach((round, r) =>
-    round.forEach((m, i) => {
-      const copy: Match = JSON.parse(JSON.stringify(m));
-      delete copy.next; // doubleToBracket legt alle lijnen opnieuw en expliciet
-      delete copy.loserNext;
-      delete copy.outs;
-      d.w[r][i] = copy;
-    })
-  );
-  return doubleToBracket(d);
+  if (!finaleRef) return { error: "Geen wedstrijden gevonden om een verliezersbracket onder te bouwen." };
+  const finale = finaleRef;
+
+  // instroom: alle eindposities ≥ nummer 2 zonder lijn. Verliezers van WB
+  // ronde r stromen (zoals bij klassiek double elimination) in op kolom 2r
+  type Ref = { r: number; m: number; rank: number; col: number; carrier?: boolean };
+  let pending: Ref[] = [];
+  rs.forEach((round, r) => round.forEach((_, m) => {
+    outsOf(b, r, m).forEach((t, rank) => {
+      if (rank >= 1 && !t) pending.push({ r, m, rank, col: Math.max(1, 2 * r) });
+    });
+  }));
+  if (pending.length === 0) {
+    return { error: "Alle verliezersposities hebben al een lijn — er valt geen verliezersbracket onder te bouwen." };
+  }
+
+  rs.forEach((round, r) => round.forEach((match, m) => {
+    if (!match.label) match.label = finale.r === r && finale.m === m ? "🏆 WB Finale" : `🏆 WB Ronde ${r + 1}`;
+  }));
+
+  const setOut = (ref: Ref, to: SlotRef) => { rs[ref.r][ref.m].outs![ref.rank] = to; };
+  const ensureRound = (c: number) => { while (rs.length <= c) rs.push([]); };
+
+  // per kolom: LB-winnaars van de vorige ronde tegen instromende verliezers
+  // ("major"), wat overblijft onderling ("minor"/intake); bij een oneven
+  // aantal wacht de laatste een kolom
+  let ready: Ref[] = [];
+  let lbRonde = 0;
+  for (let c = 1; pending.length || ready.length > 1; c++) {
+    const carriers = ready.filter((x) => x.carrier);
+    const drops = [...ready.filter((x) => !x.carrier), ...pending.filter((d) => d.col <= c)];
+    pending = pending.filter((d) => d.col > c);
+    const pairs: [Ref, Ref][] = [];
+    const zip = Math.min(carriers.length, drops.length);
+    for (let i = 0; i < zip; i++) pairs.push([carriers[i], drops[i]]);
+    const rest = [...carriers.slice(zip), ...drops.slice(zip)];
+    while (rest.length >= 2) pairs.push([rest.shift()!, rest.shift()!]);
+    ready = rest;
+    if (pairs.length === 0) continue;
+    lbRonde++;
+    ensureRound(c);
+    for (const [a, z] of pairs) {
+      const m = rs[c].length;
+      rs[c].push({ ...emptyMatch(), outs: [null, null], label: `💀 LB Ronde ${lbRonde}` });
+      setOut(a, { r: c, m, s: 0 });
+      setOut(z, { r: c, m, s: 1 });
+      ready.push({ r: c, m, rank: 0, col: c, carrier: true });
+    }
+  }
+  const survivor = ready[0];
+  if (survivor.carrier) rs[survivor.r][survivor.m].label = "💀 LB Finale";
+
+  const gfCol = Math.max(finale.r, survivor.r) + 1;
+  ensureRound(gfCol);
+  const gfM = rs[gfCol].length;
+  rs[gfCol].push({ ...emptyMatch(), outs: [null, null], label: "👑 Grand Finals" });
+  setOut({ ...finale, rank: 0, col: 0 }, { r: gfCol, m: gfM, s: 0 });
+  setOut(survivor, { r: gfCol, m: gfM, s: 1 });
+  return b;
 }
 
 // bracket wipen: alle namen en scores leeg, maar de opbouw (rondes, slots,

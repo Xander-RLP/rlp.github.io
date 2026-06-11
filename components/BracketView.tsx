@@ -212,7 +212,7 @@ export default function BracketView({ game, isAdmin, onUpdate }: Props) {
           {editStructure && (
             <button
               onClick={structAddLosersBracket}
-              title="Bouwt een losers bracket + grand finals onder de huidige knock-out (double elimination)"
+              title="Bouwt een losers bracket + grand finals onder het huidige bracket (double elimination) — werkt met elke opbouw"
               className="cursor-pointer rounded border border-red-400/50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-red-400 hover:bg-red-400/10"
             >
               ➕ Verliezersbracket genereren
