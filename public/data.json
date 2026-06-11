@@ -262,7 +262,7 @@
             {
               "teams": [
                 {
-                  "name": "Ennio",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -356,7 +356,10 @@
       "store": {
         "name": "Riot Games",
         "url": "https://www.leagueoflegends.com/en-us/download/"
-      }
+      },
+      "dugout": [
+        "Ennio"
+      ]
     },
     {
       "id": "rocket-league",
