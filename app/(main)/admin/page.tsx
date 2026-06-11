@@ -22,7 +22,7 @@ export default function AdminPage() {
     return (
       <div className="mx-auto max-w-xl">
         <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Admin</h2>
-        <div className="max-w-xl rounded-md border border-slate-700 bg-slate-800 p-6">
+        <div className="rounded-md border border-slate-700 bg-slate-800 p-6">
           <p className="mb-4 text-[13px] text-slate-300">
             ✅ Je bent ingelogd. Wijzigingen worden direct opgeslagen in de database
             (commit op de repo) en staan na ±1 minuut op de site.
@@ -45,13 +45,13 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl">
+    <div className="mx-auto max-w-md">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Admin</h2>
-      <p className="mb-5 max-w-xl text-[13px] text-slate-400">
+      <p className="mb-5 text-[13px] text-slate-400">
         Log in met de beheer-token van de organisatie. Die blijft in je browser
         en wordt nergens anders opgeslagen.
       </p>
-      <div className="w-96 max-w-full rounded-md border border-slate-700 border-t-2 border-t-lime-400 bg-slate-900 p-7">
+      <div className="w-full rounded-md border border-slate-700 border-t-2 border-t-lime-400 bg-slate-900 p-7">
         {error && <p className="mb-2.5 text-[11px] text-red-500">Token werkt niet — check de rechten (Contents: read &amp; write op de repo).</p>}
         <input
           type="password"
