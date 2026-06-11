@@ -92,18 +92,21 @@ function Klok() {
 }
 
 export default function BeamerPage() {
-  const { state, isAdmin, updateState, reload } = useTournament();
+  const { state, isAdmin, updateState, reload, saveStatus } = useTournament();
   const [idx, setIdx] = useState(0);
   const [bezig, setBezig] = useState(false);
   const [emojiMenu, setEmojiMenu] = useState(false);
   const [widgetMenu, setWidgetMenu] = useState(false);
   const [emojiVoorBlok, setEmojiVoorBlok] = useState<number | null>(null);
   const [fotoMenu, setFotoMenu] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [hulplijn, setHulplijn] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
   const [isFull, setIsFull] = useState(false);
   const [actief, setActief] = useState(true);
   const [draft, setDraft] = useState<BeamerSlide[] | null>(null);
   const draftRef = useRef(draft);
   draftRef.current = draft;
+  const lastSaveRef = useRef(0); // reload 30s pauzeren na een save (race-bescherming)
   const areaRef = useRef<HTMLDivElement>(null);
 
   const slides = useMemo(
@@ -152,7 +155,9 @@ export default function BeamerPage() {
   // óók als admin verse data blijven halen: de beamer hangt een weekend open
   useEffect(() => {
     const t = setInterval(() => {
-      if (!draftRef.current && !bezig) void reload();
+      // niet verversen vlak na een eigen save: de commit moet eerst rond zijn,
+      // anders overschrijft de oude server-staat je verse bewerking
+      if (!draftRef.current && !bezig && Date.now() - lastSaveRef.current > 30000) void reload();
     }, POLL_MS);
     return () => clearInterval(t);
   }, [reload, bezig]);
@@ -213,17 +218,19 @@ export default function BeamerPage() {
   function bewaar(d?: BeamerSlide[]) {
     const data = d ?? draftRef.current;
     if (!data) return;
+    lastSaveRef.current = Date.now();
     updateState({ beamer: data });
     setDraft(null);
     setBezig(false);
   }
 
-  function patchBlock(bi: number, patch: Partial<BeamerBlock>, meteen = false) {
+  function patchBlock(bi: number, patch: Partial<BeamerBlock>, meteen = false): BeamerSlide[] {
     const d = startEdit().map((s, si) =>
       si === idx % totaal ? { ...s, blocks: s.blocks!.map((b, j) => (j === bi ? { ...b, ...patch } : b)) } : s
     );
     setDraft(d);
     if (meteen) bewaar(d);
+    return d;
   }
 
   function addBlock(block: Omit<BeamerBlock, "id" | "x" | "y"> & Partial<Pick<BeamerBlock, "x" | "y">>) {
@@ -255,23 +262,46 @@ export default function BeamerPage() {
     setIdx(0);
   }
 
-  // blok slepen met grid-snap; ankerpunt is boven-midden van het blok
+  // blok slepen met grid-snap; ankerpunt is boven-midden van het blok.
+  // De grab-offset blijft behouden zodat het blok niet naar de muis springt
   function dragBlock(e: React.PointerEvent, bi: number) {
     if (!isAdmin) return;
     e.preventDefault();
     e.stopPropagation();
     const area = areaRef.current?.getBoundingClientRect();
     if (!area) return;
+    const blok = (huidige?.blocks ?? [])[bi];
+    if (!blok) return;
+    const offsetX = e.clientX - (area.left + (blok.x / COLS) * area.width);
+    const offsetY = e.clientY - (area.top + (blok.y / ROWS) * area.height);
     setBezig(true);
+    setDragActive(true);
+    let laatste: BeamerSlide[] | null = null;
+    const anderen = (huidige?.blocks ?? []).filter((_, j) => j !== bi);
     const move = (me: PointerEvent) => {
-      const gx = Math.max(0, Math.min(COLS, Math.round(((me.clientX - area.left) / area.width) * COLS)));
-      const gy = Math.max(0, Math.min(ROWS - 1, Math.round(((me.clientY - area.top) / area.height) * ROWS)));
-      patchBlock(bi, { x: gx, y: gy });
+      const ruwX = ((me.clientX - offsetX - area.left) / area.width) * COLS;
+      const ruwY = ((me.clientY - offsetY - area.top) / area.height) * ROWS;
+      // magnetisch snappen: eerst het midden (gecentreerd is heilig op een
+      // beamer), daarna de posities van andere blokken op deze slide
+      let gx = Math.max(0, Math.min(COLS, Math.round(ruwX)));
+      let snapX: number | null = null;
+      for (const doel of [COLS / 2, ...anderen.map((a) => a.x)]) {
+        if (Math.abs(ruwX - doel) < 0.65) { gx = doel; snapX = doel; break; }
+      }
+      let gy = Math.max(0, Math.min(ROWS - 1, Math.round(ruwY)));
+      let snapY: number | null = null;
+      for (const doel of [ROWS / 2, ...anderen.map((a) => a.y)]) {
+        if (Math.abs(ruwY - doel) < 0.65) { gy = doel; snapY = doel; break; }
+      }
+      setHulplijn({ x: snapX, y: snapY });
+      laatste = patchBlock(bi, { x: gx, y: gy });
     };
     const up = () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
-      bewaar();
+      setDragActive(false);
+      setHulplijn({ x: null, y: null });
+      bewaar(laatste ?? undefined);
     };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
@@ -347,9 +377,9 @@ export default function BeamerPage() {
     <div
       className="fixed inset-0 z-[100] overflow-hidden bg-slate-950 text-slate-100"
       onClick={(e) => {
-        // in fullscreen werkt een klik als "volgende slide", zoals een presentatie
-        if (!isFull) return;
-        if ((e.target as HTMLElement).closest("button, input, textarea, a, [contenteditable]")) return;
+        // klik op een lege plek = volgende slide (zoals een presentatie) —
+        // ook buiten fullscreen, handig tijdens het bewerken
+        if ((e.target as HTMLElement).closest("button, input, textarea, a, [contenteditable], [data-blok]")) return;
         setIdx((i) => (i + 1) % totaal);
       }}
     >
@@ -357,18 +387,38 @@ export default function BeamerPage() {
       <div className="absolute -left-32 top-16 h-96 w-96 animate-pulse rounded-full bg-teal-500/10 blur-3xl" />
       <div className="absolute -right-32 bottom-16 h-96 w-96 animate-pulse rounded-full bg-lime-500/10 blur-3xl" />
 
-      <div className="absolute left-10 top-8 flex items-center gap-4">
+      <a href="/" title="Terug naar de site" className="absolute left-10 top-8 flex items-center gap-4 transition-opacity hover:opacity-80">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" alt="RLP26" className="h-16 w-auto" />
         <div className="text-2xl font-extrabold uppercase tracking-wide">Ronnie <span className="text-lime-400">LAN</span> Party</div>
-      </div>
+      </a>
       <Klok />
 
       {/* het slide-raster */}
       <div ref={areaRef} className="absolute inset-x-0 bottom-20 top-28">
+        {/* raster + middellijnen: faden zacht in tijdens het slepen en weer uit */}
+        <div className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${dragActive ? "opacity-100" : "opacity-0"}`}>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(148,163,184,0.10) 1px, transparent 1px), linear-gradient(to bottom, rgba(148,163,184,0.10) 1px, transparent 1px)",
+              backgroundSize: `${100 / COLS}% ${100 / ROWS}%`,
+            }}
+          />
+          <div className="absolute inset-y-0 left-1/2 w-px bg-lime-400/70" />
+          <div className="absolute inset-x-0 top-1/2 h-px bg-lime-400/40" />
+          {hulplijn.x != null && hulplijn.x !== COLS / 2 && (
+            <div className="absolute inset-y-0 w-px bg-sky-400/80" style={{ left: `${(hulplijn.x / COLS) * 100}%` }} />
+          )}
+          {hulplijn.y != null && hulplijn.y !== ROWS / 2 && (
+            <div className="absolute inset-x-0 h-px bg-sky-400/80" style={{ top: `${(hulplijn.y / ROWS) * 100}%` }} />
+          )}
+        </div>
         {(huidige?.blocks ?? []).map((b, bi) => (
           <div
             key={b.id}
+            data-blok=""
             style={{ left: `${(b.x / COLS) * 100}%`, top: `${(b.y / ROWS) * 100}%` }}
             className="group absolute -translate-x-1/2"
           >
@@ -455,7 +505,7 @@ export default function BeamerPage() {
                   contentEditable
                   suppressContentEditableWarning
                   onFocus={() => setBezig(true)}
-                  onBlur={(e) => { patchBlock(bi, { content: e.currentTarget.innerText }); bewaar(); }}
+                  onBlur={(e) => patchBlock(bi, { content: e.currentTarget.innerText }, true)}
                   style={stijl}
                   className={`min-w-12 max-w-[70vw] break-words whitespace-pre-line rounded border-2 border-dashed border-transparent leading-snug outline-none transition-colors hover:border-slate-600 focus:border-lime-400 ${fontClass}`}
                 >
@@ -599,16 +649,34 @@ export default function BeamerPage() {
         </p>
       )}
 
-      {/* fullscreen aanzetten; in fullscreen is de knop onzichtbaar */}
-      {!isFull && (
-        <button
-          onClick={() => void document.documentElement.requestFullscreen().catch(() => {})}
-          title="Fullscreen (zoals F11) — Esc om terug te keren"
-          className={`absolute bottom-8 right-8 flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 hover:border-lime-400 hover:text-lime-400 ${fade}`}
-        >
-          ⛶ Fullscreen
-        </button>
+      {/* opslaan-feedback: de admin moet zien dat een bewerking echt staat */}
+      {saveStatus !== "idle" && (
+        <div className={`absolute bottom-8 left-8 z-20 rounded border px-4 py-1.5 text-[11px] font-bold tracking-wide ${
+          saveStatus === "saved" ? "border-lime-400 bg-slate-800 text-lime-400" : "border-red-500 bg-slate-800 text-red-500"
+        }`}>
+          {saveStatus === "saved" ? "✓ Opgeslagen" : "⚠ Opslaan mislukt — check verbinding/login"}
+        </div>
       )}
+
+      {/* terug naar de site + fullscreen; faden weg bij stilte */}
+      <div className={`absolute bottom-8 right-8 flex items-center gap-2 ${fade}`}>
+        <a
+          href="/"
+          title="Terug naar de site"
+          className="flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 hover:border-lime-400 hover:text-lime-400"
+        >
+          🏠 Site
+        </a>
+        {!isFull && (
+          <button
+            onClick={() => void document.documentElement.requestFullscreen().catch(() => {})}
+            title="Fullscreen (zoals F11) — Esc om terug te keren"
+            className="flex cursor-pointer items-center gap-2 rounded border border-slate-700 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-400 hover:border-lime-400 hover:text-lime-400"
+          >
+            ⛶ Fullscreen
+          </button>
+        )}
+      </div>
     </div>
   );
 }
