@@ -1815,1396 +1815,1508 @@
     {
       "blocks": [
         {
-          "id": "p0",
+          "id": "r0",
           "type": "image",
           "content": "/images/beamer/pptx/image1.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p1",
+          "id": "r1",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
-          "x": 11.75,
-          "y": 0,
-          "size": 888
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p2",
-          "type": "image",
-          "content": "/images/beamer/pptx/image3.webp",
-          "x": 16,
-          "y": 0,
-          "size": 1407
+          "id": "r2",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p3",
+          "id": "r3",
           "type": "text",
           "content": "Broodje Spek & Ei",
           "x": 12,
-          "y": 0.5,
-          "size": 158
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r4",
+          "type": "image",
+          "content": "/images/beamer/pptx/image3.webp",
+          "x": 12,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p6",
+          "id": "r5",
           "type": "image",
           "content": "/images/beamer/pptx/image6.webp",
           "x": 12,
-          "y": 0,
-          "size": 886
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p8",
+          "id": "r6",
           "type": "image",
           "content": "/images/beamer/pptx/image7.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p9",
+          "id": "r7",
+          "type": "text",
+          "content": "🧃",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r8",
+          "type": "text",
+          "content": "Jus d'orange",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r9",
           "type": "image",
           "content": "/images/beamer/pptx/image8.webp",
           "x": 12,
-          "y": -0.75,
-          "size": 929
-        },
-        {
-          "id": "p10",
-          "type": "text",
-          "content": "Jus d'orange",
-          "x": 15.75,
-          "y": 0.25,
-          "size": 145
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p12",
+          "id": "r10",
           "type": "image",
           "content": "/images/beamer/pptx/image9.webp",
           "x": 12,
-          "y": -0.5,
-          "size": 1052
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p14",
+          "id": "r11",
           "type": "image",
           "content": "/images/beamer/pptx/image10.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p15",
+          "id": "r12",
           "type": "image",
           "content": "/images/beamer/pptx/image5.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p16",
+          "id": "r13",
+          "type": "text",
+          "content": "🚿",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r14",
+          "type": "text",
+          "content": "Douchen  10:00 - 11:30  20:00 - 21:30",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r15",
           "type": "image",
           "content": "/images/beamer/pptx/image11.webp",
           "x": 12,
-          "y": -3.25,
-          "size": 1184
-        },
-        {
-          "id": "p17",
-          "type": "text",
-          "content": "Douchen  10:00 - 11:30  20:00 - 21:30",
-          "x": 4.75,
-          "y": -2.25,
-          "size": 89
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p18",
+          "id": "r16",
           "type": "image",
           "content": "/images/beamer/pptx/image5.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p19",
+          "id": "r17",
           "type": "image",
           "content": "/images/beamer/pptx/image12.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p21",
+          "id": "r18",
           "type": "image",
           "content": "/images/beamer/pptx/image13.webp",
           "x": 12,
-          "y": -0.25,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p22",
+          "id": "r19",
           "type": "image",
           "content": "/images/beamer/pptx/image1.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p23",
-          "type": "image",
-          "content": "/images/beamer/pptx/image14.webp",
-          "x": 7,
-          "y": -0.5,
-          "size": 545
+          "id": "r20",
+          "type": "text",
+          "content": "🛒",
+          "x": 12,
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p24",
-          "type": "image",
-          "content": "/images/beamer/pptx/image15.webp",
-          "x": 19.75,
-          "y": 5.75,
-          "size": 472
-        },
-        {
-          "id": "p25",
+          "id": "r21",
           "type": "text",
           "content": "Bestel Hier",
-          "x": 11,
-          "y": 10,
-          "size": 118
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r22",
+          "type": "image",
+          "content": "/images/beamer/pptx/image14.webp",
+          "x": 9.5,
+          "y": 7.5,
+          "size": 200
+        },
+        {
+          "id": "r23",
+          "type": "image",
+          "content": "/images/beamer/pptx/image15.webp",
+          "x": 14.5,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p26",
+          "id": "r24",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p27",
+          "id": "r25",
           "type": "image",
           "content": "/images/beamer/pptx/image16.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p28",
+          "id": "r26",
           "type": "image",
           "content": "/images/beamer/pptx/image17.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p29",
+          "id": "r27",
           "type": "image",
           "content": "/images/beamer/pptx/image18.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p30",
+          "id": "r28",
           "type": "image",
           "content": "/images/beamer/pptx/image19.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p31",
-          "type": "image",
-          "content": "/images/beamer/pptx/image20.webp",
-          "x": 7.75,
-          "y": 4,
-          "size": 701
+          "id": "r29",
+          "type": "text",
+          "content": "☕",
+          "x": 12,
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p32",
+          "id": "r30",
           "type": "text",
           "content": "Koffie",
-          "x": 16,
-          "y": 1.25,
-          "size": 160
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r31",
+          "type": "image",
+          "content": "/images/beamer/pptx/image20.webp",
+          "x": 12,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p33",
+          "id": "r32",
           "type": "image",
           "content": "/images/beamer/pptx/image21.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p34",
+          "id": "r33",
           "type": "image",
           "content": "/images/beamer/pptx/image22.webp",
-          "x": 12.25,
-          "y": 0.75,
-          "size": 780
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p35",
+          "id": "r34",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p36",
+          "id": "r35",
           "type": "image",
           "content": "/images/beamer/pptx/image23.webp",
-          "x": 24,
-          "y": 0.25,
-          "size": 870
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p37",
+          "id": "r36",
           "type": "image",
           "content": "/images/beamer/pptx/image24.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p38",
+          "id": "r37",
           "type": "image",
           "content": "/images/beamer/pptx/image25.webp",
           "x": 12,
-          "y": 0,
-          "size": 889
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p39",
+          "id": "r38",
           "type": "image",
           "content": "/images/beamer/pptx/image26.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p40",
+          "id": "r39",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p41",
-          "type": "image",
-          "content": "/images/beamer/pptx/image27.webp",
-          "x": 11.25,
-          "y": 0,
-          "size": 888
+          "id": "r40",
+          "type": "text",
+          "content": "🍵",
+          "x": 12,
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p42",
+          "id": "r41",
           "type": "text",
           "content": "Thee",
-          "x": 20.25,
-          "y": 10.25,
-          "size": 160
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r42",
+          "type": "image",
+          "content": "/images/beamer/pptx/image27.webp",
+          "x": 12,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p43",
+          "id": "r43",
           "type": "image",
           "content": "/images/beamer/pptx/image28.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p44",
+          "id": "r44",
           "type": "image",
           "content": "/images/beamer/pptx/image29.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p45",
+          "id": "r45",
           "type": "image",
           "content": "/images/beamer/pptx/image30.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p46",
+          "id": "r46",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p47",
-          "type": "image",
-          "content": "/images/beamer/pptx/image31.webp",
+          "id": "r47",
+          "type": "text",
+          "content": "🏊",
           "x": 12,
-          "y": -4,
-          "size": 1579
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p48",
+          "id": "r48",
           "type": "text",
           "content": "Zwembad",
           "x": 12,
-          "y": 0.5,
-          "size": 158
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r49",
+          "type": "image",
+          "content": "/images/beamer/pptx/image31.webp",
+          "x": 12,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p49",
+          "id": "r50",
           "type": "image",
           "content": "/images/beamer/pptx/image32.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p50",
+          "id": "r51",
           "type": "image",
           "content": "/images/beamer/pptx/image33.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p51",
+          "id": "r52",
           "type": "image",
           "content": "/images/beamer/pptx/image34.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p52",
+          "id": "r53",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p53",
+          "id": "r54",
+          "type": "text",
+          "content": "⚠️",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r55",
+          "type": "text",
+          "content": "Pas op!!!Mijnen veld",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r56",
           "type": "image",
           "content": "/images/beamer/pptx/image35.webp",
           "x": 12,
-          "y": 0,
-          "size": 889
-        },
-        {
-          "id": "p54",
-          "type": "text",
-          "content": "Pas op!!!Mijnen veld",
-          "x": 5.25,
-          "y": 1.75,
-          "size": 118
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p55",
+          "id": "r57",
           "type": "image",
           "content": "/images/beamer/pptx/image36.webp",
           "x": 12,
-          "y": -0.25,
-          "size": 921
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p56",
+          "id": "r58",
           "type": "image",
           "content": "/images/beamer/pptx/image37.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p57",
+          "id": "r59",
           "type": "image",
           "content": "/images/beamer/pptx/image38.webp",
           "x": 12,
-          "y": 0,
-          "size": 895
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p58",
+          "id": "r60",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p59",
+          "id": "r61",
           "type": "image",
           "content": "/images/beamer/pptx/image23.webp",
-          "x": 24,
-          "y": 0.25,
-          "size": 870
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p60",
+          "id": "r62",
           "type": "image",
           "content": "/images/beamer/pptx/image39.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p61",
+          "id": "r63",
           "type": "image",
           "content": "/images/beamer/pptx/image40.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p62",
+          "id": "r64",
           "type": "image",
           "content": "/images/beamer/pptx/image41.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p63",
+          "id": "r65",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p64",
+          "id": "r66",
           "type": "image",
           "content": "/images/beamer/pptx/image42.webp",
           "x": 12,
-          "y": 2.75,
-          "size": 539
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p65",
+          "id": "r67",
           "type": "image",
           "content": "/images/beamer/pptx/image43.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p66",
+          "id": "r68",
           "type": "image",
           "content": "/images/beamer/pptx/image44.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p67",
+          "id": "r69",
           "type": "image",
           "content": "/images/beamer/pptx/image45.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p68",
+          "id": "r70",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p70",
+          "id": "r71",
           "type": "image",
           "content": "/images/beamer/pptx/image47.webp",
           "x": 12,
-          "y": -2.25,
-          "size": 1188
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p71",
+          "id": "r72",
           "type": "image",
           "content": "/images/beamer/pptx/image48.webp",
           "x": 12,
-          "y": 0,
-          "size": 889
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p72",
+          "id": "r73",
           "type": "image",
           "content": "/images/beamer/pptx/image49.webp",
-          "x": 11.75,
-          "y": 0,
-          "size": 888
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p73",
+          "id": "r74",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p75",
+          "id": "r75",
           "type": "image",
           "content": "/images/beamer/pptx/image51.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p76",
+          "id": "r76",
           "type": "image",
           "content": "/images/beamer/pptx/image52.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p77",
+          "id": "r77",
           "type": "image",
           "content": "/images/beamer/pptx/image53.webp",
           "x": 12,
-          "y": -0.25,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p78",
+          "id": "r78",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p79",
-          "type": "image",
-          "content": "/images/beamer/pptx/image3.webp",
-          "x": 16,
-          "y": 0,
-          "size": 1407
+          "id": "r79",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
         },
         {
-          "id": "p80",
+          "id": "r80",
           "type": "text",
           "content": "Broodje Spek & Ei",
           "x": 12,
-          "y": 0.5,
-          "size": 158
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r81",
+          "type": "image",
+          "content": "/images/beamer/pptx/image3.webp",
+          "x": 12,
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p81",
+          "id": "r82",
           "type": "image",
           "content": "/images/beamer/pptx/image54.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p82",
+          "id": "r83",
           "type": "image",
           "content": "/images/beamer/pptx/image55.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p83",
+          "id": "r84",
           "type": "image",
           "content": "/images/beamer/pptx/image56.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p84",
+          "id": "r85",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p85",
+          "id": "r86",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r87",
+          "type": "text",
+          "content": "Spek met Ei",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r88",
           "type": "image",
           "content": "/images/beamer/pptx/image57.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
-        },
-        {
-          "id": "p86",
-          "type": "text",
-          "content": "Spek met Ei",
-          "x": 4.25,
-          "y": 0.75,
-          "size": 145
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p87",
+          "id": "r89",
           "type": "image",
           "content": "/images/beamer/pptx/image58.webp",
           "x": 12,
-          "y": 0,
-          "size": 899
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p88",
+          "id": "r90",
           "type": "image",
           "content": "/images/beamer/pptx/image59.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p89",
+          "id": "r91",
           "type": "image",
           "content": "/images/beamer/pptx/image60.webp",
           "x": 12,
-          "y": 0,
-          "size": 899
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p90",
+          "id": "r92",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p91",
+          "id": "r93",
+          "type": "text",
+          "content": "😴",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r94",
+          "type": "text",
+          "content": "Rust ruimte",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r95",
           "type": "image",
           "content": "/images/beamer/pptx/image61.webp",
           "x": 12,
-          "y": 0,
-          "size": 889
-        },
-        {
-          "id": "p92",
-          "type": "text",
-          "content": "Rust ruimte",
-          "x": 16.25,
-          "y": 9,
-          "size": 145
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p93",
+          "id": "r96",
           "type": "image",
           "content": "/images/beamer/pptx/image62.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p94",
+          "id": "r97",
           "type": "image",
           "content": "/images/beamer/pptx/image63.webp",
           "x": 12,
-          "y": -2.75,
-          "size": 1579
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p95",
+          "id": "r98",
           "type": "image",
           "content": "/images/beamer/pptx/image64.webp",
           "x": 12,
-          "y": 0,
-          "size": 887
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p96",
+          "id": "r99",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p97",
+          "id": "r100",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r101",
+          "type": "text",
+          "content": "Broodje Knakworst",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r102",
           "type": "image",
           "content": "/images/beamer/pptx/image65.webp",
           "x": 12,
-          "y": 0,
-          "size": 1048
-        },
-        {
-          "id": "p98",
-          "type": "text",
-          "content": "Broodje Knakworst",
-          "x": 7.5,
-          "y": 11.75,
-          "size": 145
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p99",
+          "id": "r103",
           "type": "image",
           "content": "/images/beamer/pptx/image66.webp",
-          "x": 11.5,
-          "y": 0.25,
-          "size": 842
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p100",
+          "id": "r104",
           "type": "image",
           "content": "/images/beamer/pptx/image67.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p101",
+          "id": "r105",
           "type": "image",
           "content": "/images/beamer/pptx/image68.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p102",
+          "id": "r106",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p103",
+          "id": "r107",
+          "type": "text",
+          "content": "🍳",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r108",
+          "type": "text",
+          "content": "Gebakken Spek",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r109",
           "type": "image",
           "content": "/images/beamer/pptx/image69.webp",
           "x": 12,
-          "y": 0,
-          "size": 1579
-        },
-        {
-          "id": "p104",
-          "type": "text",
-          "content": "Gebakken Spek",
-          "x": 12.25,
-          "y": 7.75,
-          "size": 160
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p105",
+          "id": "r110",
           "type": "image",
           "content": "/images/beamer/pptx/image70.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p106",
+          "id": "r111",
           "type": "image",
           "content": "/images/beamer/pptx/image71.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p107",
+          "id": "r112",
           "type": "image",
           "content": "/images/beamer/pptx/image72.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p108",
+          "id": "r113",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p109",
+          "id": "r114",
           "type": "image",
           "content": "/images/beamer/pptx/image73.webp",
-          "x": 5.5,
-          "y": 0,
-          "size": 1303
+          "x": 8.75,
+          "y": 4.5,
+          "size": 380
         },
         {
-          "id": "p110",
+          "id": "r115",
           "type": "image",
           "content": "/images/beamer/pptx/image74.webp",
-          "x": 17.5,
-          "y": -7.25,
-          "size": 1918
+          "x": 15.25,
+          "y": 4.5,
+          "size": 380
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p111",
+          "id": "r116",
           "type": "image",
           "content": "/images/beamer/pptx/image75.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p112",
+          "id": "r117",
           "type": "image",
           "content": "/images/beamer/pptx/image76.webp",
           "x": 12,
-          "y": 0,
-          "size": 897
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p113",
+          "id": "r118",
           "type": "image",
           "content": "/images/beamer/pptx/image77.webp",
           "x": 12,
-          "y": -0.25,
-          "size": 897
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p114",
+          "id": "r119",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p115",
+          "id": "r120",
+          "type": "text",
+          "content": "🥪",
+          "x": 12,
+          "y": 1,
+          "size": 96
+        },
+        {
+          "id": "r121",
+          "type": "text",
+          "content": "Zelf Service",
+          "x": 12,
+          "y": 4,
+          "size": 64
+        },
+        {
+          "id": "r122",
           "type": "image",
           "content": "/images/beamer/pptx/image78.webp",
           "x": 12,
-          "y": 0,
-          "size": 889
-        },
-        {
-          "id": "p116",
-          "type": "text",
-          "content": "Zelf Service",
-          "x": 17.25,
-          "y": 10,
-          "size": 158
+          "y": 7.5,
+          "size": 200
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p117",
+          "id": "r123",
           "type": "image",
           "content": "/images/beamer/pptx/image79.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p118",
+          "id": "r124",
           "type": "image",
           "content": "/images/beamer/pptx/image80.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p119",
+          "id": "r125",
           "type": "image",
           "content": "/images/beamer/pptx/image81.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p120",
+          "id": "r126",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p121",
+          "id": "r127",
           "type": "image",
           "content": "/images/beamer/pptx/image82.webp",
-          "x": 5.5,
-          "y": -3,
-          "size": 1316
+          "x": 8.75,
+          "y": 4.5,
+          "size": 380
         },
         {
-          "id": "p122",
+          "id": "r128",
           "type": "image",
           "content": "/images/beamer/pptx/image83.webp",
-          "x": 17.75,
-          "y": -5.25,
-          "size": 1547
+          "x": 15.25,
+          "y": 4.5,
+          "size": 380
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p123",
+          "id": "r129",
           "type": "image",
           "content": "/images/beamer/pptx/image84.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p124",
+          "id": "r130",
           "type": "image",
           "content": "/images/beamer/pptx/image85.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p125",
+          "id": "r131",
           "type": "image",
           "content": "/images/beamer/pptx/image86.webp",
           "x": 12,
-          "y": 0,
-          "size": 905
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p126",
+          "id": "r132",
           "type": "image",
           "content": "/images/beamer/pptx/image2.webp",
           "x": 12,
-          "y": -1,
-          "size": 1011
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p127",
+          "id": "r133",
           "type": "image",
           "content": "/images/beamer/pptx/image87.webp",
           "x": 12,
-          "y": 0,
-          "size": 1053
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p128",
+          "id": "r134",
           "type": "image",
           "content": "/images/beamer/pptx/image88.webp",
-          "x": 14.5,
-          "y": 0,
-          "size": 888
+          "x": 12,
+          "y": 2,
+          "size": 600
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "p129",
+          "id": "r135",
           "type": "image",
           "content": "/images/beamer/pptx/image1.webp",
           "x": 12,
-          "y": 0,
-          "size": 888
+          "y": 2,
+          "size": 600
         }
       ]
     }
