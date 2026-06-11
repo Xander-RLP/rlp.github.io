@@ -779,7 +779,11 @@
                 }
               ],
               "outs": [
-                null,
+                {
+                  "r": 2,
+                  "m": 0,
+                  "s": 0
+                },
                 null
               ],
               "label": "💀 LB Ronde 1"
