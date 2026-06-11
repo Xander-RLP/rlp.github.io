@@ -50,7 +50,7 @@
       },
       "image": "/images/cs2-wingman.png",
       "start": "2026-06-12T10:15",
-      "durationMin": 345,
+      "durationMin": 240,
       "type": "double",
       "double": {
         "w": [
