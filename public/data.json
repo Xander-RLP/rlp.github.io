@@ -10,26 +10,90 @@
             {
               "teams": [
                 {
-                  "name": "Ronnie Rifles",
+                  "name": "",
                   "score": null
                 },
                 {
-                  "name": "Rush B",
+                  "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 2,
+                "s": 0
+              }
             },
             {
               "teams": [
                 {
-                  "name": "Smoke Bros",
+                  "name": "",
                   "score": null
                 },
                 {
-                  "name": "Rolator Jeans",
+                  "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 1,
+                "m": 0,
+                "s": 1
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 2,
+                "s": 1
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 1,
+                "m": 1,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 3,
+                "s": 0
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 1,
+                "m": 1,
+                "s": 1
+              },
+              "loserNext": {
+                "r": 1,
+                "m": 3,
+                "s": 1
+              }
             }
           ],
           [
@@ -43,7 +107,184 @@
                   "name": "",
                   "score": null
                 }
-              ]
+              ],
+              "next": {
+                "r": 2,
+                "m": 0,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 2,
+                "m": 1,
+                "s": 1
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 2,
+                "m": 0,
+                "s": 1
+              },
+              "loserNext": {
+                "r": 2,
+                "m": 2,
+                "s": 1
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 2,
+                "m": 1,
+                "s": 0
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 2,
+                "m": 2,
+                "s": 0
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 5,
+                "m": 0,
+                "s": 0
+              },
+              "loserNext": {
+                "r": 4,
+                "m": 0,
+                "s": 1
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 3,
+                "m": 0,
+                "s": 0
+              }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 3,
+                "m": 0,
+                "s": 1
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 4,
+                "m": 0,
+                "s": 0
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": {
+                "r": 5,
+                "m": 0,
+                "s": 1
+              }
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": null
             }
           ]
         ]
@@ -51,195 +292,7 @@
       "image": "/images/cs2-wingman.png",
       "start": "2026-06-12T10:15",
       "durationMin": 255,
-      "type": "double",
-      "double": {
-        "w": [
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ]
-        ],
-        "l": [
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            },
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ],
-          [
-            {
-              "teams": [
-                {
-                  "name": "",
-                  "score": null
-                },
-                {
-                  "name": "",
-                  "score": null
-                }
-              ]
-            }
-          ]
-        ],
-        "gf": {
-          "teams": [
-            {
-              "name": "",
-              "score": null
-            },
-            {
-              "name": "",
-              "score": null
-            }
-          ]
-        }
-      },
+      "type": "bracket",
       "store": {
         "name": "Steam",
         "url": "https://store.steampowered.com/app/730/CounterStrike_2/"
