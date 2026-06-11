@@ -1620,7 +1620,15 @@
   ],
   "beamer": [
     {
-      "blocks": []
+      "blocks": [
+        {
+          "id": "bmq9lsxbtesp8",
+          "x": 12,
+          "y": 6,
+          "type": "widget",
+          "content": "lanstart"
+        }
+      ]
     },
     {
       "blocks": [
