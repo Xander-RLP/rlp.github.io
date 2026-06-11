@@ -49,7 +49,7 @@ export default function TeamSpeakWidget() {
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-[11px] font-bold text-slate-100">Nog geen TeamSpeak?</span>
-              <span className="block text-[10px] text-slate-400">Gratis downloaden — klaar vóór de LAN</span>
+              <span className="block text-[10px] text-slate-400">Gratis downloaden</span>
             </span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-3 w-3 shrink-0 text-lime-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
               <path d="M7 17 17 7" />
@@ -90,16 +90,15 @@ export default function TeamSpeakWidget() {
           <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
             De verbindknop opent de TeamSpeak-app. Lukt dat niet? Kopieer het adres hierboven.
           </p>
-          <div className="mt-1.5 flex items-center gap-2.5 border-t border-slate-800 pt-2">
+          <div className="mt-2 border-t border-slate-800 pt-2.5 text-center">
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">Draait op</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/ugreen-nas.webp"
-              alt="UGREEN DXP8800 Plus NAS"
-              className="h-12 w-12 shrink-0 rounded-md border border-slate-700 bg-white object-cover p-0.5"
+              alt="UGREEN DXP8800 Plus"
+              className="mx-auto h-28 w-auto"
             />
-            <p className="text-[10px] leading-relaxed text-slate-500">
-              Draait op eigen ijzer: een <b className="text-slate-400">UGREEN DXP8800 Plus</b> NAS — 8 bays, dus ruimte zat voor jullie callouts.
-            </p>
+            <p className="text-[11px] font-bold tracking-wide text-slate-300">UGREEN DXP8800 Plus</p>
           </div>
         </div>
       )}
