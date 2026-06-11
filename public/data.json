@@ -726,20 +726,20 @@
             {
               "teams": [
                 {
-                  "name": "Ronnie",
-                  "score": 4
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Laszlo",
-                  "score": 3
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Ennio",
-                  "score": 2
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Sjoerd",
-                  "score": 0
+                  "name": "",
+                  "score": null
                 },
                 {
                   "name": "",
@@ -785,20 +785,20 @@
             {
               "teams": [
                 {
-                  "name": "Ronnie",
-                  "score": 1
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Laszlo",
-                  "score": 2
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Ennio",
-                  "score": 3
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Sjoerd",
-                  "score": 4
+                  "name": "",
+                  "score": null
                 }
               ],
               "outs": [
@@ -821,12 +821,12 @@
             {
               "teams": [
                 {
-                  "name": "Sjoerd",
-                  "score": 0
+                  "name": "",
+                  "score": null
                 },
                 {
-                  "name": "Ennio",
-                  "score": 2
+                  "name": "",
+                  "score": null
                 }
               ],
               "outs": [
