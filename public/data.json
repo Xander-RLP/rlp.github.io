@@ -393,7 +393,7 @@
             {
               "teams": [
                 {
-                  "name": "Leon",
+                  "name": "",
                   "score": null
                 },
                 {
@@ -470,7 +470,8 @@
         "Laszlo",
         "Ennio",
         "Ronnie",
-        "Xander"
+        "Xander",
+        "Leon"
       ],
       "entryType": "user"
     },
