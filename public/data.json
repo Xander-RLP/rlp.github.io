@@ -3023,6 +3023,14 @@
           "x": 12,
           "y": 3.5,
           "size": 600
+        },
+        {
+          "id": "bmq9r3oio6q8w",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "Tekst…",
+          "size": 40
         }
       ]
     }
