@@ -6,14 +6,15 @@ import { COFFEE_URL } from "@/lib/links";
 // éénmaal weggeklikt = nooit meer, op de hele site (we willen niemand lastigvallen)
 const KEY = "rlp-coffee-hint-weg";
 
-// klein donatie-hintje voor piekmomenten (kampioensbanner, eten-pagina):
-// licht van toon, wegklikbaar, en maximaal één gedeelde dismiss-state
-export default function CoffeeHint({ children }: { children: React.ReactNode }) {
-  const [hidden, setHidden] = useState(true); // start verborgen tot localStorage gelezen is
+// klein donatie-hintje voor piekmomenten: licht van toon. Standaard
+// wegklikbaar met één gedeelde dismiss-state; met dismissible={false}
+// (zoals de grap op de eten-pagina) staat hij er gewoon altijd
+export default function CoffeeHint({ children, dismissible = true }: { children: React.ReactNode; dismissible?: boolean }) {
+  const [hidden, setHidden] = useState(dismissible); // start verborgen tot localStorage gelezen is
 
   useEffect(() => {
-    setHidden(localStorage.getItem(KEY) === "1");
-  }, []);
+    if (dismissible) setHidden(localStorage.getItem(KEY) === "1");
+  }, [dismissible]);
 
   if (hidden) return null;
 
@@ -28,13 +29,15 @@ export default function CoffeeHint({ children }: { children: React.ReactNode }) 
       >
         ☕ Buy me a Coffee!
       </a>
-      <button
-        onClick={() => { localStorage.setItem(KEY, "1"); setHidden(true); }}
-        title="Niet meer tonen"
-        className="cursor-pointer pl-1 text-amber-400/60 hover:text-amber-200"
-      >
-        ×
-      </button>
+      {dismissible && (
+        <button
+          onClick={() => { localStorage.setItem(KEY, "1"); setHidden(true); }}
+          title="Niet meer tonen"
+          className="cursor-pointer pl-1 text-amber-400/60 hover:text-amber-200"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }
