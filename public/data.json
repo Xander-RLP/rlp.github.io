@@ -1817,14 +1817,6 @@
           "type": "text",
           "content": "Tekst…",
           "size": 40
-        },
-        {
-          "id": "bmq9kvv0p53ft",
-          "x": 7,
-          "y": 4,
-          "type": "text",
-          "content": "Tekst…",
-          "size": 40
         }
       ]
     }
