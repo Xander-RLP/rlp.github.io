@@ -42,6 +42,25 @@ export default function RaceView({ game, isAdmin, onRaceChange }: Props) {
         {game.description && (
           <p className="mt-1 text-[13px] leading-relaxed text-slate-400">{game.description}</p>
         )}
+        {isAdmin && (
+          <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-slate-700 pt-2.5 text-[11px] text-slate-400">
+            Doel:
+            <input
+              value={race.goalLabel}
+              maxLength={60}
+              onChange={(e) => onRaceChange({ ...race, goalLabel: e.target.value })}
+              className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs focus:border-lime-400 focus:outline-none"
+            />
+            Te halen:
+            <input
+              type="number"
+              min={1}
+              value={race.target}
+              onChange={(e) => onRaceChange({ ...race, target: Math.max(1, parseInt(e.target.value, 10) || 1) })}
+              className="w-16 rounded border border-slate-700 bg-slate-950 px-2 py-1 text-center text-xs focus:border-lime-400 focus:outline-none"
+            />
+          </div>
+        )}
       </div>
 
       {winner && (

@@ -63,19 +63,23 @@ export default function Header() {
       <nav
         className={`${menuOpen ? "flex" : "hidden"} mt-2 flex-col gap-0.5 border-t border-teal-800 pt-2 md:mt-0 md:flex md:flex-1 md:flex-row md:flex-wrap md:justify-center md:gap-x-6 md:gap-y-1 md:border-t-0 md:pt-0`}
       >
-        {NAV.map(({ href, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`rounded px-2 py-2.5 text-xs font-bold uppercase tracking-widest md:rounded-none md:border-b-2 md:px-0.5 md:py-1.5 ${
-              pathname === href
-                ? "bg-teal-900 text-lime-400 md:border-lime-400 md:bg-transparent"
-                : "text-slate-100 hover:text-lime-300 md:border-transparent"
-            }`}
-          >
-            {label}
-          </Link>
-        ))}
+        {NAV.map(({ href, label }) => {
+          // statische export geeft paden een slash op het eind ("/teams/")
+          const active = pathname === href || pathname === `${href}/`;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`rounded px-2 py-2.5 text-xs font-bold uppercase tracking-widest md:rounded-none md:border-b-2 md:px-0.5 md:py-1.5 ${
+                active
+                  ? "bg-teal-900 text-lime-400 md:border-lime-400 md:bg-transparent"
+                  : "text-slate-100 hover:text-lime-300 md:border-transparent"
+              }`}
+            >
+              {label}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="hidden items-center gap-2.5 md:flex">

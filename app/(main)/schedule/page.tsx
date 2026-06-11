@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { gameInitials, gameStatus, logoColor, slugify } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
 import type { EetMoment, Game } from "@/lib/types";
@@ -12,8 +12,9 @@ const SNAP_MIN = 15;     // slepen verspringt per kwartier
 const MIN_DURATION = 30;
 
 type CalEvent = {
-  game?: Game;       // óf een toernooi…
-  eet?: EetMoment;   // …óf een eetmoment
+  game?: Game;       // toernooi…
+  eet?: EetMoment;   // …of eetmoment…
+  special?: boolean; // …of het startmoment van de LAN zelf
   title: string;
   emoji?: string;
   start: Date;
@@ -37,12 +38,13 @@ function toLocalInput(d: Date): string {
 }
 
 function idOf(ev: CalEvent): string {
-  return ev.game?.id ?? `eet:${ev.eet!.id}`;
+  return ev.game?.id ?? (ev.eet ? `eet:${ev.eet.id}` : "lan-start");
 }
 
 export default function SchedulePage() {
-  const { state, isAdmin, updateGames, updateEetmomenten, saveStatus } = useTournament();
+  const { state, isAdmin, updateGames, updateEetmomenten, updateEventStart, saveStatus } = useTournament();
   const [preview, setPreview] = useState<{ id: string; start: Date; end: Date } | null>(null);
+  const dayRefs = useRef(new Map<string, { el: HTMLDivElement; base: number }>());
   if (!state) return <p className="text-sm text-slate-400">Laden…</p>;
 
   const eetmomenten = state.eetmomenten ?? [];
@@ -86,6 +88,18 @@ export default function SchedulePage() {
         const end = new Date(start.getTime() + m.durationMin * 60000);
         return { eet: m, title: m.title, emoji: m.emoji, start, end, lane: 0, lanes: 1 };
       }),
+    // startmoment van de LAN (zelfde veld als de countdown op home)
+    ...(state.eventStart && !isNaN(new Date(state.eventStart).getTime())
+      ? [{
+          special: true,
+          title: "LAN start — inchecken",
+          emoji: "🏁",
+          start: new Date(state.eventStart),
+          end: new Date(new Date(state.eventStart).getTime() + 90 * 60000),
+          lane: 0,
+          lanes: 1,
+        }]
+      : []),
   ]
     .map((ev) => (preview && idOf(ev) === preview.id ? { ...ev, start: preview.start, end: preview.end } : ev))
     .sort((a, b) => a.start.getTime() - b.start.getTime());
@@ -144,17 +158,28 @@ export default function SchedulePage() {
     // binnen het getoonde uurbereik blijven
     const dayBase = new Date(origStart);
     dayBase.setHours(0, 0, 0, 0);
-    const railStart = dayBase.getTime() + minHour * 3600000;
-    const railEnd = dayBase.getTime() + maxHour * 3600000;
     let changed = false;
     let lastStart = origStart;
     let lastDur = origDur;
+    // dagkolommen vastleggen zodat horizontaal slepen het event naar een andere dag verplaatst
+    const cols = [...dayRefs.current.values()].map(({ el, base }) => {
+      const r = el.getBoundingClientRect();
+      return { left: r.left, right: r.right, base };
+    });
 
     const onMove = (me: PointerEvent) => {
       const rawMin = ((me.clientY - startY) / HOUR_PX) * 60;
       const deltaMin = Math.round(rawMin / SNAP_MIN) * SNAP_MIN;
+      let base = dayBase.getTime();
       if (mode === "move") {
-        let ms = origStart.getTime() + deltaMin * 60000;
+        const col = cols.find((c) => me.clientX >= c.left && me.clientX <= c.right);
+        if (col) base = col.base;
+      }
+      const railStart = base + minHour * 3600000;
+      const railEnd = base + maxHour * 3600000;
+      if (mode === "move") {
+        const tijdInDag = origStart.getTime() - dayBase.getTime();
+        let ms = base + tijdInDag + deltaMin * 60000;
         ms = Math.max(railStart, Math.min(railEnd - origDur * 60000, ms));
         lastStart = new Date(ms);
         lastDur = origDur;
@@ -172,6 +197,10 @@ export default function SchedulePage() {
       window.removeEventListener("pointerup", onUp);
       setPreview(null);
       if (!changed) return;
+      if (ev.special) {
+        updateEventStart(toLocalInput(lastStart));
+        return;
+      }
       const patch = { start: toLocalInput(lastStart), durationMin: Math.round(lastDur) };
       if (ev.game) patchGame(ev.game, patch);
       else patchMoment(ev.eet!, patch);
@@ -197,7 +226,7 @@ export default function SchedulePage() {
           onPointerDown: (e: React.PointerEvent) => beginDrag(e, ev, "move"),
         }
       : {};
-    const resizeHandle = isAdmin && (
+    const resizeHandle = isAdmin && !ev.special && (
       <div
         onPointerDown={(e) => beginDrag(e, ev, "resize")}
         title="Trek om de duur aan te passen"
@@ -206,6 +235,23 @@ export default function SchedulePage() {
         <div className="mb-0.5 h-1 w-8 rounded-full bg-slate-500/60" />
       </div>
     );
+
+    if (ev.special) {
+      // startmoment van de LAN: teal blok; admin kan het verslepen
+      const cls = `absolute overflow-hidden rounded-md border-l-4 border-l-teal-400 bg-teal-400/10 p-2 shadow-md ring-1 ring-teal-400/30 ${
+        dragging ? "z-10 ring-teal-300" : ""
+      } ${isAdmin ? "cursor-grab touch-none select-none active:cursor-grabbing" : ""}`;
+      return (
+        <div {...adminDrag} className={cls} style={pos} title={ev.title}>
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm leading-none">{ev.emoji}</span>
+            <span className="truncate text-xs font-extrabold text-teal-200">{ev.title}</span>
+          </div>
+          <div className="mt-0.5 text-[10px] font-bold text-teal-300/80">{tijd}</div>
+          <div className="truncate text-[10px] text-slate-400">Hier begint het — tot zondag!</div>
+        </div>
+      );
+    }
 
     if (!g) {
       // eetmoment: amber blokje; voor bezoekers klikbaar naar /eten,
@@ -219,7 +265,7 @@ export default function SchedulePage() {
           </div>
           <div className="mt-0.5 text-[10px] font-bold text-amber-300/80">{tijd}</div>
           <div className="truncate text-[10px] text-slate-400">
-            {tikkie ? <span className="font-bold text-lime-400">💸 Betaal via Tikkie</span> : <>Eten &amp; drinken</>}
+            {tikkie ? <span className="font-bold text-lime-400">💸 Betaal via Tikkie</span> : <>Programma</>}
           </div>
         </>
       );
@@ -312,7 +358,17 @@ export default function SchedulePage() {
 
             {/* dagkolommen */}
             {days.map(([day, dayEvents]) => (
-              <div key={day} className="relative border-l border-slate-700" style={{ height: hours.length * HOUR_PX }}>
+              <div
+                key={day}
+                ref={(el) => {
+                  if (!el) return;
+                  const base = new Date(dayEvents[0].start);
+                  base.setHours(0, 0, 0, 0);
+                  dayRefs.current.set(day, { el, base: base.getTime() });
+                }}
+                className="relative border-l border-slate-700"
+                style={{ height: hours.length * HOUR_PX }}
+              >
                 {hours.map((h, i) => (
                   <div key={h} className="absolute inset-x-0 border-t border-slate-800" style={{ top: i * HOUR_PX }} />
                 ))}
@@ -334,6 +390,17 @@ export default function SchedulePage() {
       {isAdmin && (
         <section className="max-w-2xl">
           <h3 className="mb-3 text-sm font-extrabold uppercase tracking-wide text-slate-400">Planning (admin)</h3>
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-md border border-teal-700/60 bg-slate-800 px-3.5 py-2.5">
+            <span>🏁</span>
+            <span className="w-40 text-sm font-bold">Startmoment LAN</span>
+            <input
+              type="datetime-local"
+              value={state.eventStart ?? ""}
+              onChange={(e) => updateEventStart(e.target.value)}
+              className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100 [color-scheme:dark] focus:border-lime-400 focus:outline-none"
+            />
+            <span className="text-[11px] text-slate-500">zelfde klok als de countdown op home</span>
+          </div>
           <div className="overflow-hidden rounded-md border border-slate-700">
             {state.games.map((g) => (
               <div key={g.id} className="flex flex-wrap items-center gap-3 border-t border-slate-700 bg-slate-800 px-3.5 py-2.5 first:border-t-0">

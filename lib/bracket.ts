@@ -1,4 +1,4 @@
-import type { Bracket, DoubleBracket, Game, Match } from "./types";
+import type { Bracket, DoubleBracket, Game, LegacyDoubleBracket, Match } from "./types";
 
 export const BRACKET_SIZES = [4, 8, 16, 32];
 
@@ -112,31 +112,133 @@ function emptyMatch(): Match {
   return { teams: [{ name: "", score: null }, { name: "", score: null }] };
 }
 
-export function emptyDouble(): DoubleBracket {
-  return { w1: [emptyMatch(), emptyMatch()], wf: emptyMatch(), l1: emptyMatch(), lf: emptyMatch(), gf: emptyMatch() };
+// generiek double elimination voor 4/8/16 teams.
+// losers-rondes wisselen af: intake (verliezers WB R1 gepaard), daarna per
+// stap "major" (winnaar LB vs verliezer volgende WB-ronde) en "minor"
+// (LB-winnaars onderling gepaard).
+export function emptyDouble(size = 4): DoubleBracket {
+  const w: Match[][] = [];
+  for (let n = size / 2; n >= 1; n = Math.floor(n / 2)) {
+    w.push(Array.from({ length: n }, emptyMatch));
+  }
+  const l: Match[][] = [];
+  for (let n = size / 4; n >= 1; n = Math.floor(n / 2)) {
+    l.push(Array.from({ length: n }, emptyMatch)); // major-instroom
+    l.push(Array.from({ length: n }, emptyMatch)); // (intake telt als eerste)
+  }
+  return { w, l, gf: emptyMatch() };
 }
 
-// winnaars stromen door; verliezers vallen het losers bracket in
-export function propagateDouble(double: DoubleBracket): DoubleBracket {
-  const d: DoubleBracket = JSON.parse(JSON.stringify(double));
-  const feed = (match: Match, slot: { name: string; score: number | null }, takeWinner: boolean) => {
-    const w = winnerIdx(match);
-    const idx = w < 0 ? -1 : takeWinner ? w : 1 - w;
-    const newName = idx < 0 ? "" : match.teams[idx].name;
-    if (slot.name !== newName) {
-      slot.name = newName;
+// oude opgeslagen 4-teams structuur (w1/wf/l1/lf) → generieke vorm
+export function normalizeDouble(d: DoubleBracket | LegacyDoubleBracket | undefined): DoubleBracket {
+  if (!d) return emptyDouble(4);
+  if ("w" in d) return d;
+  return { w: [[d.w1[0], d.w1[1]], [d.wf]], l: [[d.l1], [d.lf]], gf: d.gf };
+}
+
+export function doubleTeamCount(d: DoubleBracket): number {
+  return d.w[0].length * 2;
+}
+
+// winnaars stromen door; verliezers vallen het losers bracket in.
+// "settled" volgt mee zodat byes pas doorschuiven als hun bron echt vaststaat.
+export function propagateDouble(double: DoubleBracket | LegacyDoubleBracket | undefined): DoubleBracket {
+  const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(double)));
+  type Res = { winner: string; loser: string; settled: boolean };
+  const evalMatch = (m: Match, aSettled: boolean, bSettled: boolean): Res => {
+    const a = m.teams[0].name, b = m.teams[1].name;
+    if (a && b) {
+      const w = winnerIdx(m);
+      if (w >= 0) return { winner: m.teams[w].name, loser: m.teams[1 - w].name, settled: true };
+      return { winner: "", loser: "", settled: false };
+    }
+    if (!aSettled || !bSettled) return { winner: "", loser: "", settled: false };
+    if (!a && !b) return { winner: "", loser: "", settled: true };
+    return { winner: a || b, loser: "", settled: true }; // bye
+  };
+  const feed = (slot: { name: string; score: number | null }, name: string) => {
+    if (slot.name !== name) {
+      slot.name = name;
       slot.score = null;
     }
   };
-  feed(d.w1[0], d.wf.teams[0], true);
-  feed(d.w1[1], d.wf.teams[1], true);
-  feed(d.w1[0], d.l1.teams[0], false);
-  feed(d.w1[1], d.l1.teams[1], false);
-  feed(d.l1, d.lf.teams[0], true);
-  feed(d.wf, d.lf.teams[1], false);
-  feed(d.wf, d.gf.teams[0], true);
-  feed(d.lf, d.gf.teams[1], true);
+
+  const wRes: Res[][] = [d.w[0].map((m) => evalMatch(m, true, true))];
+  for (let r = 1; r < d.w.length; r++) {
+    wRes[r] = d.w[r].map((m, i) => {
+      const s0 = wRes[r - 1][2 * i], s1 = wRes[r - 1][2 * i + 1];
+      feed(m.teams[0], s0.winner);
+      feed(m.teams[1], s1.winner);
+      return evalMatch(m, s0.settled, s1.settled);
+    });
+  }
+
+  const lRes: Res[][] = [];
+  d.l.forEach((round, li) => {
+    lRes[li] = round.map((m, i) => {
+      let s0: Res, s1: Res;
+      if (li === 0) {
+        // intake: verliezers van WB R1 gepaard
+        s0 = wRes[0][2 * i];
+        s1 = wRes[0][2 * i + 1];
+        feed(m.teams[0], s0.loser);
+        feed(m.teams[1], s1.loser);
+      } else if (round.length === d.l[li - 1].length) {
+        // major: winnaar vorige LB-ronde vs verliezer uit WB-ronde
+        const k = Math.ceil(li / 2);
+        s0 = lRes[li - 1][i];
+        s1 = wRes[k][i];
+        feed(m.teams[0], s0.winner);
+        feed(m.teams[1], s1.loser);
+      } else {
+        // minor: LB-winnaars onderling gepaard
+        s0 = lRes[li - 1][2 * i];
+        s1 = lRes[li - 1][2 * i + 1];
+        feed(m.teams[0], s0.winner);
+        feed(m.teams[1], s1.winner);
+      }
+      return evalMatch(m, s0.settled, s1.settled);
+    });
+  });
+
+  const wf = wRes[d.w.length - 1][0];
+  const lf = lRes[d.l.length - 1][0];
+  feed(d.gf.teams[0], wf.winner);
+  feed(d.gf.teams[1], lf.winner);
   return d;
+}
+
+// nieuwe deelnemer in het double bracket; vol? dan verdubbelt het bracket
+// (bestaande ronde-1-indeling blijft, latere rondes worden opnieuw afgeleid)
+export function addParticipantDouble(
+  double: DoubleBracket | LegacyDoubleBracket | undefined,
+  name: string,
+): { double: DoubleBracket; grownTo?: number } | { error: string } {
+  const clean = name.trim();
+  if (!clean) return { error: "Vul een naam in." };
+  const d: DoubleBracket = JSON.parse(JSON.stringify(normalizeDouble(double)));
+  const r1 = d.w[0];
+  if (r1.some((m) => m.teams.some((t) => t.name.toLowerCase() === clean.toLowerCase()))) {
+    return { error: `"${clean}" staat al in het bracket.` };
+  }
+  for (const m of r1) {
+    if (m.teams.filter((t) => t.name).length === 1) {
+      m.teams.find((t) => !t.name)!.name = clean;
+      return { double: d };
+    }
+  }
+  for (const m of r1) {
+    if (m.teams.every((t) => !t.name)) {
+      m.teams[0].name = clean;
+      return { double: d };
+    }
+  }
+  const size = doubleTeamCount(d) * 2;
+  if (size > Math.max(...BRACKET_SIZES)) return { error: `Het bracket zit vol (max ${Math.max(...BRACKET_SIZES)} teams).` };
+  const big = emptyDouble(size);
+  r1.forEach((m, i) => { big.w[0][i] = m; });
+  big.w[0][r1.length].teams[0].name = clean;
+  return { double: big, grownTo: size };
 }
 
 export function roundTitle(r: number, totalRounds: number, teams: number): string {
@@ -176,9 +278,9 @@ export function gameStatus(game: Game): { text: string; champ: boolean } {
     const d = propagateDouble(game.double);
     const w = winnerIdx(d.gf);
     if (w >= 0) return { text: `\u{1F3C6} ${d.gf.teams[w].name}`, champ: true };
-    const all = [...d.w1, d.wf, d.l1, d.lf, d.gf];
+    const all = [...d.w.flat(), ...d.l.flat(), d.gf];
     if (all.some((m) => m.teams.some((t) => t.score != null))) return { text: "Bezig", champ: false };
-    const filled = d.w1.flatMap((m) => m.teams).filter((t) => t.name).length;
+    const filled = d.w[0].flatMap((m) => m.teams).filter((t) => t.name).length;
     return { text: filled ? "Start binnenkort" : "Aanmeldingen open", champ: false };
   }
   if (game.type === "race" && game.race) {
@@ -211,11 +313,10 @@ export function allMatches(games: Game[]): PendingMatch[] {
   for (const game of games) {
     if (game.type === "double" && game.double) {
       const d = propagateDouble(game.double);
-      push(game, d.w1[0], "WB R1");
-      push(game, d.w1[1], "WB R1");
-      push(game, d.wf, "WB FIN");
-      push(game, d.l1, "LB R1");
-      push(game, d.lf, "LB FIN");
+      d.w.forEach((round, r) => round.forEach((m) =>
+        push(game, m, r === d.w.length - 1 ? "WB FIN" : `WB R${r + 1}`)));
+      d.l.forEach((round, r) => round.forEach((m) =>
+        push(game, m, r === d.l.length - 1 ? "LB FIN" : `LB R${r + 1}`)));
       push(game, d.gf, "GF");
       continue;
     }

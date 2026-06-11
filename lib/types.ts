@@ -5,7 +5,16 @@ export type Match = { teams: [Team, Team] };
 export type Bracket = { rounds: Match[][] };
 
 // double elimination voor 4 teams: winners + losers bracket, GF = WB-winnaar vs LB-winnaar
+// generiek double elimination: winners- en losers-rondes voor 4/8/16 teams.
+// (oude opgeslagen data in het vaste 4-teams formaat wordt bij het lezen
+// genormaliseerd door normalizeDouble in lib/bracket.ts)
 export type DoubleBracket = {
+  w: Match[][]; // winners bracket, per ronde
+  l: Match[][]; // losers bracket, per ronde (afwisselend intake/samenvoegen)
+  gf: Match;    // grand finals
+};
+
+export type LegacyDoubleBracket = {
   w1: [Match, Match]; // winners ronde 1
   wf: Match;          // winners finale
   l1: Match;          // losers ronde 1 (verliezers van w1)

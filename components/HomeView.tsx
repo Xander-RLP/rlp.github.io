@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BRACKET_SIZES, addParticipant, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
+import { BRACKET_SIZES, addParticipant, addParticipantDouble, emptyBracket, emptyDouble, gameInitials, logoColor, slugify, teamCount } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
 import type { Bracket, DoubleBracket, Game, Race } from "@/lib/types";
 import BracketView from "./BracketView";
@@ -91,19 +91,15 @@ export default function HomeView() {
       }
       setRace({ ...race, participants: [...race.participants, { name, progress: 0 }] });
     } else if (game.type === "double") {
-      const d: DoubleBracket = JSON.parse(JSON.stringify(game.double ?? emptyDouble()));
-      if ([...d.w1[0].teams, ...d.w1[1].teams].some((t) => t.name.toLowerCase() === name.toLowerCase())) {
-        alert(`"${name}" staat al in het bracket.`);
+      const result = addParticipantDouble(game.double, name);
+      if ("error" in result) {
+        alert(result.error);
         return;
       }
-      // vullen in seed-volgorde: 1 (w1a-boven), 2 (w1b-boven), 3 (w1b-onder), 4 (w1a-onder)
-      const slot = [d.w1[0].teams[0], d.w1[1].teams[0], d.w1[1].teams[1], d.w1[0].teams[1]].find((t) => !t.name);
-      if (!slot) {
-        alert("Double elimination zit vol (max 4 teams).");
+      if (result.grownTo && !confirm(`Ronde 1 zit vol — het double bracket groeit naar ${result.grownTo} teams. De ronde-1-indeling blijft staan. Doorgaan?`)) {
         return;
       }
-      slot.name = name;
-      setDouble(d);
+      setDouble(result.double);
     } else {
       const result = addParticipant(game.bracket, name);
       if ("error" in result) {
@@ -201,10 +197,24 @@ export default function HomeView() {
             </div>
           )}
           <div>
-            <h1 className="text-xl font-extrabold uppercase tracking-wide md:text-2xl">
+            <h1 className="flex items-center gap-2 text-xl font-extrabold uppercase tracking-wide md:text-2xl">
               {game.type === "race" ? game.name
                 : game.type === "double" ? `${game.name}: Double Elimination`
                 : `${game.name}: ${teamCount(game.bracket)}-Team Bracket`}
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    const name = prompt("Nieuwe naam voor dit toernooi:", game.name)?.trim();
+                    if (name && name !== game.name) {
+                      updateGames(state!.games.map((g) => (g.id === game.id ? { ...g, name } : g)));
+                    }
+                  }}
+                  title="Naam aanpassen"
+                  className="cursor-pointer text-sm text-slate-500 hover:text-lime-400"
+                >
+                  ✏️
+                </button>
+              )}
             </h1>
             <div className="text-[11px] uppercase tracking-[1.5px] text-slate-400">
               {game.format || "Single Elimination"}
@@ -307,9 +317,9 @@ export default function HomeView() {
               onChange={(e) => setNewType(e.target.value as "bracket" | "race" | "double")}
               className="mb-3 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:border-lime-400 focus:outline-none"
             >
-              <option value="bracket">Bracket (knock-out)</option>
-              <option value="double">Double elimination (4 teams, winner + loser bracket)</option>
-              <option value="race">Race / leaderboard (bijv. eerste op level 20)</option>
+              <option value="bracket">Bracket (knock-out, groeit automatisch mee)</option>
+              <option value="double">Double elimination (winner + loser bracket, groeit mee)</option>
+              <option value="race">Vrij format / leaderboard (elk aantal spelers — bijv. Commander, race)</option>
             </select>
             {newType === "bracket" && (
               <select

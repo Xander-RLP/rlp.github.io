@@ -108,7 +108,7 @@ export default function SeatplanPage() {
   return (
     <div className="mx-auto w-fit max-w-full">
       <h2 className="mb-1.5 text-[22px] font-extrabold uppercase tracking-wide">Seatplan</h2>
-      <p className="mb-5 max-w-2xl text-[13px] text-slate-400">
+      <p className="mb-5 w-0 min-w-full text-[13px] text-slate-400">
         {canEdit
           ? "Tik een naam aan en daarna een vrije stoel — of sleep hem ernaartoe. Klik op een bezette stoel om hem vrij te geven."
           : "De huidige stoelindeling. Wil je een (andere) stoel? Geef het door aan de organisatie."}
@@ -175,7 +175,7 @@ export default function SeatplanPage() {
         </div>
       </div>
 
-      <p className="mt-4 max-w-xl text-xs text-slate-500">
+      <p className="mt-4 w-0 min-w-full text-xs text-slate-500">
         De organisatie deelt de stoelen in — wijzigingen staan binnen een minuut voor iedereen op de site.
       </p>
     </div>

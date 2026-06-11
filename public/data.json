@@ -788,6 +788,62 @@
       "image": "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/2732960/b1e3243662a5911fadc0924feb4b7e6e9e278403.jpg",
       "start": "2026-06-14T18:00",
       "durationMin": 120
+    },
+    {
+      "id": "magic-the-gathering",
+      "name": "Magic: The Gathering",
+      "type": "race",
+      "format": "Commander · vrij aantal spelers",
+      "image": "/images/magic-the-gathering.png",
+      "race": {
+        "goalLabel": "Gewonnen Commander-potjes",
+        "target": 2,
+        "participants": []
+      },
+      "bracket": {
+        "rounds": [
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ]
+            }
+          ]
+        ]
+      }
     }
   ],
   "seats": [
@@ -838,7 +894,7 @@
     }
   ],
   "unseated": [],
-  "eventStart": "2026-06-12T15:00",
+  "eventStart": "2026-06-11T18:00",
   "eetmomenten": [
     {
       "id": "ontbijt-vr",
@@ -875,6 +931,13 @@
       "start": "2026-06-13T17:30",
       "durationMin": 120,
       "tikkie": "https://tikkie.me/pay/bfags7ccgh4sqhdhepsh"
+    },
+    {
+      "id": "opruimen-zo",
+      "title": "Gezamenlijk opruimen",
+      "emoji": "🧹",
+      "start": "2026-06-14T13:30",
+      "durationMin": 60
     }
   ],
   "sponsors": [

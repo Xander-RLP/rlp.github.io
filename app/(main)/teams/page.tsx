@@ -1,7 +1,7 @@
 "use client";
 
 import GameHeading from "@/components/GameHeading";
-import { logoColor, seedPairs } from "@/lib/bracket";
+import { logoColor, normalizeDouble, seedPairs } from "@/lib/bracket";
 import { useTournament } from "@/lib/store";
 
 export default function TeamsPage() {
@@ -18,8 +18,9 @@ export default function TeamsPage() {
         if (g.type === "race" && g.race) {
           g.race.participants.forEach((p, i) => entries.push({ seed: i + 1, name: p.name }));
         } else if (g.type === "double" && g.double) {
-          const seeds = [[1, 4], [2, 3]];
-          g.double.w1.forEach((m, mi) =>
+          const dd = normalizeDouble(g.double);
+          const seeds = seedPairs(dd.w[0].length * 2);
+          dd.w[0].forEach((m, mi) =>
             m.teams.forEach((t, si) => {
               if (t.name) entries.push({ seed: seeds[mi][si], name: t.name });
             })
