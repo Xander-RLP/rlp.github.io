@@ -187,6 +187,19 @@
                 "m": 1,
                 "s": 0
               }
+            },
+            {
+              "teams": [
+                {
+                  "name": "",
+                  "score": null
+                },
+                {
+                  "name": "",
+                  "score": null
+                }
+              ],
+              "next": null
             }
           ],
           [
