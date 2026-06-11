@@ -1622,23 +1622,23 @@
     {
       "blocks": [
         {
-          "id": "bmq9lsxbtesp8",
-          "x": 12,
-          "y": 5.25,
+          "id": "w-vandaag",
           "type": "widget",
-          "content": "lanstart",
-          "locked": true
+          "content": "vandaag",
+          "x": 12,
+          "y": 5
         }
       ]
     },
     {
       "blocks": [
         {
-          "id": "w-vandaag",
-          "type": "widget",
-          "content": "vandaag",
+          "id": "bmq9lsxbtesp8",
           "x": 12,
-          "y": 5
+          "y": 5.25,
+          "type": "widget",
+          "content": "lanstart",
+          "locked": true
         }
       ]
     },
