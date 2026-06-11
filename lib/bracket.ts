@@ -46,6 +46,40 @@ export function teamCount(bracket: Bracket): number {
   return bracket.rounds[0].length * 2;
 }
 
+// nieuwe deelnemer in ronde 1: eerst halve matches afmaken (echte wedstrijd),
+// dan lege matches (bye). Ronde 1 vol? Dan groeit het bracket naar de volgende
+// grootte; de bestaande indeling en scores schuiven mee naar de eerste helft.
+export function addParticipant(
+  bracket: Bracket,
+  name: string,
+): { bracket: Bracket; grownTo?: number } | { error: string } {
+  const clean = name.trim();
+  if (!clean) return { error: "Vul een naam in." };
+  const b: Bracket = JSON.parse(JSON.stringify(bracket));
+  const r1 = b.rounds[0];
+  if (r1.some((m) => m.teams.some((t) => t.name.toLowerCase() === clean.toLowerCase()))) {
+    return { error: `"${clean}" staat al in het bracket.` };
+  }
+  for (const m of r1) {
+    if (m.teams.filter((t) => t.name).length === 1) {
+      m.teams.find((t) => !t.name)!.name = clean;
+      return { bracket: b };
+    }
+  }
+  for (const m of r1) {
+    if (m.teams.every((t) => !t.name)) {
+      m.teams[0].name = clean;
+      return { bracket: b };
+    }
+  }
+  const size = teamCount(b) * 2;
+  if (size > Math.max(...BRACKET_SIZES)) return { error: `Het bracket zit vol (max ${Math.max(...BRACKET_SIZES)} deelnemers).` };
+  const big = emptyBracket(size);
+  b.rounds.forEach((matches, r) => matches.forEach((m, i) => { big.rounds[r][i] = m; }));
+  big.rounds[0][r1.length].teams[0].name = clean;
+  return { bracket: big, grownTo: size };
+}
+
 export function winnerIdx(match: Match, firstRound = false): number {
   const [a, b] = match.teams;
   if (firstRound) { // bye: eenling in ronde 1 schuift automatisch door

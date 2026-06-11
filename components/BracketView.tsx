@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { logoColor, propagate, roundTitle, seedOf, seedPairs, teamCount, winnerIdx } from "@/lib/bracket";
+import { addParticipant, logoColor, propagate, roundTitle, seedOf, seedPairs, teamCount, winnerIdx } from "@/lib/bracket";
 import type { Bracket, Game } from "@/lib/types";
 
 type Line = { left: number; top: number; width: number; height: number };
@@ -21,6 +21,7 @@ export default function BracketView({ game, isAdmin, onBracketChange }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const matchRefs = useRef(new Map<string, HTMLDivElement>());
   const [lines, setLines] = useState<Line[]>([]);
+  const [newName, setNewName] = useState("");
 
   const recompute = useCallback(() => {
     const container = containerRef.current;
@@ -67,6 +68,19 @@ export default function BracketView({ game, isAdmin, onBracketChange }: Props) {
     const b: Bracket = JSON.parse(JSON.stringify(propagate(game.bracket)));
     b.rounds[r][m].teams[s].score = value === "" ? null : Math.max(0, parseInt(value, 10) || 0);
     onBracketChange(b);
+  }
+
+  function addNew() {
+    const result = addParticipant(game.bracket, newName);
+    if ("error" in result) {
+      alert(result.error);
+      return;
+    }
+    if (result.grownTo && !confirm(`Ronde 1 zit vol — het bracket groeit naar ${result.grownTo} deelnemers. De huidige indeling en scores blijven staan. Doorgaan?`)) {
+      return;
+    }
+    onBracketChange(result.bracket);
+    setNewName("");
   }
 
   const gf = bracket.rounds[totalRounds - 1][0];
@@ -155,6 +169,28 @@ export default function BracketView({ game, isAdmin, onBracketChange }: Props) {
         <div className="mt-3 text-center text-xs font-extrabold uppercase tracking-wide text-amber-400">
           🏆 Champion: {gf.teams[champ].name}
         </div>
+      )}
+
+      {isAdmin && (
+        <form
+          onSubmit={(e) => { e.preventDefault(); addNew(); }}
+          className="mt-4 flex max-w-sm items-center gap-2"
+        >
+          <input
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="Nieuwe speler of team"
+            maxLength={24}
+            className="min-w-0 flex-1 rounded border border-slate-700 bg-slate-950 px-2.5 py-1.5 text-xs font-semibold focus:border-lime-400 focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!newName.trim()}
+            className="shrink-0 cursor-pointer rounded border border-dashed border-slate-600 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-lime-400 hover:bg-lime-400/10 disabled:opacity-50"
+          >
+            + Toevoegen
+          </button>
+        </form>
       )}
     </div>
   );
