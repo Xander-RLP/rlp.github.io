@@ -109,7 +109,7 @@ export default function TeamSpeakWidget() {
               />
               {/* knipperende schijf-LED'jes op de echte LED-strip — wit, zoals officieel */}
               {/* de strip loopt door het camera-perspectief licht schuin omhoog */}
-              <span className="absolute bottom-[37%] left-[19%] flex origin-left -rotate-[4deg] items-center gap-[2px]">
+              <span className="absolute bottom-[37%] left-[19%] flex origin-left rotate-[5deg] items-center gap-[2px]">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <span
                     key={i}
