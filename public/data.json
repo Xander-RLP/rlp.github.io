@@ -2955,6 +2955,14 @@
           "x": 15.25,
           "y": 4.5,
           "size": 380
+        },
+        {
+          "id": "bmq9qs2el66pt",
+          "x": 12,
+          "y": 6,
+          "type": "text",
+          "content": "Tekst…",
+          "size": 40
         }
       ]
     },
